@@ -160,7 +160,7 @@ list_url = ['https://stackoverflow.com/users/22656/jon-skeet', 'https://stackove
             'https://stackoverflow.com/users/6309/vonc', 'https://stackoverflow.com/users/157882/balusc', 'https://stackoverflow.com/users/2084798/christian-matthew',\
             'https://stackoverflow.com/users/3436943/chevy-mark-sunderland', 'https://stackoverflow.com/users/2748531/user2748531']
 tot = 0
-for j in range (20):
+for j in range (2):
     for i in list_url:
         print('%%%%%')
         # timeit.timeit(f'{user(i)}')
