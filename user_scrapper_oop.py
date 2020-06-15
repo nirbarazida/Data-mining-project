@@ -15,6 +15,7 @@ class Website(object):
     """
 
     def __init__(self, website_name="stackoverflow"):
+        self._website_name = website_name
         self._website_url = f"https://{website_name}.com"
 
     def get_bare_website_url(self):
@@ -115,7 +116,7 @@ class UserAnalysis(Website):
 
 
 class User(UserAnalysis):
-    num_user = 0
+    num_user_dict = {}
 
     def __init__(self, user_url, website_name):
         Website.__init__(self, website_name)
@@ -125,11 +126,12 @@ class User(UserAnalysis):
         self._name = soup.find("div", {"class": "grid--cell fw-bold"}).text
         self._reputation = int(soup.find("div", {"class": "grid--cell fs-title fc-dark"}).text.replace(',', ''))
         self._highest_rating_for_one_post = int(soup.find("span", {"class": "grid--cell vote accepted"}).text)
-        User.num_user += 1
+        User.num_user_dict[self._website_name] = User.num_user_dict.get(self._website_name, 0) + 1
+
 
 
     def get_dict(self):
-        return {"Website": self.get_bare_website_url(), "#": User.num_user, "name": self._name,
+        return {"Website": self._website_name, "#": User.num_user_dict[self._website_name], "name": self._name,
                 "reputation": self._reputation, "highest_rating_for_one_post": self._highest_rating_for_one_post}
 
 

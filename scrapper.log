@@ -775,3 +775,448 @@
 2020-06-15 11:49:13,749 : root : ['package-management', ['8320'], ['39', '133']]
 2020-06-15 11:49:13,749 : root : ['system-installation', ['8150'], ['5', '32']]
 2020-06-15 11:49:13,749 : root : Finished to scrap 20 tags in 4.37 seconds
+2020-06-15 13:49:28,166 : root : Website: stackoverflow ,number of users to scrap = 3, sleep factor = 1.5
+2020-06-15 13:49:38,342 : root : {'Website': 'stackoverflow', '#': 2, 'name': 'Jon Skeet', 'reputation': 1188978, 'highest_rating_for_one_post': 10883}
+2020-06-15 13:49:42,198 : root : {'Website': 'stackoverflow', '#': 3, 'name': 'Gordon Linoff', 'reputation': 970223, 'highest_rating_for_one_post': 404}
+2020-06-15 13:49:44,865 : root : {'Website': 'stackoverflow', '#': 4, 'name': 'VonC', 'reputation': 959325, 'highest_rating_for_one_post': 2219}
+2020-06-15 13:49:44,865 : root : Finished to scrap 3 users in 16.7 seconds
+2020-06-15 13:49:50,559 : root : ['javascript', ['2028691'], ['826', '6299']]
+2020-06-15 13:49:50,561 : root : ['java', ['1683484'], ['512', '3719']]
+2020-06-15 13:49:50,561 : root : ['python', ['1458777'], ['1168', '8851']]
+2020-06-15 13:49:50,561 : root : Finished to scrap 3 tags in 5.7 seconds
+2020-06-15 13:49:50,561 : root : Website: askubuntu ,number of users to scrap = 3, sleep factor = 1.5
+2020-06-15 13:49:58,522 : root : {'Website': 'askubuntu', '#': 3, 'name': 'Rinzwind', 'reputation': 239440, 'highest_rating_for_one_post': 1232}
+2020-06-15 13:50:01,007 : root : {'Website': 'askubuntu', '#': 4, 'name': 'Luis Alvarado', 'reputation': 185034, 'highest_rating_for_one_post': 1322}
+2020-06-15 13:50:01,007 : root : Finished to scrap 3 users in 10.45 seconds
+2020-06-15 13:50:05,562 : root : ['14.04', ['20753'], ['8', '15']]
+2020-06-15 13:50:05,562 : root : ['boot', ['19443'], ['15', '114']]
+2020-06-15 13:50:05,562 : root : ['command-line', ['18756'], ['9', '52']]
+2020-06-15 13:50:05,562 : root : Finished to scrap 3 tags in 4.55 seconds
+2020-06-15 13:53:11,163 : root : Website: stackoverflow ,number of users to scrap = 3, sleep factor = 1.5
+2020-06-15 13:53:19,569 : root : {'Website': 'stackoverflow', '#': 2, 'name': 'Jon Skeet', 'reputation': 1188978, 'highest_rating_for_one_post': 10883}
+2020-06-15 13:53:23,322 : root : {'Website': 'stackoverflow', '#': 3, 'name': 'Gordon Linoff', 'reputation': 970223, 'highest_rating_for_one_post': 404}
+2020-06-15 13:53:23,322 : root : Finished to scrap 3 users in 12.16 seconds
+2020-06-15 13:53:29,084 : root : ['javascript', ['2028694'], ['826', '6299']]
+2020-06-15 13:53:29,084 : root : ['java', ['1683485'], ['512', '3719']]
+2020-06-15 13:53:29,085 : root : ['python', ['1458779'], ['1168', '8851']]
+2020-06-15 13:53:29,085 : root : Finished to scrap 3 tags in 5.76 seconds
+2020-06-15 13:53:29,085 : root : Website: askubuntu ,number of users to scrap = 3, sleep factor = 1.5
+2020-06-15 13:53:36,445 : root : {'Website': 'askubuntu', '#': 3, 'name': 'Rinzwind', 'reputation': 239440, 'highest_rating_for_one_post': 1232}
+2020-06-15 13:53:36,445 : root : Finished to scrap 3 users in 7.36 seconds
+2020-06-15 13:53:40,614 : root : ['14.04', ['20753'], ['8', '15']]
+2020-06-15 13:53:40,614 : root : ['boot', ['19443'], ['15', '114']]
+2020-06-15 13:53:40,614 : root : ['command-line', ['18756'], ['9', '52']]
+2020-06-15 13:53:40,614 : root : Finished to scrap 3 tags in 4.17 seconds
+2020-06-15 13:58:41,786 : root : Website: stackoverflow ,number of users to scrap = 37, sleep factor = 1.5
+2020-06-15 13:58:41,786 : root : Website: askubuntu ,number of users to scrap = 37, sleep factor = 1.5
+2020-06-15 13:58:41,787 : root : Website: math.stackexchange ,number of users to scrap = 37, sleep factor = 1.5
+2020-06-15 13:58:41,788 : root : Website: superuser ,number of users to scrap = 37, sleep factor = 1.5
+2020-06-15 13:59:16,712 : root : {'Website': 'superuser', '#': 1, 'name': 'harrymc', 'reputation': 319717, 'highest_rating_for_one_post': 387}
+2020-06-15 13:59:18,790 : root : ['14.04', ['20753'], ['8', '15']]
+2020-06-15 13:59:18,814 : root : ['boot', ['19443'], ['15', '114']]
+2020-06-15 13:59:18,815 : root : ['command-line', ['18756'], ['9', '52']]
+2020-06-15 13:59:18,815 : root : ['networking', ['18435'], ['9', '82']]
+2020-06-15 13:59:18,829 : root : ['16.04', ['17560'], ['23', '91']]
+2020-06-15 13:59:18,829 : root : ['12.04', ['16746'], ['11']]
+2020-06-15 13:59:18,841 : root : ['dual-boot', ['15049'], ['11', '62']]
+2020-06-15 13:59:18,842 : root : ['18.04', ['15029'], ['6', '98']]
+2020-06-15 13:59:18,843 : root : ['drivers', ['14537'], ['10', '73']]
+2020-06-15 13:59:18,844 : root : ['apt', ['13604'], ['44', '204']]
+2020-06-15 13:59:18,844 : root : ['server', ['13210'], ['8', '59']]
+2020-06-15 13:59:18,845 : root : ['wireless', ['11504'], ['39', '147']]
+2020-06-15 13:59:18,846 : root : ['partitioning', ['11476'], ['37', '167']]
+2020-06-15 13:59:18,847 : root : ['grub2', ['10909'], ['37', '167']]
+2020-06-15 13:59:18,847 : root : ['unity', ['9807'], ['14', '174']]
+2020-06-15 13:59:19,015 : root : ['nvidia', ['9709'], ['5', '39']]
+2020-06-15 13:59:19,016 : root : ['bash', ['8899'], ['26', '111']]
+2020-06-15 13:59:19,016 : root : ['gnome', ['8796'], ['35', '153']]
+2020-06-15 13:59:19,017 : root : ['package-management', ['8322'], ['39', '133']]
+2020-06-15 13:59:19,017 : root : ['system-installation', ['8150'], ['5', '33']]
+2020-06-15 13:59:19,018 : root : ['software-installation', ['7710'], ['29', '111']]
+2020-06-15 13:59:19,018 : root : ['upgrade', ['7688'], ['35', '137']]
+2020-06-15 13:59:19,019 : root : ['usb', ['7405'], ['34', '124']]
+2020-06-15 13:59:19,019 : root : ['sound', ['7238'], ['6', '40']]
+2020-06-15 13:59:19,020 : root : ['installation', ['6837'], []]
+2020-06-15 13:59:19,020 : root : ['kernel', ['6360'], ['28', '103']]
+2020-06-15 13:59:19,021 : root : ['permissions', ['6092'], ['19', '86']]
+2020-06-15 13:59:19,021 : root : ['mount', ['5833'], ['19', '75']]
+2020-06-15 13:59:19,022 : root : ['scripts', ['5628'], ['15', '56']]
+2020-06-15 13:59:19,022 : root : ['updates', ['5572'], ['20', '80']]
+2020-06-15 13:59:19,023 : root : ['graphics', ['5137'], ['11', '77']]
+2020-06-15 13:59:19,023 : root : ['ssh', ['4990'], ['7', '23']]
+2020-06-15 13:59:19,024 : root : ['11.10', ['4983'], []]
+2020-06-15 13:59:19,024 : root : ['keyboard', ['4946'], ['21', '90']]
+2020-06-15 13:59:19,025 : root : ['virtualbox', ['4860'], ['11', '57']]
+2020-06-15 13:59:19,025 : root : ['xubuntu', ['4676'], ['15', '55']]
+2020-06-15 13:59:27,161 : root : {'Website': 'superuser', '#': 2, 'name': 'user1686', 'reputation': 295714, 'highest_rating_for_one_post': 490}
+2020-06-15 13:59:31,586 : root : ['linux', ['51297'], ['18', '122']]
+2020-06-15 13:59:31,586 : root : ['windows-7', ['47236'], ['23', '97']]
+2020-06-15 13:59:31,616 : root : ['windows', ['46286'], ['14', '107']]
+2020-06-15 13:59:31,617 : root : ['windows-10', ['29084'], ['22', '164']]
+2020-06-15 13:59:31,618 : root : ['networking', ['29042'], ['15', '68']]
+2020-06-15 13:59:31,619 : root : ['microsoft-excel', ['21018'], ['5', '40']]
+2020-06-15 13:59:31,620 : root : ['macos', ['20585'], ['26', '102']]
+2020-06-15 13:59:31,620 : root : ['ubuntu', ['19553'], ['6', '48']]
+2020-06-15 13:59:31,621 : root : ['hard-drive', ['13327'], ['22', '102']]
+2020-06-15 13:59:31,622 : root : ['wireless-networking', ['13243'], ['6', '35']]
+2020-06-15 13:59:31,622 : root : ['command-line', ['11182'], ['22', '97']]
+2020-06-15 13:59:31,623 : root : ['windows-8', ['10658'], ['12', '101']]
+2020-06-15 13:59:31,635 : root : ['boot', ['10628'], ['6', '26']]
+2020-06-15 13:59:31,636 : root : ['google-chrome', ['10178'], ['21', '94']]
+2020-06-15 13:59:31,636 : root : ['bash', ['10054'], ['7', '19']]
+2020-06-15 13:59:31,637 : root : ['router', ['9209'], ['8', '23']]
+2020-06-15 13:59:31,637 : root : ['windows-xp', ['9201'], ['9', '97']]
+2020-06-15 13:59:31,638 : root : ['ssh', ['8865'], ['18', '84']]
+2020-06-15 13:59:31,639 : root : ['mac', ['8724'], ['12', '50']]
+2020-06-15 13:59:31,639 : root : ['firefox', ['7957'], ['14', '47']]
+2020-06-15 13:59:31,640 : root : ['usb', ['7408'], ['7', '20']]
+2020-06-15 13:59:31,640 : root : ['laptop', ['7399'], ['23', '78']]
+2020-06-15 13:59:31,641 : root : ['virtualbox', ['6651'], ['16', '64']]
+2020-06-15 13:59:31,642 : root : ['worksheet-function', ['6389'], ['11', '48']]
+2020-06-15 13:59:31,642 : root : ['partitioning', ['6326'], ['14', '53']]
+2020-06-15 13:59:31,643 : root : ['microsoft-word', ['6317'], ['14', '60']]
+2020-06-15 13:59:31,644 : root : ['audio', ['6195'], ['19', '83']]
+2020-06-15 13:59:31,644 : root : ['memory', ['5968'], ['12', '59']]
+2020-06-15 13:59:31,645 : root : ['drivers', ['5584'], ['13', '39']]
+2020-06-15 13:59:31,674 : root : ['windows-8.1', ['5432'], ['14', '123']]
+2020-06-15 13:59:31,675 : root : ['debian', ['5212'], ['7', '42']]
+2020-06-15 13:59:31,676 : root : ['email', ['5131'], ['12', '46']]
+2020-06-15 13:59:31,676 : root : ['video', ['5126'], ['20', '62']]
+2020-06-15 13:59:31,677 : root : ['ssd', ['5054'], ['13', '53']]
+2020-06-15 13:59:31,693 : root : ['ffmpeg', ['4914'], ['23', '95']]
+2020-06-15 13:59:31,694 : root : ['virtual-machine', ['4794'], ['9', '56']]
+2020-06-15 13:59:38,606 : root : {'Website': 'askubuntu', '#': 2, 'name': 'Rinzwind', 'reputation': 239440, 'highest_rating_for_one_post': 1232}
+2020-06-15 13:59:41,748 : root : ['hard-drive', ['4464'], ['14', '57']]
+2020-06-15 13:59:44,154 : root : {'Website': 'superuser', '#': 3, 'name': 'slhck', 'reputation': 187688, 'highest_rating_for_one_post': 468}
+2020-06-15 13:59:47,657 : root : ['real-analysis', ['109751'], ['60', '387']]
+2020-06-15 13:59:47,675 : root : ['calculus', ['105147'], ['46', '375']]
+2020-06-15 13:59:47,676 : root : ['linear-algebra', ['97371'], ['48', '311']]
+2020-06-15 13:59:47,677 : root : ['probability', ['79544'], ['43', '333']]
+2020-06-15 13:59:47,678 : root : ['abstract-algebra', ['66848'], ['33', '211']]
+2020-06-15 13:59:47,679 : root : ['integration', ['55853'], ['25', '211']]
+2020-06-15 13:59:47,679 : root : ['sequences-and-series', ['50894'], ['16', '156']]
+2020-06-15 13:59:47,680 : root : ['combinatorics', ['44095'], ['23', '167']]
+2020-06-15 13:59:47,681 : root : ['general-topology', ['43288'], ['26', '107']]
+2020-06-15 13:59:47,682 : root : ['matrices', ['42841'], ['12', '150']]
+2020-06-15 13:59:47,683 : root : ['complex-analysis', ['39632'], ['15', '119']]
+2020-06-15 13:59:47,684 : root : ['functional-analysis', ['38134'], ['15', '139']]
+2020-06-15 13:59:47,685 : root : ['group-theory', ['38061'], ['14', '105']]
+2020-06-15 13:59:47,686 : root : ['geometry', ['37744'], ['18', '138']]
+2020-06-15 13:59:47,686 : root : ['algebra-precalculus', ['37211'], ['12', '84']]
+2020-06-15 13:59:47,711 : root : ['ordinary-differential-equations', ['34426'], ['18', '130']]
+2020-06-15 13:59:47,711 : root : ['number-theory', ['33640'], ['12', '127']]
+2020-06-15 13:59:47,712 : root : ['limits', ['33308'], ['16', '115']]
+2020-06-15 13:59:47,713 : root : ['analysis', ['32633'], ['22', '101']]
+2020-06-15 13:59:47,713 : root : ['probability-theory', ['31789'], ['14', '143']]
+2020-06-15 13:59:47,715 : root : ['elementary-number-theory', ['29708'], ['9', '78']]
+2020-06-15 13:59:47,715 : root : ['statistics', ['28337'], ['13', '97']]
+2020-06-15 13:59:47,715 : root : ['measure-theory', ['28257'], ['10', '100']]
+2020-06-15 13:59:47,770 : root : ['multivariable-calculus', ['26741'], ['16', '108']]
+2020-06-15 13:59:47,770 : root : ['functions', ['25917'], ['13', '120']]
+2020-06-15 13:59:47,772 : root : ['discrete-mathematics', ['25694'], ['15', '103']]
+2020-06-15 13:59:47,772 : root : ['derivatives', ['24528'], ['8', '100']]
+2020-06-15 13:59:47,772 : root : ['proof-verification', ['23532'], ['2499']]
+2020-06-15 13:59:47,773 : root : ['trigonometry', ['23369'], ['8', '73']]
+2020-06-15 13:59:47,774 : root : ['differential-geometry', ['23282'], ['12', '87']]
+2020-06-15 13:59:47,775 : root : ['elementary-set-theory', ['22467'], ['13', '81']]
+2020-06-15 13:59:47,775 : root : ['inequality', ['22360'], ['12', '95']]
+2020-06-15 13:59:47,776 : root : ['algebraic-geometry', ['21252'], ['5', '58']]
+2020-06-15 13:59:47,777 : root : ['probability-distributions', ['20800'], ['8', '101']]
+2020-06-15 13:59:47,778 : root : ['logic', ['20752'], ['14', '86']]
+2020-06-15 13:59:47,779 : root : ['polynomials', ['20421'], ['7', '60']]
+2020-06-15 13:59:52,035 : root : ['javascript', ['2028696'], ['826', '6299']]
+2020-06-15 13:59:52,036 : root : ['java', ['1683489'], ['512', '3719']]
+2020-06-15 13:59:52,037 : root : ['python', ['1458784'], ['1168', '8851']]
+2020-06-15 13:59:52,038 : root : ['c#', ['1413711'], ['308', '2509']]
+2020-06-15 13:59:52,039 : root : ['php', ['1356043'], ['327', '2467']]
+2020-06-15 13:59:52,040 : root : ['android', ['1280540'], ['347', '2581']]
+2020-06-15 13:59:52,040 : root : ['html', ['999536'], ['342', '2601']]
+2020-06-15 13:59:52,041 : root : ['jquery', ['989000'], ['118', '1019']]
+2020-06-15 13:59:52,042 : root : ['c++', ['677033'], ['234', '1806']]
+2020-06-15 13:59:52,043 : root : ['css', ['668378'], ['215', '1695']]
+2020-06-15 13:59:52,044 : root : ['ios', ['632594'], ['121', '950']]
+2020-06-15 13:59:52,045 : root : ['mysql', ['599177'], ['143', '1183']]
+2020-06-15 13:59:52,045 : root : ['sql', ['546938'], ['147', '1377']]
+2020-06-15 13:59:52,046 : root : ['asp.net', ['356451'], ['44', '334']]
+2020-06-15 13:59:52,047 : root : ['r', ['349744'], ['175', '1582']]
+2020-06-15 13:59:52,048 : root : ['node.js', ['333436'], ['214', '1661']]
+2020-06-15 13:59:52,049 : root : ['c', ['333081'], ['104', '775']]
+2020-06-15 13:59:52,050 : root : ['arrays', ['332547'], ['108', '935']]
+2020-06-15 13:59:52,050 : root : ['ruby-on-rails', ['318241'], ['19', '243']]
+2020-06-15 13:59:52,051 : root : ['.net', ['297628'], ['49', '422']]
+2020-06-15 13:59:52,052 : root : ['json', ['293713'], ['88', '825']]
+2020-06-15 13:59:52,053 : root : ['objective-c', ['290079'], ['10', '80']]
+2020-06-15 13:59:52,054 : root : ['sql-server', ['286751'], ['67', '636']]
+2020-06-15 13:59:52,055 : root : ['swift', ['269144'], ['159', '1044']]
+2020-06-15 13:59:52,055 : root : ['angularjs', ['260660'], ['16', '110']]
+2020-06-15 13:59:52,056 : root : ['python-3.x', ['234598'], ['249', '2010']]
+2020-06-15 13:59:52,057 : root : ['django', ['234531'], ['141', '1077']]
+2020-06-15 13:59:52,058 : root : ['regex', ['227766'], ['44', '501']]
+2020-06-15 13:59:52,059 : root : ['excel', ['223929'], ['90', '799']]
+2020-06-15 13:59:52,059 : root : ['iphone', ['220440'], ['6', '56']]
+2020-06-15 13:59:52,060 : root : ['reactjs', ['220382'], ['311', '2347']]
+2020-06-15 13:59:52,061 : root : ['angular', ['219989'], ['148', '1255']]
+2020-06-15 13:59:52,062 : root : ['ruby', ['213718'], ['16', '193']]
+2020-06-15 13:59:52,063 : root : ['ajax', ['209457'], ['38', '312']]
+2020-06-15 13:59:52,063 : root : ['xml', ['194009'], ['23', '323']]
+2020-06-15 13:59:52,064 : root : ['linux', ['191326'], ['84', '619']]
+2020-06-15 13:59:54,463 : root : {'Website': 'stackoverflow', '#': 1, 'name': 'Jon Skeet', 'reputation': 1188988, 'highest_rating_for_one_post': 10883}
+2020-06-15 13:59:55,945 : root : {'Website': 'superuser', '#': 4, 'name': 'John T', 'reputation': 150903, 'highest_rating_for_one_post': 429}
+2020-06-15 13:59:56,156 : root : {'Website': 'askubuntu', '#': 3, 'name': 'Luis Alvarado', 'reputation': 185034, 'highest_rating_for_one_post': 1322}
+2020-06-15 13:59:59,551 : root : {'Website': 'math.stackexchange', '#': 1, 'name': 'Brian M. Scott', 'reputation': 499341, 'highest_rating_for_one_post': 752}
+2020-06-15 14:00:00,778 : root : ['microsoft-outlook', ['4793'], ['9', '41']]
+2020-06-15 14:00:02,707 : root : {'Website': 'stackoverflow', '#': 2, 'name': 'Gordon Linoff', 'reputation': 970248, 'highest_rating_for_one_post': 404}
+2020-06-15 14:00:06,277 : root : {'Website': 'math.stackexchange', '#': 2, 'name': 'André Nicolas', 'reputation': 469552, 'highest_rating_for_one_post': 488}
+2020-06-15 14:00:07,625 : root : ['graph-theory', ['18370'], ['9', '65']]
+2020-06-15 14:00:09,180 : root : ['asp.net-mvc', ['189614'], ['24', '212']]
+2020-06-15 14:00:11,567 : root : {'Website': 'superuser', '#': 7, 'name': 'William Hilsum', 'reputation': 112396, 'highest_rating_for_one_post': 257}
+2020-06-15 14:00:12,235 : root : {'Website': 'stackoverflow', '#': 3, 'name': 'VonC', 'reputation': 959325, 'highest_rating_for_one_post': 2219}
+2020-06-15 14:00:13,641 : root : {'Website': 'math.stackexchange', '#': 3, 'name': 'Robert Israel', 'reputation': 376884, 'highest_rating_for_one_post': 388}
+2020-06-15 14:00:13,890 : root : {'Website': 'askubuntu', '#': 5, 'name': 'muru', 'reputation': 157380, 'highest_rating_for_one_post': 237}
+2020-06-15 14:00:15,698 : root : {'Website': 'stackoverflow', '#': 4, 'name': 'BalusC', 'reputation': 935698, 'highest_rating_for_one_post': 3229}
+2020-06-15 14:00:16,513 : root : {'Website': 'math.stackexchange', '#': 4, 'name': 'Ross Millikan', 'reputation': 337205, 'highest_rating_for_one_post': 482}
+2020-06-15 14:00:17,018 : root : {'Website': 'superuser', '#': 9, 'name': 'Ignacio Vazquez-Abrams', 'reputation': 102021, 'highest_rating_for_one_post': 313}
+2020-06-15 14:00:18,513 : root : {'Website': 'stackoverflow', '#': 5, 'name': 'Darin Dimitrov', 'reputation': 916266, 'highest_rating_for_one_post': 1150}
+2020-06-15 14:00:18,601 : root : {'Website': 'askubuntu', '#': 6, 'name': 'Lekensteyn', 'reputation': 146108, 'highest_rating_for_one_post': 730}
+2020-06-15 14:00:24,474 : root : {'Website': 'math.stackexchange', '#': 6, 'name': 'Hagen von Eitzen', 'reputation': 320570, 'highest_rating_for_one_post': 308}
+2020-06-15 14:00:26,193 : root : {'Website': 'superuser', '#': 11, 'name': 'Paused until further notice.', 'reputation': 88555, 'highest_rating_for_one_post': 1755}
+2020-06-15 14:00:26,740 : root : {'Website': 'askubuntu', '#': 8, 'name': 'ish', 'reputation': 126497, 'highest_rating_for_one_post': 821}
+2020-06-15 14:00:27,616 : root : {'Website': 'math.stackexchange', '#': 7, 'name': "Jack D'Aurizio", 'reputation': 316675, 'highest_rating_for_one_post': 245}
+2020-06-15 14:00:29,233 : root : {'Website': 'superuser', '#': 12, 'name': 'magicandre1981', 'reputation': 88215, 'highest_rating_for_one_post': 540}
+2020-06-15 14:00:30,189 : root : {'Website': 'math.stackexchange', '#': 8, 'name': 'Qiaochu Yuan', 'reputation': 306655, 'highest_rating_for_one_post': 491}
+2020-06-15 14:00:31,119 : root : {'Website': 'stackoverflow', '#': 7, 'name': 'CommonsWare', 'reputation': 856851, 'highest_rating_for_one_post': 1672}
+2020-06-15 14:00:32,102 : root : {'Website': 'askubuntu', '#': 9, 'name': 'Takkat', 'reputation': 123926, 'highest_rating_for_one_post': 550}
+2020-06-15 14:00:34,937 : root : {'Website': 'stackoverflow', '#': 8, 'name': 'Hans Passant', 'reputation': 842206, 'highest_rating_for_one_post': 1146}
+2020-06-15 14:00:41,496 : root : {'Website': 'askubuntu', '#': 10, 'name': 'Eliah Kagan', 'reputation': 100891, 'highest_rating_for_one_post': 388}
+2020-06-15 14:00:44,566 : root : {'Website': 'math.stackexchange', '#': 9, 'name': 'Arturo Magidin', 'reputation': 303637, 'highest_rating_for_one_post': 1295}
+2020-06-15 14:00:45,545 : root : {'Website': 'superuser', '#': 13, 'name': 'Spiff', 'reputation': 86702, 'highest_rating_for_one_post': 807}
+2020-06-15 14:00:48,311 : root : {'Website': 'superuser', '#': 14, 'name': 'Der Hochstapler', 'reputation': 78253, 'highest_rating_for_one_post': 208}
+2020-06-15 14:00:49,378 : root : {'Website': 'stackoverflow', '#': 10, 'name': 'T.J. Crowder', 'reputation': 800906, 'highest_rating_for_one_post': 7029}
+2020-06-15 14:00:51,817 : root : {'Website': 'superuser', '#': 15, 'name': 'RedGrittyBrick', 'reputation': 72277, 'highest_rating_for_one_post': 601}
+2020-06-15 14:00:52,083 : root : {'Website': 'stackoverflow', '#': 11, 'name': 'Greg Hewgill', 'reputation': 764100, 'highest_rating_for_one_post': 9941}
+2020-06-15 14:00:52,553 : root : {'Website': 'askubuntu', '#': 12, 'name': 'steeldriver', 'reputation': 91507, 'highest_rating_for_one_post': 203}
+2020-06-15 14:00:52,882 : root : {'Website': 'math.stackexchange', '#': 11, 'name': 'José Carlos Santos', 'reputation': 272626, 'highest_rating_for_one_post': 84}
+2020-06-15 14:00:54,723 : root : {'Website': 'math.stackexchange', '#': 12, 'name': 'hmakholm left over Monica', 'reputation': 263322, 'highest_rating_for_one_post': 269}
+2020-06-15 14:00:55,337 : root : {'Website': 'stackoverflow', '#': 12, 'name': 'SLaks', 'reputation': 755798, 'highest_rating_for_one_post': 2135}
+2020-06-15 14:00:56,661 : root : {'Website': 'askubuntu', '#': 13, 'name': 'Panther', 'reputation': 88570, 'highest_rating_for_one_post': 466}
+2020-06-15 14:00:58,063 : root : {'Website': 'superuser', '#': 17, 'name': 'LawrenceC', 'reputation': 64824, 'highest_rating_for_one_post': 159}
+2020-06-15 14:00:58,508 : root : {'Website': 'stackoverflow', '#': 13, 'name': 'Quentin', 'reputation': 735262, 'highest_rating_for_one_post': 2088}
+2020-06-15 14:00:59,078 : root : {'Website': 'math.stackexchange', '#': 13, 'name': 'Did', 'reputation': 259052, 'highest_rating_for_one_post': 212}
+2020-06-15 14:00:59,770 : root : {'Website': 'askubuntu', '#': 14, 'name': 'Sergiy Kolodyazhnyy', 'reputation': 86693, 'highest_rating_for_one_post': 163}
+2020-06-15 14:01:03,020 : root : {'Website': 'math.stackexchange', '#': 14, 'name': 'lab bhattacharjee', 'reputation': 253310, 'highest_rating_for_one_post': 174}
+2020-06-15 14:01:03,153 : root : {'Website': 'stackoverflow', '#': 14, 'name': 'paxdiablo', 'reputation': 718520, 'highest_rating_for_one_post': 1401}
+2020-06-15 14:01:04,587 : root : {'Website': 'superuser', '#': 18, 'name': 'Synetech', 'reputation': 63822, 'highest_rating_for_one_post': 570}
+2020-06-15 14:01:05,392 : root : {'Website': 'stackoverflow', '#': 15, 'name': 'Alex Martelli', 'reputation': 707526, 'highest_rating_for_one_post': 4821}
+2020-06-15 14:01:05,776 : root : {'Website': 'math.stackexchange', '#': 15, 'name': 'Eric Wofsey', 'reputation': 239243, 'highest_rating_for_one_post': 119}
+2020-06-15 14:01:06,136 : root : {'Website': 'superuser', '#': 19, 'name': 'Hennes', 'reputation': 61369, 'highest_rating_for_one_post': 180}
+2020-06-15 14:01:08,856 : root : {'Website': 'superuser', '#': 20, 'name': "Gilles 'SO- stop being evil'", 'reputation': 60263, 'highest_rating_for_one_post': 548}
+2020-06-15 14:01:08,936 : root : {'Website': 'math.stackexchange', '#': 16, 'name': 'Michael Hardy', 'reputation': 235853, 'highest_rating_for_one_post': 176}
+2020-06-15 14:01:12,162 : root : {'Website': 'stackoverflow', '#': 16, 'name': 'CMS', 'reputation': 672160, 'highest_rating_for_one_post': 3181}
+2020-06-15 14:01:13,638 : root : {'Website': 'superuser', '#': 21, 'name': 'David Schwartz', 'reputation': 59035, 'highest_rating_for_one_post': 214}
+2020-06-15 14:01:13,901 : root : {'Website': 'math.stackexchange', '#': 17, 'name': 'joriki', 'reputation': 203396, 'highest_rating_for_one_post': 305}
+2020-06-15 14:01:14,314 : root : {'Website': 'stackoverflow', '#': 17, 'name': 'Mark Byers', 'reputation': 667086, 'highest_rating_for_one_post': 1397}
+2020-06-15 14:01:15,736 : root : {'Website': 'askubuntu', '#': 17, 'name': 'terdon', 'reputation': 80981, 'highest_rating_for_one_post': 731}
+2020-06-15 14:01:17,285 : root : {'Website': 'stackoverflow', '#': 18, 'name': 'Ignacio Vazquez-Abrams', 'reputation': 653272, 'highest_rating_for_one_post': 2547}
+2020-06-15 14:01:22,970 : root : {'Website': 'askubuntu', '#': 18, 'name': 'karel', 'reputation': 78819, 'highest_rating_for_one_post': 158}
+2020-06-15 14:01:23,586 : root : {'Website': 'stackoverflow', '#': 19, 'name': 'dasblinkenlight', 'reputation': 651393, 'highest_rating_for_one_post': 623}
+2020-06-15 14:01:24,577 : root : {'Website': 'math.stackexchange', '#': 18, 'name': 'egreg', 'reputation': 203035, 'highest_rating_for_one_post': 217}
+2020-06-15 14:01:26,103 : root : {'Website': 'math.stackexchange', '#': 19, 'name': 'amWhy', 'reputation': 197401, 'highest_rating_for_one_post': 58}
+2020-06-15 14:01:27,103 : root : {'Website': 'stackoverflow', '#': 20, 'name': 'Felix Kling', 'reputation': 647517, 'highest_rating_for_one_post': 5712}
+2020-06-15 14:01:27,402 : root : {'Website': 'askubuntu', '#': 19, 'name': 'A.B.', 'reputation': 77795, 'highest_rating_for_one_post': 190}
+2020-06-15 14:01:28,726 : root : {'Website': 'math.stackexchange', '#': 20, 'name': 'Christian Blatter', 'reputation': 195757, 'highest_rating_for_one_post': 133}
+2020-06-15 14:01:29,618 : root : {'Website': 'stackoverflow', '#': 21, 'name': 'unutbu', 'reputation': 645103, 'highest_rating_for_one_post': 3801}
+2020-06-15 14:01:33,116 : root : {'Website': 'math.stackexchange', '#': 21, 'name': 'Kavi Rama Murthy', 'reputation': 194074, 'highest_rating_for_one_post': 55}
+2020-06-15 14:01:34,399 : root : {'Website': 'askubuntu', '#': 20, 'name': 'heemayl', 'reputation': 76454, 'highest_rating_for_one_post': 141}
+2020-06-15 14:01:34,435 : root : {'Website': 'stackoverflow', '#': 22, 'name': 'marc_s', 'reputation': 638703, 'highest_rating_for_one_post': 2602}
+2020-06-15 14:01:34,667 : root : {'Website': 'superuser', '#': 23, 'name': 'Keltari', 'reputation': 58770, 'highest_rating_for_one_post': 157}
+2020-06-15 14:01:35,965 : root : {'Website': 'superuser', '#': 24, 'name': 'heavyd', 'reputation': 55750, 'highest_rating_for_one_post': 291}
+2020-06-15 14:01:36,624 : root : {'Website': 'stackoverflow', '#': 23, 'name': 'JaredPar', 'reputation': 636575, 'highest_rating_for_one_post': 5774}
+2020-06-15 14:01:37,229 : root : {'Website': 'math.stackexchange', '#': 22, 'name': 'DonAntonio', 'reputation': 191825, 'highest_rating_for_one_post': 56}
+2020-06-15 14:01:37,598 : root : {'Website': 'askubuntu', '#': 21, 'name': 'enzotib', 'reputation': 75923, 'highest_rating_for_one_post': 545}
+2020-06-15 14:01:38,235 : root : {'Website': 'superuser', '#': 25, 'name': 'Moab', 'reputation': 54804, 'highest_rating_for_one_post': 107}
+2020-06-15 14:01:40,260 : root : {'Website': 'stackoverflow', '#': 24, 'name': 'Jonathan Leffler', 'reputation': 629989, 'highest_rating_for_one_post': 1194}
+2020-06-15 14:01:40,558 : root : {'Website': 'superuser', '#': 26, 'name': 'Tamara Wijsman', 'reputation': 54493, 'highest_rating_for_one_post': 369}
+2020-06-15 14:01:45,289 : root : {'Website': 'superuser', '#': 27, 'name': 'akira', 'reputation': 53762, 'highest_rating_for_one_post': 555}
+2020-06-15 14:01:45,714 : root : {'Website': 'askubuntu', '#': 22, 'name': 'WinEunuuchs2Unix', 'reputation': 74779, 'highest_rating_for_one_post': 56}
+2020-06-15 14:01:49,363 : root : {'Website': 'math.stackexchange', '#': 23, 'name': 'lhf', 'reputation': 189563, 'highest_rating_for_one_post': 81}
+2020-06-15 14:01:49,649 : root : {'Website': 'superuser', '#': 28, 'name': 'Paul', 'reputation': 53046, 'highest_rating_for_one_post': 217}
+2020-06-15 14:01:53,818 : root : {'Website': 'superuser', '#': 29, 'name': 'Bob', 'reputation': 52959, 'highest_rating_for_one_post': 304}
+2020-06-15 14:01:55,357 : root : {'Website': 'stackoverflow', '#': 25, 'name': 'Guffa', 'reputation': 608438, 'highest_rating_for_one_post': 2509}
+2020-06-15 14:01:57,449 : root : {'Website': 'stackoverflow', '#': 26, 'name': 'JB Nizet', 'reputation': 602923, 'highest_rating_for_one_post': 737}
+2020-06-15 14:01:57,976 : root : {'Website': 'math.stackexchange', '#': 25, 'name': 'Yves Daoust', 'reputation': 171491, 'highest_rating_for_one_post': 115}
+2020-06-15 14:02:01,376 : root : {'Website': 'askubuntu', '#': 24, 'name': 'Florian Diesch', 'reputation': 73054, 'highest_rating_for_one_post': 266}
+2020-06-15 14:02:01,790 : root : {'Website': 'stackoverflow', '#': 27, 'name': 'anubhava', 'reputation': 598241, 'highest_rating_for_one_post': 2396}
+2020-06-15 14:02:02,125 : root : {'Website': 'math.stackexchange', '#': 26, 'name': 'Henno Brandsma', 'reputation': 166262, 'highest_rating_for_one_post': 79}
+2020-06-15 14:02:03,217 : root : {'Website': 'superuser', '#': 30, 'name': 'Karan', 'reputation': 52437, 'highest_rating_for_one_post': 275}
+2020-06-15 14:02:04,018 : root : {'Website': 'stackoverflow', '#': 28, 'name': 'CB Bailey', 'reputation': 593490, 'highest_rating_for_one_post': 5729}
+2020-06-15 14:02:05,013 : root : {'Website': 'superuser', '#': 31, 'name': 'Mehper C. Palavuzlar', 'reputation': 51755, 'highest_rating_for_one_post': 225}
+2020-06-15 14:02:06,121 : root : {'Website': 'math.stackexchange', '#': 27, 'name': 'Noah Schweber', 'reputation': 165461, 'highest_rating_for_one_post': 151}
+2020-06-15 14:02:06,335 : root : {'Website': 'stackoverflow', '#': 29, 'name': 'Eric Lippert', 'reputation': 591511, 'highest_rating_for_one_post': 4806}
+2020-06-15 14:02:06,516 : root : {'Website': 'askubuntu', '#': 25, 'name': 'Jacob Vlijm', 'reputation': 72806, 'highest_rating_for_one_post': 236}
+2020-06-15 14:02:08,899 : root : {'Website': 'math.stackexchange', '#': 28, 'name': 'Arthur', 'reputation': 161493, 'highest_rating_for_one_post': 148}
+2020-06-15 14:02:09,742 : root : {'Website': 'stackoverflow', '#': 30, 'name': 'Stephen C', 'reputation': 589774, 'highest_rating_for_one_post': 1373}
+2020-06-15 14:02:12,215 : root : {'Website': 'askubuntu', '#': 26, 'name': 'Maythux', 'reputation': 67121, 'highest_rating_for_one_post': 146}
+2020-06-15 14:02:13,290 : root : {'Website': 'math.stackexchange', '#': 29, 'name': 'Gerry Myerson', 'reputation': 159977, 'highest_rating_for_one_post': 264}
+2020-06-15 14:02:13,353 : root : {'Website': 'superuser', '#': 32, 'name': 'nik', 'reputation': 51519, 'highest_rating_for_one_post': 849}
+2020-06-15 14:02:16,013 : root : {'Website': 'superuser', '#': 33, 'name': 'davidgo', 'reputation': 51411, 'highest_rating_for_one_post': 148}
+2020-06-15 14:02:16,343 : root : {'Website': 'math.stackexchange', '#': 30, 'name': 'Omnomnomnom', 'reputation': 158020, 'highest_rating_for_one_post': 65}
+2020-06-15 14:02:18,195 : root : {'Website': 'askubuntu', '#': 27, 'name': 'Pilot6', 'reputation': 66587, 'highest_rating_for_one_post': 97}
+2020-06-15 14:02:20,253 : root : {'Website': 'math.stackexchange', '#': 31, 'name': 'Claude Leibovici', 'reputation': 157677, 'highest_rating_for_one_post': 206}
+2020-06-15 14:02:24,624 : root : {'Website': 'stackoverflow', '#': 33, 'name': 'Gumbo', 'reputation': 562454, 'highest_rating_for_one_post': 10321}
+2020-06-15 14:02:25,119 : root : {'Website': 'math.stackexchange', '#': 32, 'name': 'Michael Rozenberg', 'reputation': 155244, 'highest_rating_for_one_post': 60}
+2020-06-15 14:02:25,275 : root : {'Website': 'askubuntu', '#': 28, 'name': 'karthick87', 'reputation': 66573, 'highest_rating_for_one_post': 635}
+2020-06-15 14:02:26,576 : root : {'Website': 'superuser', '#': 34, 'name': 'terdon', 'reputation': 46040, 'highest_rating_for_one_post': 207}
+2020-06-15 14:02:27,751 : root : {'Website': 'math.stackexchange', '#': 33, 'name': 'Martin Argerami', 'reputation': 151384, 'highest_rating_for_one_post': 49}
+2020-06-15 14:02:28,268 : root : {'Website': 'superuser', '#': 35, 'name': 'LPChip', 'reputation': 44099, 'highest_rating_for_one_post': 366}
+2020-06-15 14:02:28,867 : root : {'Website': 'stackoverflow', '#': 34, 'name': 'David Heffernan', 'reputation': 554682, 'highest_rating_for_one_post': 217}
+2020-06-15 14:02:29,825 : root : {'Website': 'askubuntu', '#': 29, 'name': 'Bruno Pereira', 'reputation': 66490, 'highest_rating_for_one_post': 276}
+2020-06-15 14:02:30,730 : root : {'Website': 'superuser', '#': 36, 'name': 'Dennis', 'reputation': 43612, 'highest_rating_for_one_post': 88}
+2020-06-15 14:02:31,018 : root : {'Website': 'math.stackexchange', '#': 34, 'name': 'Bernard', 'reputation': 148911, 'highest_rating_for_one_post': 147}
+2020-06-15 14:02:31,592 : root : {'Website': 'stackoverflow', '#': 35, 'name': 'cletus', 'reputation': 553568, 'highest_rating_for_one_post': 6632}
+2020-06-15 14:02:33,802 : root : {'Website': 'math.stackexchange', '#': 35, 'name': 'Mark Viola', 'reputation': 145084, 'highest_rating_for_one_post': 39}
+2020-06-15 14:02:34,090 : root : {'Website': 'askubuntu', '#': 30, 'name': 'Anwar', 'reputation': 66444, 'highest_rating_for_one_post': 409}
+2020-06-15 14:02:34,800 : root : {'Website': 'stackoverflow', '#': 36, 'name': 'Bozho', 'reputation': 531316, 'highest_rating_for_one_post': 1793}
+2020-06-15 14:02:41,305 : root : {'Website': 'superuser', '#': 37, 'name': 'MariusMatutiae', 'reputation': 42291, 'highest_rating_for_one_post': 493}
+2020-06-15 14:02:43,708 : root : {'Website': 'askubuntu', '#': 31, 'name': 'Avinash Raj', 'reputation': 64980, 'highest_rating_for_one_post': 406}
+2020-06-15 14:02:44,711 : root : {'Website': 'math.stackexchange', '#': 36, 'name': 'copper.hat', 'reputation': 144660, 'highest_rating_for_one_post': 79}
+2020-06-15 14:02:49,444 : root : {'Website': 'askubuntu', '#': 32, 'name': 'Jorge Castro', 'reputation': 64003, 'highest_rating_for_one_post': 852}
+2020-06-15 14:02:50,617 : root : {'Website': 'stackoverflow', '#': 37, 'name': 'Barmar', 'reputation': 525730, 'highest_rating_for_one_post': 578}
+2020-06-15 14:02:52,951 : root : {'Website': 'askubuntu', '#': 33, 'name': 'ændrük', 'reputation': 61805, 'highest_rating_for_one_post': 1069}
+2020-06-15 14:02:54,379 : root : {'Website': 'math.stackexchange', '#': 37, 'name': 'Davide Giraudo', 'reputation': 141392, 'highest_rating_for_one_post': 222}
+2020-06-15 14:02:55,595 : root : {'Website': 'askubuntu', '#': 34, 'name': 'Braiam', 'reputation': 58961, 'highest_rating_for_one_post': 298}
+2020-06-15 14:02:57,898 : root : {'Website': 'askubuntu', '#': 35, 'name': 'gertvdijk', 'reputation': 58516, 'highest_rating_for_one_post': 389}
+2020-06-15 14:03:00,230 : root : {'Website': 'askubuntu', '#': 36, 'name': 'Zanna', 'reputation': 58197, 'highest_rating_for_one_post': 189}
+2020-06-15 14:03:04,894 : root : {'Website': 'askubuntu', '#': 37, 'name': 'htorque', 'reputation': 57503, 'highest_rating_for_one_post': 523}
+2020-06-15 14:06:20,643 : root : Website: stackoverflow ,number of users to scrap = 37, sleep factor = 1.5
+2020-06-15 14:06:20,644 : root : Website: askubuntu ,number of users to scrap = 37, sleep factor = 1.5
+2020-06-15 14:06:20,645 : root : Website: math.stackexchange ,number of users to scrap = 37, sleep factor = 1.5
+2020-06-15 14:06:20,646 : root : Website: superuser ,number of users to scrap = 37, sleep factor = 1.5
+2020-06-15 14:06:39,277 : root : {'Website': 'superuser', '#': 1, 'name': 'harrymc', 'reputation': 319717, 'highest_rating_for_one_post': 387}
+2020-06-15 14:06:44,426 : root : {'Website': 'superuser', '#': 2, 'name': 'user1686', 'reputation': 295714, 'highest_rating_for_one_post': 490}
+2020-06-15 14:06:47,730 : root : {'Website': 'superuser', '#': 3, 'name': 'slhck', 'reputation': 187688, 'highest_rating_for_one_post': 468}
+2020-06-15 14:06:51,736 : root : {'Website': 'askubuntu', '#': 2, 'name': 'Rinzwind', 'reputation': 239440, 'highest_rating_for_one_post': 1232}
+2020-06-15 14:06:51,884 : root : {'Website': 'superuser', '#': 4, 'name': 'John T', 'reputation': 150903, 'highest_rating_for_one_post': 429}
+2020-06-15 14:06:54,502 : root : {'Website': 'stackoverflow', '#': 1, 'name': 'Jon Skeet', 'reputation': 1189008, 'highest_rating_for_one_post': 10883}
+2020-06-15 14:06:57,359 : root : {'Website': 'askubuntu', '#': 3, 'name': 'Luis Alvarado', 'reputation': 185034, 'highest_rating_for_one_post': 1322}
+2020-06-15 14:06:58,748 : root : {'Website': 'math.stackexchange', '#': 1, 'name': 'Brian M. Scott', 'reputation': 499341, 'highest_rating_for_one_post': 752}
+2020-06-15 14:06:59,681 : root : {'Website': 'superuser', '#': 7, 'name': 'William Hilsum', 'reputation': 112396, 'highest_rating_for_one_post': 257}
+2020-06-15 14:07:00,469 : root : {'Website': 'stackoverflow', '#': 2, 'name': 'Gordon Linoff', 'reputation': 970248, 'highest_rating_for_one_post': 404}
+2020-06-15 14:07:04,149 : root : {'Website': 'math.stackexchange', '#': 2, 'name': 'André Nicolas', 'reputation': 469552, 'highest_rating_for_one_post': 488}
+2020-06-15 14:07:04,562 : root : {'Website': 'stackoverflow', '#': 3, 'name': 'VonC', 'reputation': 959325, 'highest_rating_for_one_post': 2219}
+2020-06-15 14:07:05,999 : root : {'Website': 'askubuntu', '#': 5, 'name': 'muru', 'reputation': 157380, 'highest_rating_for_one_post': 237}
+2020-06-15 14:07:06,913 : root : {'Website': 'superuser', '#': 9, 'name': 'Ignacio Vazquez-Abrams', 'reputation': 102021, 'highest_rating_for_one_post': 313}
+2020-06-15 14:07:08,216 : root : {'Website': 'math.stackexchange', '#': 3, 'name': 'Robert Israel', 'reputation': 376884, 'highest_rating_for_one_post': 388}
+2020-06-15 14:07:08,313 : root : {'Website': 'stackoverflow', '#': 4, 'name': 'BalusC', 'reputation': 935708, 'highest_rating_for_one_post': 3229}
+2020-06-15 14:07:12,139 : root : {'Website': 'askubuntu', '#': 6, 'name': 'Lekensteyn', 'reputation': 146108, 'highest_rating_for_one_post': 730}
+2020-06-15 14:07:12,168 : root : {'Website': 'stackoverflow', '#': 5, 'name': 'Darin Dimitrov', 'reputation': 916266, 'highest_rating_for_one_post': 1150}
+2020-06-15 14:07:12,493 : root : {'Website': 'math.stackexchange', '#': 4, 'name': 'Ross Millikan', 'reputation': 337205, 'highest_rating_for_one_post': 482}
+2020-06-15 14:07:15,657 : root : {'Website': 'superuser', '#': 11, 'name': 'Paused until further notice.', 'reputation': 88555, 'highest_rating_for_one_post': 1755}
+2020-06-15 14:07:19,554 : root : {'Website': 'superuser', '#': 12, 'name': 'magicandre1981', 'reputation': 88215, 'highest_rating_for_one_post': 540}
+2020-06-15 14:07:19,772 : root : {'Website': 'math.stackexchange', '#': 6, 'name': 'Hagen von Eitzen', 'reputation': 320570, 'highest_rating_for_one_post': 308}
+2020-06-15 14:07:20,126 : root : {'Website': 'askubuntu', '#': 8, 'name': 'ish', 'reputation': 126497, 'highest_rating_for_one_post': 821}
+2020-06-15 14:07:23,306 : root : {'Website': 'math.stackexchange', '#': 7, 'name': "Jack D'Aurizio", 'reputation': 316675, 'highest_rating_for_one_post': 245}
+2020-06-15 14:07:24,355 : root : {'Website': 'stackoverflow', '#': 7, 'name': 'CommonsWare', 'reputation': 856851, 'highest_rating_for_one_post': 1672}
+2020-06-15 14:07:27,928 : root : {'Website': 'math.stackexchange', '#': 8, 'name': 'Qiaochu Yuan', 'reputation': 306655, 'highest_rating_for_one_post': 491}
+2020-06-15 14:07:27,973 : root : {'Website': 'askubuntu', '#': 9, 'name': 'Takkat', 'reputation': 123926, 'highest_rating_for_one_post': 550}
+2020-06-15 14:07:28,532 : root : {'Website': 'stackoverflow', '#': 8, 'name': 'Hans Passant', 'reputation': 842206, 'highest_rating_for_one_post': 1146}
+2020-06-15 14:07:29,794 : root : {'Website': 'superuser', '#': 13, 'name': 'Spiff', 'reputation': 86702, 'highest_rating_for_one_post': 807}
+2020-06-15 14:07:31,623 : root : {'Website': 'superuser', '#': 14, 'name': 'Der Hochstapler', 'reputation': 78253, 'highest_rating_for_one_post': 208}
+2020-06-15 14:07:36,200 : root : {'Website': 'superuser', '#': 15, 'name': 'RedGrittyBrick', 'reputation': 72277, 'highest_rating_for_one_post': 601}
+2020-06-15 14:07:37,163 : root : {'Website': 'askubuntu', '#': 10, 'name': 'Eliah Kagan', 'reputation': 100891, 'highest_rating_for_one_post': 388}
+2020-06-15 14:07:40,125 : root : {'Website': 'math.stackexchange', '#': 9, 'name': 'Arturo Magidin', 'reputation': 303647, 'highest_rating_for_one_post': 1295}
+2020-06-15 14:07:43,635 : root : {'Website': 'superuser', '#': 17, 'name': 'LawrenceC', 'reputation': 64824, 'highest_rating_for_one_post': 159}
+2020-06-15 14:07:45,337 : root : {'Website': 'stackoverflow', '#': 10, 'name': 'T.J. Crowder', 'reputation': 800906, 'highest_rating_for_one_post': 7029}
+2020-06-15 14:07:47,311 : root : {'Website': 'stackoverflow', '#': 11, 'name': 'Greg Hewgill', 'reputation': 764100, 'highest_rating_for_one_post': 9941}
+2020-06-15 14:07:51,164 : root : {'Website': 'math.stackexchange', '#': 11, 'name': 'José Carlos Santos', 'reputation': 272636, 'highest_rating_for_one_post': 84}
+2020-06-15 14:07:52,754 : root : {'Website': 'stackoverflow', '#': 12, 'name': 'SLaks', 'reputation': 755798, 'highest_rating_for_one_post': 2135}
+2020-06-15 14:07:52,935 : root : {'Website': 'askubuntu', '#': 12, 'name': 'steeldriver', 'reputation': 91507, 'highest_rating_for_one_post': 203}
+2020-06-15 14:07:53,623 : root : {'Website': 'superuser', '#': 18, 'name': 'Synetech', 'reputation': 63822, 'highest_rating_for_one_post': 570}
+2020-06-15 14:07:54,732 : root : {'Website': 'math.stackexchange', '#': 12, 'name': 'hmakholm left over Monica', 'reputation': 263322, 'highest_rating_for_one_post': 269}
+2020-06-15 14:07:55,294 : root : {'Website': 'superuser', '#': 19, 'name': 'Hennes', 'reputation': 61369, 'highest_rating_for_one_post': 180}
+2020-06-15 14:07:55,610 : root : {'Website': 'stackoverflow', '#': 13, 'name': 'Quentin', 'reputation': 735262, 'highest_rating_for_one_post': 2088}
+2020-06-15 14:07:57,174 : root : {'Website': 'math.stackexchange', '#': 13, 'name': 'Did', 'reputation': 259052, 'highest_rating_for_one_post': 212}
+2020-06-15 14:07:57,338 : root : {'Website': 'askubuntu', '#': 13, 'name': 'Panther', 'reputation': 88570, 'highest_rating_for_one_post': 466}
+2020-06-15 14:07:57,627 : root : {'Website': 'superuser', '#': 20, 'name': "Gilles 'SO- stop being evil'", 'reputation': 60263, 'highest_rating_for_one_post': 548}
+2020-06-15 14:07:57,865 : root : {'Website': 'stackoverflow', '#': 14, 'name': 'paxdiablo', 'reputation': 718530, 'highest_rating_for_one_post': 1401}
+2020-06-15 14:07:58,929 : root : {'Website': 'math.stackexchange', '#': 14, 'name': 'lab bhattacharjee', 'reputation': 253310, 'highest_rating_for_one_post': 174}
+2020-06-15 14:07:59,526 : root : {'Website': 'superuser', '#': 21, 'name': 'David Schwartz', 'reputation': 59035, 'highest_rating_for_one_post': 214}
+2020-06-15 14:07:59,921 : root : {'Website': 'stackoverflow', '#': 15, 'name': 'Alex Martelli', 'reputation': 707526, 'highest_rating_for_one_post': 4821}
+2020-06-15 14:08:00,693 : root : {'Website': 'askubuntu', '#': 14, 'name': 'Sergiy Kolodyazhnyy', 'reputation': 86693, 'highest_rating_for_one_post': 163}
+2020-06-15 14:08:03,433 : root : {'Website': 'math.stackexchange', '#': 15, 'name': 'Eric Wofsey', 'reputation': 239243, 'highest_rating_for_one_post': 119}
+2020-06-15 14:08:08,127 : root : {'Website': 'math.stackexchange', '#': 16, 'name': 'Michael Hardy', 'reputation': 235853, 'highest_rating_for_one_post': 176}
+2020-06-15 14:08:12,409 : root : {'Website': 'stackoverflow', '#': 16, 'name': 'CMS', 'reputation': 672160, 'highest_rating_for_one_post': 3181}
+2020-06-15 14:08:13,645 : root : {'Website': 'math.stackexchange', '#': 17, 'name': 'joriki', 'reputation': 203396, 'highest_rating_for_one_post': 305}
+2020-06-15 14:08:15,410 : root : {'Website': 'stackoverflow', '#': 17, 'name': 'Mark Byers', 'reputation': 667086, 'highest_rating_for_one_post': 1397}
+2020-06-15 14:08:18,742 : root : {'Website': 'superuser', '#': 23, 'name': 'Keltari', 'reputation': 58770, 'highest_rating_for_one_post': 157}
+2020-06-15 14:08:19,186 : root : {'Website': 'stackoverflow', '#': 18, 'name': 'Ignacio Vazquez-Abrams', 'reputation': 653272, 'highest_rating_for_one_post': 2547}
+2020-06-15 14:08:22,672 : root : {'Website': 'superuser', '#': 24, 'name': 'heavyd', 'reputation': 55750, 'highest_rating_for_one_post': 291}
+2020-06-15 14:08:24,560 : root : {'Website': 'stackoverflow', '#': 19, 'name': 'dasblinkenlight', 'reputation': 651393, 'highest_rating_for_one_post': 623}
+2020-06-15 14:08:25,372 : root : {'Website': 'askubuntu', '#': 17, 'name': 'terdon', 'reputation': 80981, 'highest_rating_for_one_post': 731}
+2020-06-15 14:08:26,703 : root : {'Website': 'math.stackexchange', '#': 18, 'name': 'egreg', 'reputation': 203035, 'highest_rating_for_one_post': 217}
+2020-06-15 14:08:27,103 : root : {'Website': 'superuser', '#': 25, 'name': 'Moab', 'reputation': 54804, 'highest_rating_for_one_post': 107}
+2020-06-15 14:08:28,006 : root : {'Website': 'stackoverflow', '#': 20, 'name': 'Felix Kling', 'reputation': 647517, 'highest_rating_for_one_post': 5712}
+2020-06-15 14:08:28,559 : root : {'Website': 'math.stackexchange', '#': 19, 'name': 'amWhy', 'reputation': 197401, 'highest_rating_for_one_post': 58}
+2020-06-15 14:08:29,167 : root : {'Website': 'superuser', '#': 26, 'name': 'Tamara Wijsman', 'reputation': 54493, 'highest_rating_for_one_post': 369}
+2020-06-15 14:08:30,312 : root : {'Website': 'askubuntu', '#': 18, 'name': 'karel', 'reputation': 78819, 'highest_rating_for_one_post': 158}
+2020-06-15 14:08:31,073 : root : {'Website': 'stackoverflow', '#': 21, 'name': 'unutbu', 'reputation': 645103, 'highest_rating_for_one_post': 3801}
+2020-06-15 14:08:31,775 : root : {'Website': 'math.stackexchange', '#': 20, 'name': 'Christian Blatter', 'reputation': 195757, 'highest_rating_for_one_post': 133}
+2020-06-15 14:08:31,785 : root : {'Website': 'superuser', '#': 27, 'name': 'akira', 'reputation': 53762, 'highest_rating_for_one_post': 555}
+2020-06-15 14:08:33,376 : root : {'Website': 'askubuntu', '#': 19, 'name': 'A.B.', 'reputation': 77795, 'highest_rating_for_one_post': 190}
+2020-06-15 14:08:33,728 : root : {'Website': 'stackoverflow', '#': 22, 'name': 'marc_s', 'reputation': 638703, 'highest_rating_for_one_post': 2602}
+2020-06-15 14:08:34,239 : root : {'Website': 'superuser', '#': 28, 'name': 'Paul', 'reputation': 53046, 'highest_rating_for_one_post': 217}
+2020-06-15 14:08:34,360 : root : {'Website': 'math.stackexchange', '#': 21, 'name': 'Kavi Rama Murthy', 'reputation': 194074, 'highest_rating_for_one_post': 55}
+2020-06-15 14:08:35,772 : root : {'Website': 'stackoverflow', '#': 23, 'name': 'JaredPar', 'reputation': 636575, 'highest_rating_for_one_post': 5774}
+2020-06-15 14:08:36,108 : root : {'Website': 'math.stackexchange', '#': 22, 'name': 'DonAntonio', 'reputation': 191825, 'highest_rating_for_one_post': 56}
+2020-06-15 14:08:36,290 : root : {'Website': 'superuser', '#': 29, 'name': 'Bob', 'reputation': 52959, 'highest_rating_for_one_post': 304}
+2020-06-15 14:08:37,438 : root : {'Website': 'askubuntu', '#': 20, 'name': 'heemayl', 'reputation': 76454, 'highest_rating_for_one_post': 141}
+2020-06-15 14:08:39,889 : root : {'Website': 'stackoverflow', '#': 24, 'name': 'Jonathan Leffler', 'reputation': 629989, 'highest_rating_for_one_post': 1194}
+2020-06-15 14:08:46,502 : root : {'Website': 'askubuntu', '#': 21, 'name': 'enzotib', 'reputation': 75923, 'highest_rating_for_one_post': 545}
+2020-06-15 14:08:49,718 : root : {'Website': 'superuser', '#': 30, 'name': 'Karan', 'reputation': 52437, 'highest_rating_for_one_post': 275}
+2020-06-15 14:08:50,193 : root : {'Website': 'math.stackexchange', '#': 23, 'name': 'lhf', 'reputation': 189563, 'highest_rating_for_one_post': 81}
+2020-06-15 14:08:52,075 : root : {'Website': 'superuser', '#': 31, 'name': 'Mehper C. Palavuzlar', 'reputation': 51755, 'highest_rating_for_one_post': 225}
+2020-06-15 14:08:53,215 : root : {'Website': 'stackoverflow', '#': 25, 'name': 'Guffa', 'reputation': 608438, 'highest_rating_for_one_post': 2509}
+2020-06-15 14:08:54,397 : root : {'Website': 'askubuntu', '#': 22, 'name': 'WinEunuuchs2Unix', 'reputation': 74779, 'highest_rating_for_one_post': 56}
+2020-06-15 14:08:55,743 : root : {'Website': 'stackoverflow', '#': 26, 'name': 'JB Nizet', 'reputation': 602923, 'highest_rating_for_one_post': 737}
+2020-06-15 14:08:56,197 : root : {'Website': 'math.stackexchange', '#': 25, 'name': 'Yves Daoust', 'reputation': 171491, 'highest_rating_for_one_post': 115}
+2020-06-15 14:08:59,724 : root : {'Website': 'math.stackexchange', '#': 26, 'name': 'Henno Brandsma', 'reputation': 166262, 'highest_rating_for_one_post': 79}
+2020-06-15 14:09:00,322 : root : {'Website': 'stackoverflow', '#': 27, 'name': 'anubhava', 'reputation': 598241, 'highest_rating_for_one_post': 2396}
+2020-06-15 14:09:01,933 : root : {'Website': 'superuser', '#': 32, 'name': 'nik', 'reputation': 51519, 'highest_rating_for_one_post': 849}
+2020-06-15 14:09:03,611 : root : {'Website': 'math.stackexchange', '#': 27, 'name': 'Noah Schweber', 'reputation': 165461, 'highest_rating_for_one_post': 151}
+2020-06-15 14:09:03,754 : root : {'Website': 'superuser', '#': 33, 'name': 'davidgo', 'reputation': 51411, 'highest_rating_for_one_post': 148}
+2020-06-15 14:09:04,357 : root : {'Website': 'stackoverflow', '#': 28, 'name': 'CB Bailey', 'reputation': 593490, 'highest_rating_for_one_post': 5729}
+2020-06-15 14:09:05,587 : root : {'Website': 'askubuntu', '#': 24, 'name': 'Florian Diesch', 'reputation': 73054, 'highest_rating_for_one_post': 266}
+2020-06-15 14:09:06,338 : root : {'Website': 'superuser', '#': 34, 'name': 'terdon', 'reputation': 46040, 'highest_rating_for_one_post': 207}
+2020-06-15 14:09:06,713 : root : {'Website': 'stackoverflow', '#': 29, 'name': 'Eric Lippert', 'reputation': 591511, 'highest_rating_for_one_post': 4806}
+2020-06-15 14:09:07,572 : root : {'Website': 'math.stackexchange', '#': 28, 'name': 'Arthur', 'reputation': 161493, 'highest_rating_for_one_post': 148}
+2020-06-15 14:09:08,219 : root : {'Website': 'superuser', '#': 35, 'name': 'LPChip', 'reputation': 44099, 'highest_rating_for_one_post': 366}
+2020-06-15 14:09:08,873 : root : {'Website': 'askubuntu', '#': 25, 'name': 'Jacob Vlijm', 'reputation': 72806, 'highest_rating_for_one_post': 236}
+2020-06-15 14:09:10,091 : root : {'Website': 'superuser', '#': 36, 'name': 'Dennis', 'reputation': 43612, 'highest_rating_for_one_post': 88}
+2020-06-15 14:09:10,697 : root : {'Website': 'stackoverflow', '#': 30, 'name': 'Stephen C', 'reputation': 589784, 'highest_rating_for_one_post': 1373}
+2020-06-15 14:09:11,244 : root : {'Website': 'math.stackexchange', '#': 29, 'name': 'Gerry Myerson', 'reputation': 159977, 'highest_rating_for_one_post': 264}
+2020-06-15 14:09:12,408 : root : {'Website': 'askubuntu', '#': 26, 'name': 'Maythux', 'reputation': 67121, 'highest_rating_for_one_post': 146}
+2020-06-15 14:09:14,195 : root : {'Website': 'math.stackexchange', '#': 30, 'name': 'Omnomnomnom', 'reputation': 158020, 'highest_rating_for_one_post': 65}
+2020-06-15 14:09:19,034 : root : {'Website': 'math.stackexchange', '#': 31, 'name': 'Claude Leibovici', 'reputation': 157677, 'highest_rating_for_one_post': 206}
+2020-06-15 14:09:22,496 : root : {'Website': 'askubuntu', '#': 27, 'name': 'Pilot6', 'reputation': 66587, 'highest_rating_for_one_post': 97}
+2020-06-15 14:09:24,515 : root : {'Website': 'superuser', '#': 37, 'name': 'MariusMatutiae', 'reputation': 42291, 'highest_rating_for_one_post': 493}
+2020-06-15 14:09:25,317 : root : {'Website': 'math.stackexchange', '#': 32, 'name': 'Michael Rozenberg', 'reputation': 155244, 'highest_rating_for_one_post': 60}
+2020-06-15 14:09:25,956 : root : {'Website': 'askubuntu', '#': 28, 'name': 'karthick87', 'reputation': 66573, 'highest_rating_for_one_post': 635}
+2020-06-15 14:09:26,513 : root : {'Website': 'stackoverflow', '#': 33, 'name': 'Gumbo', 'reputation': 562454, 'highest_rating_for_one_post': 10321}
+2020-06-15 14:09:27,742 : root : {'Website': 'math.stackexchange', '#': 33, 'name': 'Martin Argerami', 'reputation': 151384, 'highest_rating_for_one_post': 49}
+2020-06-15 14:09:28,727 : root : {'Website': 'stackoverflow', '#': 34, 'name': 'David Heffernan', 'reputation': 554682, 'highest_rating_for_one_post': 217}
+2020-06-15 14:09:29,597 : root : {'Website': 'askubuntu', '#': 29, 'name': 'Bruno Pereira', 'reputation': 66490, 'highest_rating_for_one_post': 276}
+2020-06-15 14:09:30,008 : root : {'Website': 'math.stackexchange', '#': 34, 'name': 'Bernard', 'reputation': 148911, 'highest_rating_for_one_post': 147}
+2020-06-15 14:09:30,699 : root : {'Website': 'stackoverflow', '#': 35, 'name': 'cletus', 'reputation': 553568, 'highest_rating_for_one_post': 6632}
+2020-06-15 14:09:31,719 : root : {'Website': 'math.stackexchange', '#': 35, 'name': 'Mark Viola', 'reputation': 145084, 'highest_rating_for_one_post': 39}
+2020-06-15 14:09:32,482 : root : {'Website': 'stackoverflow', '#': 36, 'name': 'Bozho', 'reputation': 531326, 'highest_rating_for_one_post': 1793}
+2020-06-15 14:09:33,510 : root : {'Website': 'askubuntu', '#': 30, 'name': 'Anwar', 'reputation': 66444, 'highest_rating_for_one_post': 409}
+2020-06-15 14:09:37,692 : root : {'Website': 'math.stackexchange', '#': 36, 'name': 'copper.hat', 'reputation': 144660, 'highest_rating_for_one_post': 79}
+2020-06-15 14:09:41,444 : root : {'Website': 'askubuntu', '#': 31, 'name': 'Avinash Raj', 'reputation': 64980, 'highest_rating_for_one_post': 406}
+2020-06-15 14:09:50,886 : root : {'Website': 'askubuntu', '#': 32, 'name': 'Jorge Castro', 'reputation': 64003, 'highest_rating_for_one_post': 852}
+2020-06-15 14:09:51,311 : root : {'Website': 'stackoverflow', '#': 37, 'name': 'Barmar', 'reputation': 525730, 'highest_rating_for_one_post': 578}
+2020-06-15 14:09:53,155 : root : {'Website': 'math.stackexchange', '#': 37, 'name': 'Davide Giraudo', 'reputation': 141392, 'highest_rating_for_one_post': 222}
+2020-06-15 14:09:53,931 : root : {'Website': 'askubuntu', '#': 33, 'name': 'ændrük', 'reputation': 61805, 'highest_rating_for_one_post': 1069}
+2020-06-15 14:09:55,970 : root : {'Website': 'askubuntu', '#': 34, 'name': 'Braiam', 'reputation': 58961, 'highest_rating_for_one_post': 298}
+2020-06-15 14:09:58,019 : root : {'Website': 'askubuntu', '#': 35, 'name': 'gertvdijk', 'reputation': 58516, 'highest_rating_for_one_post': 389}
+2020-06-15 14:10:00,113 : root : {'Website': 'askubuntu', '#': 36, 'name': 'Zanna', 'reputation': 58197, 'highest_rating_for_one_post': 189}
+2020-06-15 14:10:04,744 : root : {'Website': 'askubuntu', '#': 37, 'name': 'htorque', 'reputation': 57503, 'highest_rating_for_one_post': 523}
+2020-06-15 16:52:27,727 : root : Website: stackoverflow ,number of users to scrap = 37, sleep factor = 1.5

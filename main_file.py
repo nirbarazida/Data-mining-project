@@ -8,7 +8,7 @@ import user_scrapper_oop as s
 import concurrent.futures
 
 # constants
-MIN_NUM_USERS_TO_SCRAP = 20
+MIN_NUM_USERS_TO_SCRAP = 37
 WEBSITE_NAMES = ["stackoverflow", "askubuntu", "math.stackexchange", "superuser"]
 SLEEP_FACTOR = 1.5
 
@@ -18,12 +18,12 @@ def scrap_users(website_name):
     user_page = s.UserAnalysis(website_name)
     logging.info(f"Website: {website_name} ,number of users to scrap = {MIN_NUM_USERS_TO_SCRAP},"
                  f" sleep factor = {SLEEP_FACTOR}")
-    for i, link in enumerate(user_page.generate_users_links()):
+    for link in user_page.generate_users_links():
         user = s.User(link, website_name)
         logging.info(user.get_dict())
         # if user.num_user == MIN_NUM_USERS_TO_SCRAP - 1:
         #     break
-        if i == MIN_NUM_USERS_TO_SCRAP - 1:
+        if user.num_user_dict[website_name] == MIN_NUM_USERS_TO_SCRAP:
             break
 
 
@@ -43,7 +43,7 @@ def main():
     t_start = time.perf_counter()
     # with concurrent.futures.ThreadPoolExecutor() as executer:
     #     executer.map(scrap_users, WEBSITE_NAMES)
-    #     executer.map(scrap_tags, WEBSITE_NAMES)
+        #executer.map(scrap_tags, WEBSITE_NAMES)
 
     for website_name in WEBSITE_NAMES[:2]:
         t1 = time.perf_counter()
@@ -51,10 +51,10 @@ def main():
         t2 = time.perf_counter()
         logging.info(f"Finished to scrap {MIN_NUM_USERS_TO_SCRAP} users in {round(t2 - t1, 2)} seconds")
 
-        t1 = time.perf_counter()
-        scrap_tags(website_name)
-        t2 = time.perf_counter()
-        logging.info(f"Finished to scrap {MIN_NUM_USERS_TO_SCRAP} tags in {round(t2 - t1, 2)} seconds")
+        # t1 = time.perf_counter()
+        # scrap_tags(website_name)
+        # t2 = time.perf_counter()
+        # logging.info(f"Finished to scrap {MIN_NUM_USERS_TO_SCRAP} tags in {round(t2 - t1, 2)} seconds")
 
     t_end = time.perf_counter()
     print(f"Finished all the code in {round(t_end - t_start, 2)} seconds")
