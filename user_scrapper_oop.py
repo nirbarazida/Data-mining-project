@@ -2,8 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import re
 import time
-from main_file import SLEEP_FACTOR, MIN_NUM_USERS_TO_SCRAP
-
+from main_file import SLEEP_FACTOR, MIN_NUM_USERS_TO_SCRAP, FIRST_INSTANCE_TO_SCRAP
 
 class Website(object):
     """
@@ -14,7 +13,7 @@ class Website(object):
     4. get soups of each input main topic page (that contain X amount of topic domain)
     """
 
-    def __init__(self, website_name="stackoverflow"):
+    def __init__(self, website_name):
         self._website_name = website_name
         self._website_url = f"https://{website_name}.com"
 
@@ -38,7 +37,7 @@ class Website(object):
         return soup
 
     @staticmethod
-    def get_number_of_pages_needed(url):
+    def get_num_of_last_page(url):
         """
         Static method that return the number of pages existing in the website
         for the specific topic (i.e users, tags, etc)
@@ -59,7 +58,7 @@ class Website(object):
         :param topic_url: first main topic url (str)
         :return: soup of the next main users page
         """
-        number_of_last_page = self.get_number_of_pages_needed(topic_url)
+        number_of_last_page = self.get_num_of_last_page(topic_url)
         soup = Website.create_soup(topic_url)
         yield soup
 
@@ -69,35 +68,20 @@ class Website(object):
             yield soup
 
 
-class TagsAnalysis(Website):
-
-    @property
-    def tags_url(self):
-        return self._website_url + '/tags'
-
-    def get_tags_high_level_data(self):
-
-        for i, soup in enumerate(self.get_pages_soups(self.tags_url)):
-
-            print(f"website: {self.get_bare_website_url()}, tag page {i + 1}")
-            main_bar = soup.find("div", {"id": "mainbar-full"})
-            tags = main_bar.find_all("div", {"class": "s-card"})
-
-            for tag in tags:
-                cells = tag.find_all("div", {"class": "grid--cell"})
-                cells_text_list = [cell.text.strip() for cell in cells]
-                yield [cells_text_list[0]] + [re.findall(r'\d+', cell) for cell in cells_text_list[2:]]
-
-
 class UserAnalysis(Website):
     """
     Class for user analysis in a website
     contains method to get links for each individual user page
     """
+    def __init__(self, website_name, index_first_page, index_first_instance_first_page):
+        Website.__init__(self, website_name)
+        self._index_first_page = index_first_page
+        self._first_users_page_url = self._website_url +\
+                                              f'/users?page={index_first_page}&tab=reputation&filter=all'
+        self._index_first_instance_first_page = index_first_instance_first_page
 
-    @property
-    def users_url(self):
-        return self._website_url + '/users'
+    def get_first_url(self):
+        return self._first_users_page_url
 
     def generate_users_links(self):
         """
@@ -105,12 +89,14 @@ class UserAnalysis(Website):
         :return:
         """
 
-        for i, soup in enumerate(self.get_pages_soups(self.users_url)):
-            print(f"website: {self.get_bare_website_url()} ,page {i + 1}")
+        for i, soup in enumerate(self.get_pages_soups(self.get_first_url())):
+            print(f"website: {self.get_bare_website_url()} ,page {i + self._index_first_page}")
             users_grid = soup.find("div", {"class": "grid-layout"})
             users_info = users_grid.find_all_next("div", {"class": "user-info"})
 
-            for user_info in users_info:
+            first_instance_in_page = self._index_first_instance_first_page - 1 if i == 0 else 0
+
+            for user_info in users_info[first_instance_in_page:]:
                 user_details = user_info.find("div", {"class": "user-details"})
                 yield self.get_bare_website_url() + user_details.find("a")["href"]
 
@@ -118,22 +104,22 @@ class UserAnalysis(Website):
 class User(UserAnalysis):
     num_user_dict = {}
 
-    def __init__(self, user_url, website_name):
+    def __init__(self, website_name, user_url):
         Website.__init__(self, website_name)
-        self._user_url = user_url
-        soup = Website.create_soup(self._user_url)
+        soup = Website.create_soup(user_url)
 
         self._name = soup.find("div", {"class": "grid--cell fw-bold"}).text
         self._reputation = int(soup.find("div", {"class": "grid--cell fs-title fc-dark"}).text.replace(',', ''))
-        self._highest_rating_for_one_post = int(soup.find("span", {"class": "grid--cell vote accepted"}).text)
-        User.num_user_dict[self._website_name] = User.num_user_dict.get(self._website_name, 0) + 1
-
-
+        self._highest_rating_for_one_post = int(soup.find("span", {"class": "grid--cell vote accepted"}).text) # TODO:
+        User.num_user_dict[self._website_name] = User.num_user_dict.get(self._website_name, FIRST_INSTANCE_TO_SCRAP - 1) + 1
+        self._rank = User.num_user_dict[self._website_name]
 
     def get_dict(self):
-        return {"Website": self._website_name, "#": User.num_user_dict[self._website_name], "name": self._name,
+        return {"Website": self._website_name, "#": self._rank, "name": self._name,
                 "reputation": self._reputation, "highest_rating_for_one_post": self._highest_rating_for_one_post}
 
+    def __repr__(self):
+        return f"{self.get_dict()}"
 
 
 
