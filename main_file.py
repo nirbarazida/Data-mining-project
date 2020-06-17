@@ -3,18 +3,24 @@ Authors: Nir Barazida and Inbar Shirizly
 """
 
 import time
-import logging
-import user_scrapper_oop as s
+from user_analysis import UserAnalysis
+from user import User
+import json
+
+import concurrent.futures
+
+with open("data_mining_constants.txt", "r") as json_file:
+    constants_data = json.load(json_file)
 
 # constants - Stays always the same
-NUM_INSTANCES_IN_PAGE = 36
+NUM_INSTANCES_IN_PAGE = constants_data["constants"]["NUM_INSTANCES_IN_PAGE"]
 
 # constants - user might change according to his needs
-WEBSITE_NAMES = ["stackoverflow", "askubuntu", "math.stackexchange", "superuser"]
-FIRST_INSTANCE_TO_SCRAP = 990
-MIN_NUM_USERS_TO_SCRAP = 10
-RECORDS_IN_CHUNK_OF_DATA = 2
-SLEEP_FACTOR = 2
+WEBSITE_NAMES = constants_data["constants for user"]["WEBSITE_NAMES"]
+FIRST_INSTANCE_TO_SCRAP = constants_data["constants for user"]["FIRST_INSTANCE_TO_SCRAP"]
+MIN_NUM_USERS_TO_SCRAP = constants_data["constants for user"]["MIN_NUM_USERS_TO_SCRAP"]
+RECORDS_IN_CHUNK_OF_DATA = constants_data["constants for user"]["RECORDS_IN_CHUNK_OF_DATA"]
+SLEEP_FACTOR = constants_data["constants for user"]["SLEEP_FACTOR"]
 
 
 def scrap_users(website_name):
@@ -23,14 +29,14 @@ def scrap_users(website_name):
     index_for_first_page = (FIRST_INSTANCE_TO_SCRAP // NUM_INSTANCES_IN_PAGE) + 1
     index_for_first_instance_in_first_page = FIRST_INSTANCE_TO_SCRAP % NUM_INSTANCES_IN_PAGE
 
-    user_page = s.UserAnalysis(website_name, index_for_first_page, index_for_first_instance_in_first_page)
+    user_page = UserAnalysis(website_name, index_for_first_page, index_for_first_instance_in_first_page)
 
     print(f"Website: {website_name} ,number of users to scrap = {MIN_NUM_USERS_TO_SCRAP},"
                  f" sleep factor = {SLEEP_FACTOR}, first user: {FIRST_INSTANCE_TO_SCRAP},"
                  f" last user: {FIRST_INSTANCE_TO_SCRAP + MIN_NUM_USERS_TO_SCRAP - 1}")
 
     for link in user_page.generate_users_links():
-        user = s.User(website_name, link)
+        user = User(website_name, link)
         websites_chunk_dict[website_name].append(user)
 
         for website_chunk, records in websites_chunk_dict.items():
@@ -49,11 +55,11 @@ def scrap_users(website_name):
 
 
 def main():
-    logging.basicConfig(filename="scrapper.log", level=logging.INFO,
-                        format='%(asctime)s : %(name)s : %(message)s')
 
     t_start = time.perf_counter()
 
+    # with concurrent.futures.ThreadPoolExecutor() as executer:
+    #     executer.map(scrap_users, WEBSITE_NAMES)
     for website_name in WEBSITE_NAMES:
         t1 = time.perf_counter()
         scrap_users(website_name)
