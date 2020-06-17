@@ -1,0 +1,17 @@
+{
+  "constants": {
+    "NUM_INSTANCES_IN_PAGE": 36
+  },
+  "constants for user": {
+    "WEBSITE_NAMES": [
+      "stackoverflow",
+      "askubuntu",
+      "math.stackexchange",
+      "superuser"
+    ],
+    "FIRST_INSTANCE_TO_SCRAP": 5,
+    "MIN_NUM_USERS_TO_SCRAP": 3,
+    "RECORDS_IN_CHUNK_OF_DATA": 5,
+    "SLEEP_FACTOR": 2
+  }
+}
