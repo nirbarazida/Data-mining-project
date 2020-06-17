@@ -1,29 +1,43 @@
+"""
+
+Website - General class for websites with the format of Stack Exchange
+         (for instance -stack overflow)
+         create soup of pages, find last page and create soups for main topic pages
+
+Authors: Nir Barazida and Inbar Shirizly
+"""
+
 import requests
 from bs4 import BeautifulSoup
 import re
 import time
 import json
 
+# get constant SLEEP_FACTOR for json file
 with open("data_mining_constants.txt", "r") as json_file:
     constants_data = json.load(json_file)
-
 SLEEP_FACTOR = constants_data["constants for user"]["SLEEP_FACTOR"]
+
 
 class Website(object):
     """
-    General class for the website crawler:
-    1. generate website name
-    2. create soup for url input (and timing)
-    3. get number of pages for an input topic (users/tags etc)
-    4. get soups of each input main topic page (that contain X amount of topic domain)
+    General class for the website crawler with the format of Stack Exchange
+    the class bundles several general methods:
+    1. create soup for url input and sleep for the request time * factor
+    2. get last main topic page for input topic (users/tags etc)
+    3. get soups of each input main topic page (that contain X amount of topic domain)
     """
 
     def __init__(self, website_name):
+        """
+        initiates parameters of the class
+        :param website_name: domain name of the website that is been scrapped (str)
+        """
         self._website_name = website_name
-        self._website_url = f"https://{website_name}.com"
 
-    def get_bare_website_url(self):
-        return self._website_url
+    @property
+    def website_url(self):
+        return f"https://{self._website_name}.com"
 
     @ staticmethod
     def create_soup(url):
@@ -37,7 +51,6 @@ class Website(object):
         page = requests.get(url)
         time_sleep = page.elapsed.total_seconds()
         time.sleep(time_sleep * SLEEP_FACTOR)
-        #print(f"request page {url} in {3 * time_sleep} seconds (include sleep)")
         soup = BeautifulSoup(page.content, "html.parser")
         return soup
 
@@ -58,8 +71,9 @@ class Website(object):
         """
         generator which returns soups for all the main topic pages
         uses the link under the "next" bottom in the previous page
-        these are the pages that include a general view about many
-        of the topic individuals (users, tags, etc)
+        The main topic pages are pages that include a general view about many
+        of the topic individuals (users, tags, etc) and from them the child class
+        (such as UserAnalysis) extracts the links for each individual
         :param topic_url: first main topic url (str)
         :return: soup of the next main users page
         """
@@ -68,6 +82,7 @@ class Website(object):
         yield soup
 
         for i in range(number_of_last_page - 1):
-            last_link = self.get_bare_website_url() + soup.find('a', {'rel': 'next'})['href']
+            last_link = self.website_url + soup.find('a', {'rel': 'next'})['href']
             soup = Website.create_soup(last_link)
             yield soup
+
