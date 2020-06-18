@@ -4,19 +4,19 @@ Data mining project - "Analysis of Stack Exchange Websites"- main file
 milestone 1: program implementations:
 1. Scraps a list of websites under the Stack Exchange websites
     (such as stack overflow, askUbuntu, etc)
-2. Scraps several website in a loop or concurrently by threading
-3. Scraps the website individual User pages for requested index (not necessarily from the beginning)
-    and until the number of sequence requested
+2. Scraps several websites in a loop or concurrently by threading
+3. Scraps the websites' individual User pages for requested index (not necessarily from the beginning)
+     until the number of sequence(s) requested
 4. data for each user is transformed via generators:
     a. generator for sequence of main pages (includes X individual instances in each page)
-    b. generator of instances of user object (includes a dictionary of the relevant data which scrapped)
-5. The data of each user for each website is appended to it's relevant list (in a dedicated dictionary)
-    when the list reaches it's demanded length - it prints all the values in the list and clean it
-    (This is preparation for uploading the data to the database in chunks of data)
+    b. generator of instances of user object (includes a dictionary of the relevant data which was scrapped)
+5. The data of each user for each website is appended to its relevant list (in a dedicated dictionary)
+    when the list reaches it's demanded length - it prints all the values in the list and cleans it
+    (This is preparation for uploading the data in chunks to the database)
 6. When the user index reaches the user last index requested (according to the amount of users to scrap)
     the program prints the last amount of data needed (if there is list of users which have not been printed yet)
-    and program breaks from the function (in loop case, it will begin the next website. in the threading case,
-    it can happen in en expected ratio - but it assures that each one of the website will scrap all the requested users
+    and program breaks from the function (in the case of a loop, it will begin the next website. in the threading case,
+    it can happen in en expected ratio - but it assures that each one of the websites will scrap all the requested users
 
 Along with the main file, the program include the following files:
 1. website.py - includes the class Website(object) - create soup of pages, find last page and create soups for main topic pages
@@ -45,7 +45,7 @@ NUM_INSTANCES_IN_PAGE = constants_data["constants"]["NUM_INSTANCES_IN_PAGE"]
 # constants - user might change according to his needs (will be changed in the json file)
 WEBSITE_NAMES = constants_data["constants for user"]["WEBSITE_NAMES"]
 FIRST_INSTANCE_TO_SCRAP = constants_data["constants for user"]["FIRST_INSTANCE_TO_SCRAP"]
-MIN_NUM_USERS_TO_SCRAP = constants_data["constants for user"]["MIN_NUM_USERS_TO_SCRAP"]
+NUM_USERS_TO_SCRAP = constants_data["constants for user"]["NUM_USERS_TO_SCRAP"]
 RECORDS_IN_CHUNK_OF_DATA = constants_data["constants for user"]["RECORDS_IN_CHUNK_OF_DATA"]
 SLEEP_FACTOR = constants_data["constants for user"]["SLEEP_FACTOR"]
 THREADING = constants_data["constants for user"]["THREADING"]
@@ -66,9 +66,9 @@ def scrap_users(website_name):
 
     user_page = UserAnalysis(website_name, index_for_first_page, index_for_first_instance_in_first_page)
 
-    print(f"Website: {website_name} ,number of users to scrap = {MIN_NUM_USERS_TO_SCRAP},"
+    print(f"Website: {website_name} ,number of users to scrap = {NUM_USERS_TO_SCRAP},"
           f" sleep factor = {SLEEP_FACTOR}, first user: {FIRST_INSTANCE_TO_SCRAP},"
-          f" last user: {FIRST_INSTANCE_TO_SCRAP + MIN_NUM_USERS_TO_SCRAP - 1},"
+          f" last user: {FIRST_INSTANCE_TO_SCRAP + NUM_USERS_TO_SCRAP - 1},"
           f" Threading? {THREADING} ")
 
     for link in user_page.generate_users_links():
@@ -82,7 +82,7 @@ def scrap_users(website_name):
                     print(user_data)
                 websites_chunk_dict[website_chunk] = []
 
-        if user.num_user_dict[website_name] == FIRST_INSTANCE_TO_SCRAP + MIN_NUM_USERS_TO_SCRAP - 1:
+        if user.num_user_dict[website_name] == FIRST_INSTANCE_TO_SCRAP + NUM_USERS_TO_SCRAP - 1:
             if len(websites_chunk_dict[website_name]) > 0:
                 print(f"print chunk of {len(websites_chunk_dict[website_name])} for website {website_name}")
                 for user_data in websites_chunk_dict[website_name]:
@@ -104,7 +104,7 @@ def main():
             t1 = time.perf_counter()
             scrap_users(website_name)
             t2 = time.perf_counter()
-            print(f"Finished to scrap {MIN_NUM_USERS_TO_SCRAP} users in {round(t2 - t1, 2)} seconds")
+            print(f"Finished to scrap {NUM_USERS_TO_SCRAP} users in {round(t2 - t1, 2)} seconds")
 
     t_end = time.perf_counter()
     print(f"Finished all the code in {round(t_end - t_start, 2)} seconds")
