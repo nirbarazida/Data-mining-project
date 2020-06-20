@@ -34,9 +34,8 @@ The analysis focuses on data retrieved from the top **1000** individual users
 
 
 ## install
-
+[Requirements file](https://github.com/nirbarazida/Data-mining-project/blob/master/requirements.txt) \
 The project dependencies can be found in the requirements.txt file in the current repository
-
 ## Program work flow
 
 ![image](https://raw.githubusercontent.com/nirbarazida/Data-mining-project/master/Data%20mining%20workflow.jpeg)
@@ -77,15 +76,15 @@ mode is turned off  it will run over this list in a loop
 
 ## Class
 The project implementation plan is to use OOP because of it's diversity and time optimization.\
-The possibility to implement scraping features on different websites, using the same project with minor changes in the HTML page, gives the project a significant advantage.
+The opportunity to implement scraping features on different websites, using the same project with minor changes in the HTML page, gives the project a significant advantage.
 
-To approach the diversity problem we a decided to create 3 different class:
+To approach the diversity problem we decided to create 3 different class:
 - **Website**
 - **User analysis**
 - **User**
 
  The first two are general and have little dependence on the website HTML.
- The third class is all dedicated scraping the information and very much adjusted to the specific web site that we are scraping.
+ The third class is all dedicated to scraping the information and very much adjusted to the specific website we are scraping.
  
 ![image](https://raw.githubusercontent.com/nirbarazida/Data-mining-project/master/Class%20flow%20chart.jpeg)  
 
