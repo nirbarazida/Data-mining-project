@@ -13,7 +13,18 @@ class User(UserAnalysis, dict):
     """
     General: Class User gets the users url, scrapes all the information into class variables
     inheritance: "create_soup" from class Website.
-                  dict and all of it methods to be applied on User once transforming it to json file.
+
+                The idea behind dictionary inheritance is to allow the developer to protect the data that can be
+                scraped into the database and prevent a scenario where the data is added / subtracted from the user.
+                This feature is ready to deploy on the product demand.
+
+                In addition, dictionary methods allows us to store the data in a structure that can be transfer
+                to a Jason file without creating any additional variables. – O(n) time and space complexity.
+
+                for clarity reasons all class variables are being declared at the top of the class. All class
+                variables who needs more than one line to scrap the information are being scraped in separate blocks
+
+
     """
 
     num_user_dict = {}
@@ -47,7 +58,7 @@ class User(UserAnalysis, dict):
             self['location'] = basic_info_as_list[0].text.strip()
         for i in basic_info_as_list:
             if 'Member for' in i.text:
-                self['member since'] = (i.find('span')['title'][:10], '%Y-%m-%d')
+                self['member since'] = (i.find('span')['title'][:10])
         del basic_info_scope, basic_info_as_list
 
         """

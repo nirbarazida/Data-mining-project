@@ -75,9 +75,39 @@ as possible while avoiding blockage.
 of the input WEBSITE_NAMES concurrently using threading. If the 
 mode is turned off  it will run over this list in a loop
 
-## Classes
+## Class
+The project implementation plan is to use OOP because of it's diversity and time optimization.\
+The possibility to implement scraping features on different websites, using the same project with minor changes in the HTML page, gives the project a significant advantage.
 
-### Chart-flow
+To approach the diversity problem we a decided to create 3 different class:
+- **Website**
+- **User analysis**
+- **User**
 
+ The first two are general and have little dependence on the website HTML.
+ The third class is all dedicated scraping the information and very much adjusted to the specific web site that we are scraping.
+ 
+![image](https://raw.githubusercontent.com/nirbarazida/Data-mining-project/master/Class%20flow%20chart.jpeg)  
+
+- **Class Website:** \
+    General class for the website crawler with the format of Stack Exchange
+
+- **Class User analysis:** \
+    Class for user analysis in a the website that get links for each individual user page
+
+- **Class User** \
+    Receives the users url, scrapes all the information into class variables
 
 ## Sources
+[Corey Schafer - Python tutorials](https://www.youtube.com/user/schafer5):
+
+- [Python OOP Tutorials - Working with Classes](https://www.youtube.com/watch?v=ZDa-Z5JzLYM&list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc)
+- [Web Scraping with BeautifulSoup and Requests](https://www.youtube.com/watch?v=ng2o98k983k&t=1120s)
+- [Generators](https://www.youtube.com/watch?v=bD05uGo_sVI)
+- [Threading](https://www.youtube.com/watch?v=IEEhzQoKtQU)
+
+[Towards datas cience](https://towardsdatascience.com/)
+
+[Stack-overflow](https://stackoverflow.com/)
+
+
