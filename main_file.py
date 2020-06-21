@@ -21,7 +21,7 @@ milestone 1: program implementations:
 Along with the main file, the program include the following files:
 1. website.py - includes the class Website(object) - create soup of pages, find last page and create soups for main topic pages
 2. user_analysis.py - includes the class UserAnalysis(Website) - create a generator of links for each individual user page
-3. user.py - includes the class User(UserAnalysis) - extracts the data in the individual user file - creates a dict object
+3. user.py - includes the class User(Website) - extracts the data in the individual user file - creates a dict object
 4. data mining_constants.txt - text file in json format which contains the constants for all the program.
                                each file imports the data that is relevant to run the file.
 
@@ -49,6 +49,7 @@ NUM_USERS_TO_SCRAP = constants_data["constants for user"]["NUM_USERS_TO_SCRAP"]
 RECORDS_IN_CHUNK_OF_DATA = constants_data["constants for user"]["RECORDS_IN_CHUNK_OF_DATA"]
 SLEEP_FACTOR = constants_data["constants for user"]["SLEEP_FACTOR"]
 THREADING = constants_data["constants for user"]["THREADING"]
+
 
 def scrap_users(website_name):
     """

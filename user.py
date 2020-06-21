@@ -1,5 +1,4 @@
 from website import Website
-from user_analysis import UserAnalysis
 import json
 
 with open("data_mining_constants.txt", "r") as json_file:
@@ -8,7 +7,7 @@ with open("data_mining_constants.txt", "r") as json_file:
 FIRST_INSTANCE_TO_SCRAP = constants_data["constants for user"]["FIRST_INSTANCE_TO_SCRAP"]
 
 
-class User(UserAnalysis, dict):
+class User(Website, dict):
 
     """
     General: Class User gets the users url, scrapes all the information into class variables

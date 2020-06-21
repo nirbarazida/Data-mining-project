@@ -1,5 +1,5 @@
 # Data-mining-project
-ITC - Data mining project - StackExchange Analyse
+ITC - Data mining project - *StackExchange* Analyse
 main focus - **Stack Overflow**
 
 ### Authors
@@ -19,7 +19,7 @@ The analysis focuses on data retrieved from the top **1000** individual users
  (according to the website's all-time rank (since the website's establishment
  until scrapper was run)) .
 
-####Main insights the program attempts to present:
+#### Main insights the program attempts to present:
 - Presents insights about each country:
     1. [Reputation](https://stackoverflow.com/help/whats-reputation#:~:text=You%20gain%20reputation%20when%3A,your%20answer%3A%20%2B%20full%20bounty%20amount)
     2. Total answers 
@@ -30,10 +30,7 @@ The analysis focuses on data retrieved from the top **1000** individual users
  of **current** top users
 
 
- 
-
-
-## install
+ ## install
 [Requirements file](https://github.com/nirbarazida/Data-mining-project/blob/master/requirements.txt) \
 The project dependencies can be found in the requirements.txt file in the current repository
 ## Program work flow
@@ -45,6 +42,30 @@ input websites and **prints** each individual user data. <br/>
 In the future, the program will store the data which was retrieved and 
 upload it to MySQL database, and display the insights in a dashboard
 
+## Project implementation
+The project implementation plan is to use OOP because of it's diversity and time optimization.\
+The opportunity to implement scraping features on different websites, using the same project with minor changes in the HTML page, gives the project a significant advantage.
+
+To approach the diversity problem we decided to create 3 different class:
+- **Website**
+- **User analysis**
+- **User**
+
+ The first two are general and have little dependence on the website HTML.
+ The third class is all dedicated to scraping the information and very much adjusted to the specific website we are scraping.
+ 
+ ### Class Flow- Chart
+ 
+![image](https://raw.githubusercontent.com/nirbarazida/Data-mining-project/master/Class%20flow%20chart.jpeg)  
+
+- **Class Website:** \
+    General class for the website crawler with the format of Stack Exchange
+
+- **Class User analysis:** \
+    Class for user analysis in a the website that get links for each individual user page
+
+- **Class User** \
+    Receives the users url, scrapes all the information into class variables
 
 ## Features
 
@@ -74,28 +95,6 @@ as possible while avoiding blockage.
 of the input WEBSITE_NAMES concurrently using threading. If the 
 mode is turned off  it will run over this list in a loop
 
-## Class
-The project implementation plan is to use OOP because of it's diversity and time optimization.\
-The opportunity to implement scraping features on different websites, using the same project with minor changes in the HTML page, gives the project a significant advantage.
-
-To approach the diversity problem we decided to create 3 different class:
-- **Website**
-- **User analysis**
-- **User**
-
- The first two are general and have little dependence on the website HTML.
- The third class is all dedicated to scraping the information and very much adjusted to the specific website we are scraping.
- 
-![image](https://raw.githubusercontent.com/nirbarazida/Data-mining-project/master/Class%20flow%20chart.jpeg)  
-
-- **Class Website:** \
-    General class for the website crawler with the format of Stack Exchange
-
-- **Class User analysis:** \
-    Class for user analysis in a the website that get links for each individual user page
-
-- **Class User** \
-    Receives the users url, scrapes all the information into class variables
 
 ## Sources
 [Corey Schafer - Python tutorials](https://www.youtube.com/user/schafer5):
@@ -105,8 +104,7 @@ To approach the diversity problem we decided to create 3 different class:
 - [Generators](https://www.youtube.com/watch?v=bD05uGo_sVI)
 - [Threading](https://www.youtube.com/watch?v=IEEhzQoKtQU)
 
-[Towards datas cience](https://towardsdatascience.com/)
+[Web scraping with Python from   A to Z, ITC](https://www.itc.tech/web-scraping-with-python-a-to-z/)
 
-[Stack-overflow](https://stackoverflow.com/)
 
 
