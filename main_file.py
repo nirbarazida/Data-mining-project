@@ -33,22 +33,59 @@ from user_analysis import UserAnalysis
 from user import User
 import json
 import concurrent.futures
+import argparse
 
 
-# get constants from json file (which contains all the Constants)
+def bool_converter(v):
+    """ gets the command line argument for threading
+        converts it to a boolean variable.
+        if not valid - raise a type error
+    """
+    if v == bool:
+        return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
+
+# receiving arguments from the command line terminal for the scraping process
+parser = argparse.ArgumentParser(description='Scraping users from Stack Exchange websites')
+parser.add_argument('--web_sites', help="Which Stack Exchange websites to scrap from", nargs='+',
+                    default=['stackoverflow', 'askubuntu', 'math.stackexchange', 'superuser'],
+                    choices={'stackoverflow', 'askubuntu', 'math.stackexchange', 'superuser'})
+
+parser.add_argument('first_user', help="Position of the first user to scrap", type=int)
+
+parser.add_argument('num_users', help="Number of users to scrap", type=int)
+
+parser.add_argument('--chunk_of_data', help="How many users to store in memory before\
+                     uploading to data base, default=10", default=10, type=int)
+
+parser.add_argument('--sleep_factor', help="Sleep factor between requests, default=1.5", default=1.5, type=float)
+
+parser.add_argument("--threading", help="To use threading or basic for loop between the different websites, "
+                                        "default=False "
+                    , type=bool_converter, default=False)
+
+# implementing the command line arguments into variables
+# will not use the arguments directly for flexibility purposes (to using json file for input variables)
+args = parser.parse_args()
+WEBSITE_NAMES = args.web_sites
+FIRST_INSTANCE_TO_SCRAP = args.first_user
+NUM_USERS_TO_SCRAP = args.num_users
+RECORDS_IN_CHUNK_OF_DATA = args.chunk_of_data
+SLEEP_FACTOR = args.sleep_factor
+THREADING = args.threading
+
+# get constants from json file
 with open("data_mining_constants.txt", "r") as json_file:
     constants_data = json.load(json_file)
 
 # constants - Stays always the same
 NUM_INSTANCES_IN_PAGE = constants_data["constants"]["NUM_INSTANCES_IN_PAGE"]
-
-# constants - user might change according to his needs (will be changed in the json file)
-WEBSITE_NAMES = constants_data["constants for user"]["WEBSITE_NAMES"]
-FIRST_INSTANCE_TO_SCRAP = constants_data["constants for user"]["FIRST_INSTANCE_TO_SCRAP"]
-NUM_USERS_TO_SCRAP = constants_data["constants for user"]["NUM_USERS_TO_SCRAP"]
-RECORDS_IN_CHUNK_OF_DATA = constants_data["constants for user"]["RECORDS_IN_CHUNK_OF_DATA"]
-SLEEP_FACTOR = constants_data["constants for user"]["SLEEP_FACTOR"]
-THREADING = constants_data["constants for user"]["THREADING"]
 
 
 def scrap_users(website_name):
@@ -92,7 +129,6 @@ def scrap_users(website_name):
 
 
 def main():
-
     t_start = time.perf_counter()
 
     # Treading mode
