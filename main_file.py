@@ -97,7 +97,7 @@ def main():
 
     # Treading mode
     if MULTI_PROCESS:
-        with concurrent.futures.ThreadPoolExecutor() as executer:
+        with concurrent.futures.ProcessPoolExecutor() as executer:
             executer.map(scrap_users, WEBSITE_NAMES)
     # for loop mode
     else:
