@@ -1,10 +1,9 @@
 """
 Data mining project - "Analysis of Stack Exchange Websites"- main file
-
 milestone 1: program implementations:
 1. Scraps a list of websites under the Stack Exchange websites
     (such as stack overflow, askUbuntu, etc)
-2. Scraps several websites in a loop or concurrently by threading
+2. Scraps several websites in a loop or concurrently by Multi Process
 3. Scraps the websites' individual User pages for requested index (not necessarily from the beginning)
      until the number of sequence(s) requested
 4. data for each user is transformed via generators:
@@ -15,16 +14,14 @@ milestone 1: program implementations:
     (This is preparation for uploading the data in chunks to the database)
 6. When the user index reaches the user last index requested (according to the amount of users to scrap)
     the program prints the last amount of data needed (if there is list of users which have not been printed yet)
-    and program breaks from the function (in the case of a loop, it will begin the next website. in the threading case,
+    and program breaks from the function (in the case of a loop, it will begin the next website. in the Multi Process case,
     it can happen in en expected ratio - but it assures that each one of the websites will scrap all the requested users
-
 Along with the main file, the program include the following files:
 1. website.py - includes the class Website(object) - create soup of pages, find last page and create soups for main topic pages
 2. user_analysis.py - includes the class UserAnalysis(Website) - create a generator of links for each individual user page
 3. user.py - includes the class User(Website) - extracts the data in the individual user file - creates a dict object
 4. data mining_constants.txt - text file in json format which contains the constants for all the program.
                                each file imports the data that is relevant to run the file.
-
 Authors: Nir Barazida and Inbar Shirizly
 """
 
@@ -33,54 +30,20 @@ from user_analysis import UserAnalysis
 from user import User
 import json
 import concurrent.futures
-import argparse
+from command_args import args
 
 
-def bool_converter(v):
-    """ gets the command line argument for threading
-        converts it to a boolean variable.
-        if not valid - raise a type error
-    """
-    if v == bool:
-        return v
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
-        return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-        return False
-    else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
-
-
-# receiving arguments from the command line terminal for the scraping process
-parser = argparse.ArgumentParser(description='Scraping users from Stack Exchange websites')
-parser.add_argument('--web_sites', help="Which Stack Exchange websites to scrap from", nargs='+',
-                    default=['stackoverflow', 'askubuntu', 'math.stackexchange', 'superuser'],
-                    choices={'stackoverflow', 'askubuntu', 'math.stackexchange', 'superuser'})
-
-parser.add_argument('first_user', help="Position of the first user to scrap", type=int)
-
-parser.add_argument('num_users', help="Number of users to scrap", type=int)
-
-parser.add_argument('--chunk_of_data', help="How many users to store in memory before\
-                     uploading to data base, default=10", default=10, type=int)
-
-parser.add_argument('--sleep_factor', help="Sleep factor between requests, default=1.5", default=1.5, type=float)
-
-parser.add_argument("--threading", help="To use threading or basic for loop between the different websites, "
-                                        "default=False "
-                    , type=bool_converter, default=False)
 
 # implementing the command line arguments into variables
 # will not use the arguments directly for flexibility purposes (to using json file for input variables)
-args = parser.parse_args()
 WEBSITE_NAMES = args.web_sites
 FIRST_INSTANCE_TO_SCRAP = args.first_user
 NUM_USERS_TO_SCRAP = args.num_users
 RECORDS_IN_CHUNK_OF_DATA = args.chunk_of_data
 SLEEP_FACTOR = args.sleep_factor
-THREADING = args.threading
+MULTI_PROCESS = args.multi_process
 
-# get constants from json file
+# get constants from json file (which contains all the Constants)
 with open("data_mining_constants.txt", "r") as json_file:
     constants_data = json.load(json_file)
 
@@ -94,7 +57,7 @@ def scrap_users(website_name):
     create a dictionary [website: [user_instance1, user_instance2...] each list has maximum length of
     RECORDS_IN_CHUNK_OF_DATA. when the list reaches this length, it prints the data on each user and cleans the list
     when the user index reaches the last user needed (per website), the function prints the rest of the data (the users
-    that are in the last list) in breaking out (on the threading mode, this function runs concurrently on different websites)
+    that are in the last list) in breaking out (on the Multi Process mode, this function runs concurrently on different websites)
     :param website_name: domain name of the website that is been scrapped (str)
     :return: None
     """
@@ -107,7 +70,7 @@ def scrap_users(website_name):
     print(f"Website: {website_name} ,number of users to scrap = {NUM_USERS_TO_SCRAP},"
           f" sleep factor = {SLEEP_FACTOR}, first user: {FIRST_INSTANCE_TO_SCRAP},"
           f" last user: {FIRST_INSTANCE_TO_SCRAP + NUM_USERS_TO_SCRAP - 1},"
-          f" Threading? {THREADING} ")
+          f" Multi Process? {MULTI_PROCESS} ")
 
     for link in user_page.generate_users_links():
         user = User(website_name, link)
@@ -129,10 +92,11 @@ def scrap_users(website_name):
 
 
 def main():
+
     t_start = time.perf_counter()
 
     # Treading mode
-    if THREADING:
+    if MULTI_PROCESS:
         with concurrent.futures.ThreadPoolExecutor() as executer:
             executer.map(scrap_users, WEBSITE_NAMES)
     # for loop mode
