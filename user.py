@@ -1,13 +1,5 @@
 from website import Website
-import json
 from command_args import args
-
-# keeping the json file option for flexibility purpose
-# with open("data_mining_constants.txt", "r") as json_file:
-#     constants_data = json.load(json_file)
-#
-# FIRST_INSTANCE_TO_SCRAP = constants_data["constants for user"]["FIRST_INSTANCE_TO_SCRAP"]
-
 
 FIRST_INSTANCE_TO_SCRAP = args.first_user
 

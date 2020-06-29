@@ -95,7 +95,7 @@ def main():
 
     t_start = time.perf_counter()
 
-    # Treading mode
+    # Multi Process mode
     if MULTI_PROCESS:
         with concurrent.futures.ProcessPoolExecutor() as executer:
             executer.map(scrap_users, WEBSITE_NAMES)

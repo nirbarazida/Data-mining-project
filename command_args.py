@@ -31,6 +31,6 @@ parser.add_argument('--sleep_factor', help="Sleep factor between requests, defau
 
 parser.add_argument("--multi_process", help="To use Multi Process or basic for loop between the different websites, "
                                         "default=False "
-                    , type=bool_converter, default=False)
+                    , type=bool_converter, default=True)
 
 args = parser.parse_args()
