@@ -17,7 +17,7 @@ The websites that are analysed are under the group of [StackExchange](https://st
 
 The analysis focuses on data retrieved from the top **1000** individual users
  (according to the website's all-time rank (since the website's establishment
- until scrapper was run)) .
+ until scrapper was run)).
 
 #### Main insights the program attempts to present:
 - Presents insights about each country:

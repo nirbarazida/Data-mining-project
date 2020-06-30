@@ -1,10 +1,7 @@
 from website import Website
-import json
+from command_args import args
 
-with open("data_mining_constants.txt", "r") as json_file:
-    constants_data = json.load(json_file)
-
-FIRST_INSTANCE_TO_SCRAP = constants_data["constants for user"]["FIRST_INSTANCE_TO_SCRAP"]
+FIRST_INSTANCE_TO_SCRAP = args.first_user
 
 
 class User(Website, dict):
@@ -41,6 +38,7 @@ class User(Website, dict):
         self['location'] = None  # not all users have a location in profile - must keep as default none
         self['member since'] = None
         self['reputation'] = int(soup.find("div", {"class": "grid--cell fs-title fc-dark"}).text.replace(',', ''))
+        self['profile views'] = '0'
         self['total number of answers'] = None
         self['number of people the user reached'] = None
         self['top tags names'] = []
@@ -58,28 +56,35 @@ class User(Website, dict):
         for i in basic_info_as_list:
             if 'Member for' in i.text:
                 self['member since'] = (i.find('span')['title'][:10])
+            if 'profile views' in i.text:
+                self['profile views'] = i.text.strip().split()[0]
+                break
         del basic_info_scope, basic_info_as_list
 
         """
         Defines users number of answers, users people reached
         """
-        user_community_info = soup.find('div', {'class': 'fc-medium mb16'}).find_all_next \
-            ('div', {'class': 'grid--cell fs-body3 fc-dark fw-bold'})
-        self['total number of answers'] = user_community_info[0].text
-        self['number of people the user reached'] = user_community_info[2].text.strip('~')
-        del user_community_info
+        user_community_info = soup.find('div', {'class': 'fc-medium mb16'})
+        if user_community_info:
+            user_community_info = user_community_info.find_all_next('div',
+                                                                    {'class': 'grid--cell fs-body3 fc-dark fw-bold'})
+            self['total number of answers'] = user_community_info[0].text
+            self['number of people the user reached'] = user_community_info[2].text.strip('~')
+            del user_community_info
 
         """
         User tags - append the values to the users top_tag_names, top_tag_scores, number_of_posts - that are lists
         """
-        top_tag_names, top_tag_scores, number_of_posts = [], [], []
+
         all_tags_info = soup.find("div", {"id": "top-tags"})
-        for tag in all_tags_info.find_all_next('a', {"class": "post-tag"}):
-            top_tag_names.append(tag.text)
-        self['top tags names'] = top_tag_names
-        for tag in all_tags_info.find_all_next('div', {"class": "grid jc-end ml-auto"}):
-            top_tag_scores.append(tag.text.replace("\n", " ").split()[1])
-            number_of_posts.append(tag.text.replace("\n", " ").split()[3])
-        self['top tags scores'] = top_tag_scores
-        self['number of posts'] = number_of_posts
-        del all_tags_info, top_tag_names, top_tag_scores, number_of_posts
+        if all_tags_info:
+            top_tag_names, top_tag_scores, number_of_posts = [], [], []
+            for tag in all_tags_info.find_all_next('a', {"class": "post-tag"}):
+                top_tag_names.append(tag.text)
+            self['top tags names'] = top_tag_names
+            for tag in all_tags_info.find_all_next('div', {"class": "grid jc-end ml-auto"}):
+                top_tag_scores.append(tag.text.replace("\n", " ").split()[1])
+                number_of_posts.append(tag.text.replace("\n", " ").split()[3])
+            self['top tags scores'] = top_tag_scores
+            self['number of posts'] = number_of_posts
+            del all_tags_info, top_tag_names, top_tag_scores, number_of_posts

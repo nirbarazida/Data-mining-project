@@ -11,13 +11,10 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import time
-import json
+from command_args import args
 
-# get constant SLEEP_FACTOR for json file
-with open("data_mining_constants.txt", "r") as json_file:
-    constants_data = json.load(json_file)
-SLEEP_FACTOR = constants_data["constants for user"]["SLEEP_FACTOR"]
 
+SLEEP_FACTOR = args.sleep_factor
 
 class Website(object):
     """
