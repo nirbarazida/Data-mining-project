@@ -95,9 +95,9 @@ def main():
 
     t_start = time.perf_counter()
 
-    # Treading mode
+    # Threading mode
     if THREADING:
-        with concurrent.futures.ThreadPoolExecutor() as executer:
+        with concurrent.futures.ProcessPoolExecutor() as executer:
             executer.map(scrap_users, WEBSITE_NAMES)
     # for loop mode
     else:

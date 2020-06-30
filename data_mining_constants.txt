@@ -10,9 +10,9 @@
       "superuser"
     ],
     "FIRST_INSTANCE_TO_SCRAP": 1,
-    "NUM_USERS_TO_SCRAP": 10,
+    "NUM_USERS_TO_SCRAP": 5,
     "RECORDS_IN_CHUNK_OF_DATA": 5,
     "SLEEP_FACTOR": 2,
-    "THREADING": false
+    "THREADING": true
   }
 }
