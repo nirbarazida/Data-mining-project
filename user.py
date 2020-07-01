@@ -134,12 +134,13 @@ class User(Website, dict):
         user reputation for years: [2017, 2018, 2019 ,2020]
          will evaluate years only for users registered before 2017
         """
-        if self["year"] and member_since < threshold_date:
-            soup_activity = self.create_soup(url + "?tab=topactivity")
-            source_data = soup_activity.find("div", {"id": "top-cards"}).text
-            numbers = re.search(r"var\sgraphData\s=\s(\[\S+\])", source_data)
-            reputation_numbers = ast.literal_eval(numbers.group(1))
-            self['reputation_years'] = [reputation_numbers[year] for year in year_indexes]
+        if self["year"]:
+            if member_since < threshold_date:
+                soup_activity = self.create_soup(url + "?tab=topactivity")
+                source_data = soup_activity.find("div", {"id": "top-cards"}).text
+                numbers = re.search(r"var\sgraphData\s=\s(\[\S+\])", source_data)
+                reputation_numbers = ast.literal_eval(numbers.group(1))
+                self['reputation_years'] = [reputation_numbers[year] for year in year_indexes]
 
 
 def main():
