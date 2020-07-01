@@ -32,8 +32,8 @@ import json
 import concurrent.futures
 from command_args import args
 
-
-
+import pandas as pd
+pd.set_option('display.max_columns', 15)
 # implementing the command line arguments into variables
 # will not use the arguments directly for flexibility purposes (to using json file for input variables)
 WEBSITE_NAMES = args.web_sites
@@ -43,9 +43,12 @@ RECORDS_IN_CHUNK_OF_DATA = args.chunk_of_data
 SLEEP_FACTOR = args.sleep_factor
 MULTI_PROCESS = args.multi_process
 
+JSON_FILE_NAME = "mining_constants.json"
 # get constants from json file (which contains all the Constants)
-with open("data_mining_constants.txt", "r") as json_file:
+
+with open(JSON_FILE_NAME, "r") as json_file:
     constants_data = json.load(json_file)
+
 
 # constants - Stays always the same
 NUM_INSTANCES_IN_PAGE = constants_data["constants"]["NUM_INSTANCES_IN_PAGE"]
@@ -79,15 +82,15 @@ def scrap_users(website_name):
         for website_chunk, records in websites_chunk_dict.items():
             if len(records) == RECORDS_IN_CHUNK_OF_DATA:
                 print(f"print chunk of {RECORDS_IN_CHUNK_OF_DATA} for website {website_name}")
-                for user_data in websites_chunk_dict[website_chunk]:
-                    print(user_data)
+                users_chunk = pd.DataFrame(websites_chunk_dict[website_chunk])
+                print(users_chunk)
                 websites_chunk_dict[website_chunk] = []
 
         if user.num_user_dict[website_name] == FIRST_INSTANCE_TO_SCRAP + NUM_USERS_TO_SCRAP - 1:
             if len(websites_chunk_dict[website_name]) > 0:
                 print(f"print chunk of {len(websites_chunk_dict[website_name])} for website {website_name}")
-                for user_data in websites_chunk_dict[website_name]:
-                    print(user_data)
+                users_chunk = pd.DataFrame(websites_chunk_dict[website_name])
+                print(users_chunk)
             break
 
 
