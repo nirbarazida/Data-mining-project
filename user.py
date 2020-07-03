@@ -59,9 +59,9 @@ class User(Website, dict):
         self['name'] = soup.find("div", {"class": "grid--cell fw-bold"}).text
         self['country'] = None  # not all users have a valid location in profile - must keep as default none
         self['continent'] = None # same as line above
+        self['member_since'] = None
         self['year'] = None
         self['month'] = None
-        #self['reputation'] = int(soup.find("div", {"class": "grid--cell fs-title fc-dark"}).text.replace(',', ''))
         self['profile_views'] = 0
         self['answers'] = None
         self['people_reached'] = None
@@ -93,9 +93,9 @@ class User(Website, dict):
 
         for i in basic_info_as_list:
             if 'Member for' in i.text:
-                member_since = datetime.strptime(i.find('span')['title'][:-1], '%Y-%m-%d %H:%M:%S')
-                self["year"] = member_since.year
-                self["month"] = member_since.month
+                self['member_since'] = datetime.strptime(i.find('span')['title'][:-1], '%Y-%m-%d %H:%M:%S')
+                self["year"] = self['member_since'].year
+                self["month"] = self['member_since'].month
             if 'profile views' in i.text:
                 self['profile_views'] = int(i.text.strip().split()[0].replace(",", ""))
                 break
@@ -134,8 +134,8 @@ class User(Website, dict):
         user reputation for years: [2017, 2018, 2019 ,2020]
          will evaluate years only for users registered before 2017
         """
-        if self["year"]:
-            if member_since < threshold_date:
+        if self['member_since']:
+            if self['member_since'] < threshold_date:
                 soup_activity = self.create_soup(url + "?tab=topactivity")
                 source_data = soup_activity.find("div", {"id": "top-cards"}).text
                 numbers = re.search(r"var\sgraphData\s=\s(\[\S+\])", source_data)
