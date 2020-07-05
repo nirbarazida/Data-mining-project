@@ -25,15 +25,27 @@ Along with the main file, the program include the following files:
 Authors: Nir Barazida and Inbar Shirizly
 """
 
+from command_args import args
+import create_DB
 import time
 from user_analysis import UserAnalysis
 from user import User
 import json
 import concurrent.futures
-from command_args import args
-
+import logging
+from ORM import WebsitesT, engine, Base, session
 import pandas as pd
 pd.set_option('display.max_columns', 15)
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(levelname)s:%(asctime)s:%(name)s:%(message)s')
+file_handler = logging.FileHandler('main.log')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
+
+
 # implementing the command line arguments into variables
 # will not use the arguments directly for flexibility purposes (to using json file for input variables)
 WEBSITE_NAMES = args.web_sites
@@ -42,6 +54,9 @@ NUM_USERS_TO_SCRAP = args.num_users
 RECORDS_IN_CHUNK_OF_DATA = args.chunk_of_data
 SLEEP_FACTOR = args.sleep_factor
 MULTI_PROCESS = args.multi_process
+AUTO_SCRAP = args.auto_scrap
+
+MIN_LAST_SCRAPED = 0
 
 JSON_FILE_NAME = "mining_constants.json"
 # get constants from json file (which contains all the Constants)
@@ -49,9 +64,25 @@ JSON_FILE_NAME = "mining_constants.json"
 with open(JSON_FILE_NAME, "r") as json_file:
     constants_data = json.load(json_file)
 
-
 # constants - Stays always the same
 NUM_INSTANCES_IN_PAGE = constants_data["constants"]["NUM_INSTANCES_IN_PAGE"]
+
+
+def create_table_website(web_names):
+    """
+    get a list of all the websites that the user wants to scrap from
+    create new entries in table websites with those names
+    """
+
+    if not engine.dialect.has_table(engine, 'websites'):
+        raise print(f'Table websites not exist in DB')
+
+    for name in web_names:
+        web = session.query(WebsitesT).filter(WebsitesT.name == name).first()
+        if web is None:
+            web = WebsitesT(name=name, last_scraped=MIN_LAST_SCRAPED)
+            session.add(web)
+            session.commit()
 
 
 def scrap_users(website_name):
@@ -64,39 +95,61 @@ def scrap_users(website_name):
     :param website_name: domain name of the website that is been scrapped (str)
     :return: None
     """
+    if AUTO_SCRAP:
+        web = session.query(WebsitesT).filter(WebsitesT.name == website_name).first()
+        FIRST_INSTANCE_TO_SCRAP = web.last_scraped + 1
+        web.last_scraped += NUM_USERS_TO_SCRAP  # todo BOTH: can cause trouble if program fails before finishing
+
     websites_chunk_dict = {website: [] for website in WEBSITE_NAMES}
     index_for_first_page = (FIRST_INSTANCE_TO_SCRAP // NUM_INSTANCES_IN_PAGE) + 1
     index_for_first_instance_in_first_page = FIRST_INSTANCE_TO_SCRAP % NUM_INSTANCES_IN_PAGE
 
     user_page = UserAnalysis(website_name, index_for_first_page, index_for_first_instance_in_first_page)
 
-    print(f"Website: {website_name} ,number of users to scrap = {NUM_USERS_TO_SCRAP},"
+    logger.info(f"Website: {website_name} ,number of users to scrap = {NUM_USERS_TO_SCRAP},"
           f" sleep factor = {SLEEP_FACTOR}, first user: {FIRST_INSTANCE_TO_SCRAP},"
           f" last user: {FIRST_INSTANCE_TO_SCRAP + NUM_USERS_TO_SCRAP - 1},"
           f" Multi Process? {MULTI_PROCESS} ")
 
+    # create a new user
     for link in user_page.generate_users_links():
-        user = User(website_name, link)
+        user = User(website_name, link, FIRST_INSTANCE_TO_SCRAP)
+        user.scrap_info(link)
+
         websites_chunk_dict[website_name].append(user)
 
         for website_chunk, records in websites_chunk_dict.items():
             if len(records) == RECORDS_IN_CHUNK_OF_DATA:
-                print(f"print chunk of {RECORDS_IN_CHUNK_OF_DATA} for website {website_name}")
-                users_chunk = pd.DataFrame(websites_chunk_dict[website_chunk])
-                print(users_chunk)
+                logger.info(f"print chunk of {RECORDS_IN_CHUNK_OF_DATA} for website {website_name}")
+                for user_i in websites_chunk_dict[website_chunk]:
+                    user_i.insert_user()
+                    # print(user_i)
+                # users_chunk = pd.DataFrame(websites_chunk_dict[website_chunk])
+                # print(users_chunk)
                 websites_chunk_dict[website_chunk] = []
 
         if user.num_user_dict[website_name] == FIRST_INSTANCE_TO_SCRAP + NUM_USERS_TO_SCRAP - 1:
             if len(websites_chunk_dict[website_name]) > 0:
-                print(f"print chunk of {len(websites_chunk_dict[website_name])} for website {website_name}")
-                users_chunk = pd.DataFrame(websites_chunk_dict[website_name])
-                print(users_chunk)
+                logger.info(f"print chunk of {len(websites_chunk_dict[website_name])} for website {website_name}")
+                for user_i in websites_chunk_dict[website_name]:
+                    user_i.insert_user()
+                    # print(user_i)
+                # users_chunk = pd.DataFrame(websites_chunk_dict[website_name])
+                # print(users_chunk)
             break
 
 
 def main():
-
     t_start = time.perf_counter()
+
+    # Drops all tables. del when DB is ready
+    # Base.metadata.drop_all(engine)
+
+    # creates all tables - if exists won't do anything
+    Base.metadata.create_all(engine)
+
+    # create table website for all the websites
+    create_table_website(WEBSITE_NAMES)
 
     # Multi Process mode
     if MULTI_PROCESS:
@@ -108,10 +161,10 @@ def main():
             t1 = time.perf_counter()
             scrap_users(website_name)
             t2 = time.perf_counter()
-            print(f"Finished to scrap {NUM_USERS_TO_SCRAP} users in {round(t2 - t1, 2)} seconds")
+            logger.info(f"Finished to scrap {NUM_USERS_TO_SCRAP} users in {round(t2 - t1, 2)} seconds")
 
     t_end = time.perf_counter()
-    print(f"Finished all the code in {round(t_end - t_start, 2)} seconds")
+    logger.info(f"Finished all the code in {round(t_end - t_start, 2)} seconds")
 
 
 if __name__ == '__main__':
