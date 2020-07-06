@@ -8,3 +8,4 @@ flaskblog.py
 testing.py
 venv
 documentation
+*.log

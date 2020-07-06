@@ -12,7 +12,8 @@ data['constants'] = {
                     'AF': 'Africa',
                     'EU': 'Europe'
                    },
-    'MAGNITUDE_MAP': {"m": 6, "k": 3}
+    'MAGNITUDE_MAP': {"m": 6, "k": 3},
+    'REPUTATION_YEARS': (2017, 2018, 2019, 2020)
 }
 
 data['constants for user'] = {
@@ -24,6 +25,6 @@ data['constants for user'] = {
     'MULTI_PROCESS': True
 }
 
-print(data)
+
 with open('mining_constants.json', 'w') as outfile:
     json.dump(data, outfile, indent=2)

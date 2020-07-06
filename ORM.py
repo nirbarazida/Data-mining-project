@@ -8,9 +8,11 @@ from sqlalchemy import create_engine, Integer, String, Column, DateTime, Foreign
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Session
 from command_args import args
+import os
 
-USER_NAME = args.user_name
-PASSWORD = args.password
+
+USER_NAME = os.environ.get("MySQL_USER")
+PASSWORD = os.environ.get("MySQL_PASS")
 DB_NAME = args.DB_name
 
 engine = create_engine(f"mysql+pymysql://{USER_NAME}:{PASSWORD}@localhost/{DB_NAME}")
@@ -44,7 +46,7 @@ class UserT(Base):
         Reputation - one to one
         Location - one to many
     """
-    __tablename__ = 'user'
+    __tablename__ = 'users' #: TODO - user is a save word in mysql - bad practice
     id = Column(Integer(), primary_key=True)
     rank = Column(Integer())
     name = Column(String(100), nullable=False)
@@ -75,7 +77,7 @@ class User_Tags(Base):
     """
     __tablename__ = 'user_tags'
     id = Column(Integer(), primary_key=True)
-    user_id = Column(Integer(), ForeignKey("user.id"))
+    user_id = Column(Integer(), ForeignKey("users.id"))
     tag_id = Column(Integer(), ForeignKey("tags.id"))
     score = Column(Integer())
     posts = Column(Integer())
@@ -101,8 +103,7 @@ class Reputation(Base):
         User - one to one
     """
     __tablename__ = 'reputation'
-    id = Column(Integer(), primary_key=True)
-    user_id = Column(Integer(), ForeignKey('user.id'))
+    user_id = Column(Integer(), ForeignKey('users.id'), primary_key=True)
     reputation_now = Column(Integer(), nullable=False)
     reputation_2020 = Column(Integer(), nullable=True)
     reputation_2019 = Column(Integer(), nullable=True)

@@ -26,24 +26,17 @@ Authors: Nir Barazida and Inbar Shirizly
 """
 
 from command_args import args
-import create_DB
 import time
+import create_DB
 from user_analysis import UserAnalysis
 from user import User
 import json
 import concurrent.futures
-import logging
 from ORM import WebsitesT, engine, Base, session
-import pandas as pd
-pd.set_option('display.max_columns', 15)
+from logger import Logger
+from tqdm import tqdm
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter('%(levelname)s:%(asctime)s:%(name)s:%(message)s')
-file_handler = logging.FileHandler('main.log')
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
-
+logger_main = Logger("main").logger
 
 
 # implementing the command line arguments into variables
@@ -58,6 +51,7 @@ AUTO_SCRAP = args.auto_scrap
 
 MIN_LAST_SCRAPED = 0
 
+
 JSON_FILE_NAME = "mining_constants.json"
 # get constants from json file (which contains all the Constants)
 
@@ -68,7 +62,7 @@ with open(JSON_FILE_NAME, "r") as json_file:
 NUM_INSTANCES_IN_PAGE = constants_data["constants"]["NUM_INSTANCES_IN_PAGE"]
 
 
-def create_table_website(web_names):
+def create_table_website(web_names): # : TODO - Inbar - I think this should be in ORM file
     """
     get a list of all the websites that the user wants to scrap from
     create new entries in table websites with those names
@@ -106,36 +100,31 @@ def scrap_users(website_name):
 
     user_page = UserAnalysis(website_name, index_for_first_page, index_for_first_instance_in_first_page)
 
-    logger.info(f"Website: {website_name} ,number of users to scrap = {NUM_USERS_TO_SCRAP},"
+    logger_main.info(f"Website: {website_name} ,number of users to scrap = {NUM_USERS_TO_SCRAP},"
           f" sleep factor = {SLEEP_FACTOR}, first user: {FIRST_INSTANCE_TO_SCRAP},"
           f" last user: {FIRST_INSTANCE_TO_SCRAP + NUM_USERS_TO_SCRAP - 1},"
           f" Multi Process? {MULTI_PROCESS} ")
 
     # create a new user
-    for link in user_page.generate_users_links():
+    user_links_generator = user_page.generate_users_links()
+    for link in tqdm(user_links_generator, desc=f"{website_name}", total=NUM_USERS_TO_SCRAP, position=1, leave=False):
         user = User(website_name, link, FIRST_INSTANCE_TO_SCRAP)
         user.scrap_info(link)
 
         websites_chunk_dict[website_name].append(user)
 
-        for website_chunk, records in websites_chunk_dict.items():
+        for website_chunk, records in websites_chunk_dict.items(): #: TODO - it seems like commit one by one is pretty efficient, I suggest to delete this
             if len(records) == RECORDS_IN_CHUNK_OF_DATA:
-                logger.info(f"print chunk of {RECORDS_IN_CHUNK_OF_DATA} for website {website_name}")
+                #logger_main.info(f"print chunk of {RECORDS_IN_CHUNK_OF_DATA} for website {website_name}")
                 for user_i in websites_chunk_dict[website_chunk]:
                     user_i.insert_user()
-                    # print(user_i)
-                # users_chunk = pd.DataFrame(websites_chunk_dict[website_chunk])
-                # print(users_chunk)
                 websites_chunk_dict[website_chunk] = []
 
         if user.num_user_dict[website_name] == FIRST_INSTANCE_TO_SCRAP + NUM_USERS_TO_SCRAP - 1:
             if len(websites_chunk_dict[website_name]) > 0:
-                logger.info(f"print chunk of {len(websites_chunk_dict[website_name])} for website {website_name}")
+                logger_main.info(f"print chunk of {len(websites_chunk_dict[website_name])} for website {website_name}")
                 for user_i in websites_chunk_dict[website_name]:
                     user_i.insert_user()
-                    # print(user_i)
-                # users_chunk = pd.DataFrame(websites_chunk_dict[website_name])
-                # print(users_chunk)
             break
 
 
@@ -157,14 +146,14 @@ def main():
             executer.map(scrap_users, WEBSITE_NAMES)
     # for loop mode
     else:
-        for website_name in WEBSITE_NAMES:
+        for website_name in tqdm(WEBSITE_NAMES, desc="Websites", position=0):
             t1 = time.perf_counter()
             scrap_users(website_name)
             t2 = time.perf_counter()
-            logger.info(f"Finished to scrap {NUM_USERS_TO_SCRAP} users in {round(t2 - t1, 2)} seconds")
+            logger_main.info(f"Finished to scrap {NUM_USERS_TO_SCRAP} users in {round(t2 - t1, 2)} seconds")
 
     t_end = time.perf_counter()
-    logger.info(f"Finished all the code in {round(t_end - t_start, 2)} seconds")
+    logger_main.info(f"Finished all the code in {round(t_end - t_start, 2)} seconds")
 
 
 if __name__ == '__main__':

@@ -7,14 +7,9 @@ Authors: Nir Barazida and Inbar Shirizly
 """
 
 from website import Website
-import logging
+from logger import Logger
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter('%(levelname)s:%(name)s:%(message)s')
-file_handler = logging.FileHandler('main.log')
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
+logger_us = Logger("user_analysis").logger
 
 class UserAnalysis(Website):
     """
@@ -53,7 +48,7 @@ class UserAnalysis(Website):
         """
 
         for i, soup in enumerate(self.get_pages_soups(self.get_first_url())):
-            logger.info(f"website: {self.website_url} ,page {i + self._index_first_page}")
+            #logger_us.info(f"website: {self.website_url} ,page {i + self._index_first_page}") # :TODO: check every X user with api
             users_grid = soup.find("div", {"class": "grid-layout"})
             users_info = users_grid.find_all_next("div", {"class": "user-info"})
 

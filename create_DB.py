@@ -1,14 +1,15 @@
 import pymysql
-
 from command_args import args
+import os
 
-USER_NAME = args.user_name
-PASSWORD = args.password
+
+USER_NAME = os.environ.get("MySQL_USER")
+PASSWORD = os.environ.get("MySQL_PASS")
 DB_NAME = args.DB_name
 
 # todo NIR: add exceptions
 
-if args.creat_DB:
+if args.create_DB:
     connection = pymysql.connect(host='localhost', user=USER_NAME, password=PASSWORD)
 
     # Create a cursor object
@@ -21,7 +22,7 @@ if args.creat_DB:
         # SQL Statement to create a database
         sqlStatement = "CREATE DATABASE " + DB_NAME
 
-        # Execute the create database SQL statment through the cursor instance
+        # Execute the create database SQL statement through the cursor instance
         cursorInsatnce.execute(sqlStatement)
 
 
