@@ -46,6 +46,7 @@ class UserT(Base):
         Reputation - one to one
         Location - one to many
     """
+
     __tablename__ = 'users' #: TODO - user is a save word in mysql - bad practice
     id = Column(Integer(), primary_key=True)
     rank = Column(Integer())
@@ -122,3 +123,16 @@ class Location(Base):
     country = Column(String(100), nullable=True)
     continent = Column(String(50), nullable=True)
     users = relationship("UserT", backref="location")
+    stack_locations = relationship("Stack_Exchange_Location", backref="location")
+
+
+class Stack_Exchange_Location(Base):
+    """
+    location of all the users in the way that was writen in the website
+    relationship:
+        Location - one to many
+    """
+    __tablename__ = 'stack_exchange_location'
+    id = Column(Integer(), primary_key=True)
+    stack_exchange_location = Column(String(100), nullable=False)
+    location_id = Column(Integer(), ForeignKey('location.id'))
