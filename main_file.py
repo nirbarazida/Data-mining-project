@@ -79,6 +79,20 @@ def create_table_website(web_names): # : TODO - Inbar - I think this should be i
             session.commit()
 
 
+def arrange_first_user_to_scrap(website_name): #: TODO - moved from main function - need to find place for it
+    if AUTO_SCRAP:
+        web = session.query(WebsitesT).filter(WebsitesT.name == website_name).first()
+        first_instance_to_scrap = web.last_scraped + 1
+        web.last_scraped += NUM_USERS_TO_SCRAP  # todo BOTH: can cause trouble if program fails before finishing
+    else:
+        first_instance_to_scrap = FIRST_INSTANCE_TO_SCRAP
+
+    index_first_page = (first_instance_to_scrap // NUM_INSTANCES_IN_PAGE) + 1
+    index_first_instance_in_first_page = first_instance_to_scrap % NUM_INSTANCES_IN_PAGE
+
+    return first_instance_to_scrap, index_first_page, index_first_instance_in_first_page
+
+
 def scrap_users(website_name):
     """
     receives website name and scrap individual users data (via the classes generators in the related files)
@@ -89,42 +103,28 @@ def scrap_users(website_name):
     :param website_name: domain name of the website that is been scrapped (str)
     :return: None
     """
-    if AUTO_SCRAP:
-        web = session.query(WebsitesT).filter(WebsitesT.name == website_name).first()
-        FIRST_INSTANCE_TO_SCRAP = web.last_scraped + 1
-        web.last_scraped += NUM_USERS_TO_SCRAP  # todo BOTH: can cause trouble if program fails before finishing
-
     websites_chunk_dict = {website: [] for website in WEBSITE_NAMES}
-    index_for_first_page = (FIRST_INSTANCE_TO_SCRAP // NUM_INSTANCES_IN_PAGE) + 1
-    index_for_first_instance_in_first_page = FIRST_INSTANCE_TO_SCRAP % NUM_INSTANCES_IN_PAGE
 
-    user_page = UserAnalysis(website_name, index_for_first_page, index_for_first_instance_in_first_page)
+    first_instance_to_scrap, index_first_page, index_first_instance_in_first_page = arrange_first_user_to_scrap(website_name)
+
+    user_page = UserAnalysis(website_name, index_first_page, index_first_instance_in_first_page)
 
     logger_main.info(f"Website: {website_name} ,number of users to scrap = {NUM_USERS_TO_SCRAP},"
-          f" sleep factor = {SLEEP_FACTOR}, first user: {FIRST_INSTANCE_TO_SCRAP},"
-          f" last user: {FIRST_INSTANCE_TO_SCRAP + NUM_USERS_TO_SCRAP - 1},"
+          f" sleep factor = {SLEEP_FACTOR}, first user: {first_instance_to_scrap},"
+          f" last user: {first_instance_to_scrap + NUM_USERS_TO_SCRAP - 1},"
           f" Multi Process? {MULTI_PROCESS} ")
 
     # create a new user
     user_links_generator = user_page.generate_users_links()
-    for link in tqdm(user_links_generator, desc=f"{website_name}", total=NUM_USERS_TO_SCRAP, position=1, leave=False):
-        user = User(website_name, link, FIRST_INSTANCE_TO_SCRAP)
+    for num_user, link in enumerate(tqdm(user_links_generator, desc=f"{website_name}", total=NUM_USERS_TO_SCRAP, position=1, leave=False)):
+        user = User(website_name, link, first_instance_to_scrap)
         user.scrap_info(link)
+        user.insert_user()
+        #user.insert_user() #: TODO - problem!! in case we insert the same instance again, the DB just add it - duplicates
 
         websites_chunk_dict[website_name].append(user)
 
-        for website_chunk, records in websites_chunk_dict.items(): #: TODO - it seems like commit one by one is pretty efficient, I suggest to delete this
-            if len(records) == RECORDS_IN_CHUNK_OF_DATA:
-                #logger_main.info(f"print chunk of {RECORDS_IN_CHUNK_OF_DATA} for website {website_name}")
-                for user_i in websites_chunk_dict[website_chunk]:
-                    user_i.insert_user()
-                websites_chunk_dict[website_chunk] = []
-
-        if user.num_user_dict[website_name] == FIRST_INSTANCE_TO_SCRAP + NUM_USERS_TO_SCRAP - 1:
-            if len(websites_chunk_dict[website_name]) > 0:
-                logger_main.info(f"print chunk of {len(websites_chunk_dict[website_name])} for website {website_name}")
-                for user_i in websites_chunk_dict[website_name]:
-                    user_i.insert_user()
+        if num_user == NUM_USERS_TO_SCRAP - 1:
             break
 
 

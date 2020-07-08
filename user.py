@@ -61,20 +61,23 @@ class User(Website, dict):
 
         User.num_user_dict[self._website_name] = User.num_user_dict.get(self._website_name,
                                                                         FIRST_INSTANCE_TO_SCRAP - 1) + 1
-        self['rank'] = User.num_user_dict[self._website_name]
-        self['name'] = self._soup.find("div", {"class": "grid--cell fw-bold"}).text
-        self['member_since'] = None
-        self['year'] = None #: TODO - Inbar - we should delete this in my opinion
-        self['month'] = None #: TODO - Inbar - we should delete this in my opinion
-        self['profile_views'] = 0
-        self['answers'] = None
-        self['people_reached'] = None
-        self['country'] = None  # not all users have a valid location in profile - must keep as default none
-        self['continent'] = None  # same as line above
-        self['reputation_now'] = int(
+        self._rank = User.num_user_dict[self._website_name]
+        self._name = self._soup.find("div", {"class": "grid--cell fw-bold"}).text
+        self._member_since = None
+        self._year = None #: TODO - Inbar - we should delete this in my opinion
+        self._month = None #: TODO - Inbar - we should delete this in my opinion
+        self._profile_views = 0
+        self._answers = None
+        self._people_reached = None
+        self._country = None  # not all users have a valid location in profile - must keep as default none
+        self._continent = None  # same as line above
+        self._reputation_now = int(
             self._soup.find("div", {"class": "grid--cell fs-title fc-dark"}).text.replace(',', '')) #:TODO - cluster this with the other reputations
-        self['reputation_years'] = {}  # must be emty dict so ORM will be able to map it
-        self['tags'] = self.create_tags() # TODO: Inbar - I think we can use this way for all the variables
+        self._reputation_2017 = None
+        self._reputation_2018 = None
+        self._reputation_2019 = None
+        self._reputation_2020 = None
+        self._tags = self.create_tags() # TODO: Inbar - I think we can use this way for all the variables
 
 
     def personal_info(self):
@@ -86,15 +89,15 @@ class User(Website, dict):
         basic_info_as_list = basic_info_scope.find_all_next("div", {"class": "grid gs8 gsx ai-center"})
         if basic_info_as_list[0].find('svg', {'aria-hidden': 'true', 'class': 'svg-icon iconLocation'}):
             location_string = basic_info_as_list[0].text.strip()
-            self["country"], self['continent'] = Website.get_country_and_continent_from_location(location_string)
+            self._country, self._continent = Website.get_country_and_continent_from_location(location_string)
 
         for i in basic_info_as_list:
             if 'Member for' in i.text:
-                self['member_since'] = datetime.strptime(i.find('span')['title'][:-1], '%Y-%m-%d %H:%M:%S')
-                self["year"] = self['member_since'].year
-                self["month"] = self['member_since'].month
+                self._member_since = datetime.strptime(i.find('span')['title'][:-1], '%Y-%m-%d %H:%M:%S')
+                self._year = self._member_since.year
+                self._month = self._member_since.month
             if 'profile views' in i.text:
-                self['profile_views'] = int(i.text.strip().split()[0].replace(",", ""))
+                self._profile_views = int(i.text.strip().split()[0].replace(",", ""))
                 break
 
     def professional_info(self):
@@ -105,22 +108,30 @@ class User(Website, dict):
         if user_community_info:
             user_community_info = user_community_info.find_all_next('div',
                                                                     {'class': 'grid--cell fs-body3 fc-dark fw-bold'})
-            self['answers'] = int(user_community_info[0].text.replace(",", ""))
+            self._answers = int(user_community_info[0].text.replace(",", ""))
             people_reached = user_community_info[2].text.strip('~')
-            self['people_reached'] = int(float(people_reached[:-1]) * (10 ** magnitude_dict[people_reached[-1]]))
+            self._people_reached = int(float(people_reached[:-1]) * (10 ** magnitude_dict[people_reached[-1]]))
 
     def reputation_hist(self, url):
         """
         user reputation for years: [2017, 2018, 2019 ,2020]
          will evaluate years only for users registered before 2017
         """
-        if self['member_since'] < threshold_date:
+        if self._member_since < threshold_date:
             soup_activity = self.create_soup(url + "?tab=topactivity")
             source_data = soup_activity.find("div", {"id": "top-cards"}).text
             numbers = re.search(REPUTATION_REGEX, source_data).group(1)
             reputation_numbers = ast.literal_eval(numbers)
-            self['reputation_years'] = {f'reputation_{year}': reputation_numbers[ind] for year, ind in
-                                        zip(REPUTATION_YEARS, year_indexes)}
+            try:
+                # self._reputation_years = {f'reputation_{year}': reputation_numbers[ind] for year, ind in
+                #                             zip(REPUTATION_YEARS, year_indexes)}
+                self._reputation_2017 = reputation_numbers[year_indexes[0]]
+                self._reputation_2018 = reputation_numbers[year_indexes[1]]
+                self._reputation_2019 = reputation_numbers[year_indexes[2]]
+                self._reputation_2020 = reputation_numbers[year_indexes[3]]
+            except IndexError:
+                print(f"website {self._website_name} rank {self._rank}"
+                      f" user  is member since more than 4 years but have reputation plot of month")
 
     def create_tags(self):
         """
@@ -146,31 +157,36 @@ class User(Website, dict):
         created to decrees amount of lines in main file.
         reputation_hist method most be last - so self['member_since'] will get a value.
         """
-        #self.create_tags()
         self.professional_info()
         self.personal_info()
         self.reputation_hist(link)
 
     def get_user_info(self):
         return {
-            'rank': self['rank'],
-            'name': self['name'],
-            'member_since': self['member_since'],
-            'year': self['year'],
-            'month': self['month'],
-            'profile_views': self['profile_views'],
-            'answers': self['answers'],
-            'people_reached': self['people_reached'],
+            'rank': self._rank,
+            'name': self._name,
+            'member_since': self._member_since,
+            'year': self._year,
+            'month': self._month,
+            'profile_views': self._profile_views,
+            'answers': self._answers,
+            'people_reached': self._people_reached,
         }
 
     def get_location(self):
         return {
-            'country': self['country'],
-            'continent': self['continent']
+            'country': self._country,
+            'continent': self._continent
         }
 
     def get_reputation(self):
-        return {**{'reputation_now': self['reputation_now']}, **self['reputation_years']}
+        return {
+            'reputation_2017': self._reputation_2017,
+            'reputation_2018': self._reputation_2018,
+            'reputation_2019': self._reputation_2019,
+            'reputation_2020': self._reputation_2020,
+            'reputation_now': self._reputation_now
+                }
 
     def insert_user(self):
         tic = time.perf_counter() # TODO: I think we can drop this - information not that important - we can time X commits
@@ -178,7 +194,7 @@ class User(Website, dict):
         # list of variables that we'll add and commit in one shot commit
         commit_list = []
         web = session.query(WebsitesT).filter(WebsitesT.name == self._website_name).first()
-        loc = session.query(Location).filter(Location.country == self['country']).first()
+        loc = session.query(Location).filter(Location.country == self._country).first()
         if loc is None:
             loc = Location(**self.get_location())
         # create new user entrance in table and commit it to create PK for user.
@@ -188,7 +204,7 @@ class User(Website, dict):
         # create user Reputation and connects it to the user.
         rep = Reputation(user_id=user.id, **self.get_reputation())
         commit_list.extend([loc, rep])
-        for tag in self['tags']:
+        for tag in self._tags:
             new_tag = session.query(TagsT).filter(TagsT.name == tag[0]).first()
             if new_tag is None:
                 new_tag = TagsT(name=tag[0])
@@ -203,7 +219,7 @@ class User(Website, dict):
 
         toc = time.perf_counter()
         logger_user.info(
-            f"Finished insert ( {self['name'].encode('utf-8')} ) to table {self._website_name} in {round(toc - tic, 4)} seconds")
+            f"Finished insert ( {self._name.encode('utf-8')} ) to table {self._website_name} in {round(toc - tic, 4)} seconds")
             # : TODO - Inbar: in my opinion this logger is redundent - maybe we can replace with something that checks for a problem
 
 

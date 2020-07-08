@@ -1,11 +1,3 @@
 *.pyc
-check.txt
-1.1.py
-ORM.py
-flaskblog.py
-1.py
-2.py
 testing.py
-venv
-documentation
 *.log
