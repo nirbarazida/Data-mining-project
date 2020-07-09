@@ -47,13 +47,11 @@ class UserT(Base):
         Location - one to many
     """
 
-    __tablename__ = 'users' #: TODO - user is a save word in mysql - bad practice
+    __tablename__ = 'users'
     id = Column(Integer(), primary_key=True)
     rank = Column(Integer())
     name = Column(String(100), nullable=False)
     member_since = Column(DateTime())
-    year = Column(Integer())
-    month = Column(Integer())
     profile_views = Column(Integer())
     answers = Column(Integer())
     people_reached = Column(Integer())
@@ -134,5 +132,5 @@ class Stack_Exchange_Location(Base):
     """
     __tablename__ = 'stack_exchange_location'
     id = Column(Integer(), primary_key=True)
-    stack_exchange_location = Column(String(100), nullable=False)
+    website_location = Column(String(100), nullable=True)
     location_id = Column(Integer(), ForeignKey('location.id'))
