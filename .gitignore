@@ -1,3 +1,7 @@
 *.pyc
 testing.py
 *.log
+junk
+venv
+documentation
+.idea
