@@ -19,14 +19,29 @@ with open(JSON_FILE_NAME, "r") as json_file:
     constants_data = json.load(json_file)
 
 magnitude_dict = constants_data["constants"]["MAGNITUDE_MAP"]
-REPUTATION_YEARS = constants_data["constants"]["REPUTATION_YEARS"]
-continents_dict = constants_data["constants"]["CONTINENTS_MAP"]
 
+
+# location handling varibales
+continents_dict = constants_data["constants"]["CONTINENTS_MAP"]
+KNOWN_COUNTRIES = constants_data["constants"]["KNOWN_COUNTRIES"]
+IGNORE_NAME_IN_LOCATION_CACHE_TABLE = constants_data["constants"]["IGNORE_NAME_IN_LOCATION_CACHE_TABLE"]
+
+# regex strings
+REPUTATION_REGEX = re.compile(constants_data["constants"]["REGEX_STRINGS"]["REPUTATION_REGEX"])
+GMT_REGEX = re.compile(constants_data["constants"]["REGEX_STRINGS"]["GMT_REGEX"])
+
+# logger strings
+GeocoderUnavailable_WARNING_STRING = constants_data["constants"]["LOGGER_STRINGS"]["GeocoderUnavailable_WARNING_STRING"]
+GeocoderUnavailable_ERROR_STRING = constants_data["constants"]["LOGGER_STRINGS"]["GeocoderUnavailable_ERROR_STRING"]
+
+# find indexes of 1 of January in the years searched for reputation. get threshold for it (4 years from today)
+REPUTATION_YEARS = constants_data["constants"]["REPUTATION_YEARS"]
 now = datetime.now()
 threshold_date = now - timedelta(days=4 * 365)
 year_indexes = [-(now - datetime(year, 1, 1)).days for year in REPUTATION_YEARS]
 
-REPUTATION_REGEX = re.compile(r"var\sgraphData\s=\s(\[\S+\])")
+# sleep time in seconds for request to locations api
+SLEEP_TIME_FOR_LOCATIONS_API = constants_data["constants for user"]["SLEEP_TIME_FOR_LOCATIONS_API"]
 
 
 class User(Website, dict):
@@ -53,17 +68,19 @@ class User(Website, dict):
 
     """
 
+    # class variable that contains the current rank of the users for each website, i.e : {"stackoverflow": 5,
+    #                                                                                    "another website":2}
     num_user_dict = {}
 
 
-    def __init__(self, website_name, url, FIRST_INSTANCE_TO_SCRAP):
+    def __init__(self, website_name, url, first_instance_to_scrap):
         dict.__init__(self)
         Website.__init__(self, website_name)
 
         self._soup = Website.create_soup(url)
 
         User.num_user_dict[self._website_name] = User.num_user_dict.get(self._website_name,
-                                                                        FIRST_INSTANCE_TO_SCRAP - 1) + 1
+                                                                        first_instance_to_scrap - 1) + 1
         self._rank = User.num_user_dict[self._website_name]
         self._name = self._soup.find("div", {"class": "grid--cell fw-bold"}).text
         self._member_since = None
@@ -81,7 +98,6 @@ class User(Website, dict):
         self._reputation_2020 = None
         self._tags = self.create_tags() # TODO: Inbar - I think we can use this way for all the variables
 
-
     def personal_info(self):
         """
         Defines users name and users location
@@ -93,18 +109,23 @@ class User(Website, dict):
             location_string = basic_info_as_list[0].text.strip()
 
             last_word_in_user_location_string = location_string.rsplit(",")[-1].strip()
-            check_existing_location = session.query(Stack_Exchange_Location.location_id)\
-                                             .filter(Stack_Exchange_Location.website_location == last_word_in_user_location_string.title())\
-                                             .first() #: TODO - merge with next query
 
-            if check_existing_location: #: TODO: We should create a list of problematic words that occured (like: University (located to UK)) and write the in the json file
-                self._country, self._continent = session.query(Location.country, Location.continent)\
-                                                        .join(Stack_Exchange_Location)\
-                                                        .filter(Stack_Exchange_Location.location_id == check_existing_location[0])\
-                                                        .first()
+            if last_word_in_user_location_string in KNOWN_COUNTRIES:
+                self._country, self._continent = KNOWN_COUNTRIES[last_word_in_user_location_string]
+
+            location_row = session.query(Location)\
+                                  .join(Stack_Exchange_Location)\
+                                  .filter(Stack_Exchange_Location.website_location == last_word_in_user_location_string)\
+                                  .first()
+
+            if location_row:
+                self._country, self._continent = location_row.country, location_row.continent
+
             else:
                 self._country, self._continent = self.get_country_and_continent_from_location(location_string)
-                if self._country and last_word_in_user_location_string.istitle():
+                if (self._country)\
+                        and (last_word_in_user_location_string not in IGNORE_NAME_IN_LOCATION_CACHE_TABLE)\
+                        and (last_word_in_user_location_string.istitle()):
                     self._new_location_name_in_website = last_word_in_user_location_string
 
         for i in basic_info_as_list:
@@ -116,18 +137,19 @@ class User(Website, dict):
 
     def get_country_and_continent_from_location(self, loc_string):
         country, continent = None, None  # initiate the returned variables
-        if not re.search(r"GMT\s[+-]\d", loc_string):  # handle "GMT {-8:00}" - time zone location inputted
+        if not re.search(GMT_REGEX, loc_string):  # handle "GMT {-8:00}" - time zone location inputted
             try:
                 country, continent = User.geolocator_process(loc_string)
             except GeocoderUnavailable:
-                logger_user.warning(f"problem! user {self._name} rank {self._rank} and website {self._website_name}"
-                      f" with address {loc_string}, did not scrapped, try to run again")
-                time.sleep(1.5) # :TODO - add to json
+                logger_user.warning(GeocoderUnavailable_WARNING_STRING.format(self._name, self._rank,
+                                                                              self._website_name, loc_string))
+
+                time.sleep(SLEEP_TIME_FOR_LOCATIONS_API)
                 try:
                     country, continent = User.geolocator_process(loc_string)
                 except GeocoderUnavailable:
-                    logger_user.error(f"Failed! user {self._name} rank {self._rank} and website {self._website_name}"
-                          f" with address {loc_string}, did not scrapped") # : TODO: add the url of the users, after milestone 2 - update these locations
+                    logger_user.error(GeocoderUnavailable_ERROR_STRING.format(self._name, self._rank,
+                                                                              self._website_name, loc_string)) # : TODO: add the url of the users, after milestone 2 - update these locations
 
         return country, continent
 
@@ -137,21 +159,19 @@ class User(Website, dict):
         loc = Website.geolocator.geocode(loc_string)
         if loc:
             lat, lon = loc.latitude, loc.longitude
-            time.sleep(1.5)
+            time.sleep(SLEEP_TIME_FOR_LOCATIONS_API)
             new_loc = Website.geolocator.reverse([lat, lon], language='en')
             try:
                 country = new_loc.raw["address"]["country"]
                 continent = continents_dict[country_alpha2_to_continent_code(
                     country_name_to_country_alpha2(country))]
 
-            except KeyError:  #: TODO: move to json file
-                if country == "The Netherlands":
-                    country = "Netherlands"
-                    continent = "Europe"
+            except KeyError:
+                if country in KNOWN_COUNTRIES:
+                    country, continent = KNOWN_COUNTRIES[country]
             finally:
-                time.sleep(1.1)  # :TODO: calculate time to sleep
+                time.sleep(SLEEP_TIME_FOR_LOCATIONS_API)
         return country, continent
-
 
     def professional_info(self):
         """

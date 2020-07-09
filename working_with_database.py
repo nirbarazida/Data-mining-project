@@ -2,14 +2,24 @@ from ORM import WebsitesT, engine, Base, session
 from command_args import args
 import os
 import pymysql
+import json
+
 
 MIN_LAST_SCRAPED = 0
 NUM_USERS_TO_SCRAP = args.num_users
 WEBSITE_NAMES = args.web_sites
-USER_NAME = os.environ.get("MySQL_USER")
-PASSWORD = os.environ.get("MySQL_PASS")
+
 DB_NAME = args.DB_name
 
+JSON_FILE_NAME = "mining_constants.json"
+# get constants from json file (which contains all the Constants)
+
+with open(JSON_FILE_NAME, "r") as json_file:
+    constants_data = json.load(json_file)
+
+# get authentication values
+USER_NAME = os.environ.get(constants_data["constants"]["AUTHENTICATION"]["USER_ENV_NAME"])
+PASSWORD = os.environ.get(constants_data["constants"]["AUTHENTICATION"]["PASSWORD_ENV_NAME"])
 
 def initiate_database():
 
@@ -52,7 +62,7 @@ def create_table_website(web_names):
     """
 
     if not engine.dialect.has_table(engine, 'websites'):
-        raise print(f'Table websites not exist in DB')
+        raise print('Table websites not exist in DB')
 
     for name in web_names:
         web = session.query(WebsitesT).filter(WebsitesT.name == name).first()

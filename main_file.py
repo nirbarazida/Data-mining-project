@@ -45,7 +45,6 @@ logger_main = Logger("main").logger
 WEBSITE_NAMES = args.web_sites
 FIRST_INSTANCE_TO_SCRAP = args.first_user
 NUM_USERS_TO_SCRAP = args.num_users
-RECORDS_IN_CHUNK_OF_DATA = args.chunk_of_data
 SLEEP_FACTOR = args.sleep_factor
 MULTI_PROCESS = args.multi_process
 AUTO_SCRAP = args.auto_scrap
@@ -58,10 +57,13 @@ JSON_FILE_NAME = "mining_constants.json"
 with open(JSON_FILE_NAME, "r") as json_file:
     constants_data = json.load(json_file)
 
-# constants - Stays always the same
+# nunber of instances in each page
 NUM_INSTANCES_IN_PAGE = constants_data["constants"]["NUM_INSTANCES_IN_PAGE"]
 
-
+# logger strings
+OPENING_STRING = constants_data["constants"]["LOGGER_STRINGS"]["OPENING_STRING"]
+SANITY_CHECK_STRING = constants_data["constants"]["LOGGER_STRINGS"]["SANITY_CHECK_STRING"]
+WEBSITE_SCRAPP_INFO = constants_data["constants"]["LOGGER_STRINGS"]["WEBSITE_SCRAPP_INFO"]
 
 def arrange_first_user_to_scrap(website_name): #: TODO - moved from main function - need to find place for it
 
@@ -99,24 +101,23 @@ def scrap_users(website_name):
 
     user_page = UserAnalysis(website_name, index_first_page, index_first_instance_in_first_page)
 
-    logger_main.info(f"Website: {website_name}, first user: {first_instance_to_scrap},"
-                     f" last user: {first_instance_to_scrap + NUM_USERS_TO_SCRAP - 1}")
+    logger_main.info(WEBSITE_SCRAPP_INFO.format(website_name, first_instance_to_scrap,
+                                                first_instance_to_scrap + NUM_USERS_TO_SCRAP - 1))
 
     random_user_to_check = random.randint(0, NUM_USERS_TO_SCRAP - 1)
 
     # create a new user
     user_links_generator = user_page.generate_users_links()
-    for num_user, link in enumerate(tqdm(user_links_generator, desc=f"{website_name}", total=NUM_USERS_TO_SCRAP, position=1, leave=False)):
+    for num_user, link in enumerate(tqdm(user_links_generator, desc=f"{website_name}",
+                                         total=NUM_USERS_TO_SCRAP, position=1, leave=False)):
         user = User(website_name, link, first_instance_to_scrap)
         user.scrap_info(link)
         user.insert_user()
         #user.insert_user() #: TODO - problem!! in case we insert the same instance again, the DB just add it - duplicates
 
         if num_user == random_user_to_check: #:TODO - after milstone2 - create here a sanity check - pick random user from the data base and makes sure it corresponds to the website api data
-            logger_main.info(f"Sanity check for user: {user._name},"  #: TODO - add getters for these variables in user
-                             f" website: {website_name}, "
-                             f" page: {user._rank // NUM_INSTANCES_IN_PAGE},"
-                             f" reputation: {user._reputation_now}")
+            logger_main.info(SANITY_CHECK_STRING.format(link, website_name,
+                                                        user._rank // NUM_INSTANCES_IN_PAGE, user._reputation_now))  #: TODO - add getters for these variables in user
 
         if num_user == NUM_USERS_TO_SCRAP - 1:
             break
@@ -126,8 +127,7 @@ def scrap_users(website_name):
 def main():
 
     initiate_database()
-    logger_main.info(f"Working on DB: {DB_NAME}, number of users to scrap = {NUM_USERS_TO_SCRAP}, "
-                     f"sleep factor = {SLEEP_FACTOR}, Multi Process? {MULTI_PROCESS}")
+    logger_main.info(OPENING_STRING.format(DB_NAME, NUM_USERS_TO_SCRAP, SLEEP_FACTOR, MULTI_PROCESS))
 
     # Multi Process mode
     if MULTI_PROCESS:
