@@ -172,7 +172,7 @@ class User(Website, dict):
         """
         if self._member_since < threshold_date:
             soup_activity = self.create_soup(url + "?tab=topactivity")
-            source_data = soup_activity.find("div", {"id": "top-cards"}).text
+            source_data = soup_activity.find("div", {"id": "top-cards"}).contents[3].string
             numbers = re.search(REPUTATION_REGEX, source_data).group(1)
             reputation_numbers = ast.literal_eval(numbers)
             try:
