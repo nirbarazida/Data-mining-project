@@ -1,8 +1,9 @@
-from ORM import WebsitesT, engine, Base, session
+from ORM import WebsitesT, engine, Base, session,UserT
 from command_args import args
 import os
 import pymysql
 import json
+from sqlalchemy import func
 
 
 MIN_LAST_SCRAPED = 0
@@ -36,13 +37,20 @@ def initiate_database():
     create_table_website(WEBSITE_NAMES)
 
 
-def create_database():
-    # todo NIR: add exceptions
+def create_database():# todo NIR: add exceptions
 
-    connection = pymysql.connect(host='localhost', user=USER_NAME, password=PASSWORD)
+    try:
+        connection = pymysql.connect(host='localhost', user=USER_NAME, password=PASSWORD)
+    except pymysql.err.OperationalError as err:
+        raise pymysql.err.OperationalError('os environ variables are not defined.'
+                                           ' for help go to https://www.youtube.com/watch?v=IolxqkL7cD8 ')
 
     # Create a cursor object
-    cursor_insatnce = connection.cursor()
+    try:
+        cursor_insatnce = connection.cursor()
+    except pymysql.err.OperationalError:
+        raise pymysql.err.OperationalError("couldn't form a connection with server")
+
 
     # SQL Statement to check if DB exist
     sql_statement = 'SELECT distinct(SCHEMA_NAME) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ' '"' + DB_NAME + '"'
@@ -72,8 +80,19 @@ def create_table_website(web_names):
             session.commit()
 
 
+# def auto_scrap_updates(website_name):
+#     web = session.query(WebsitesT).filter(WebsitesT.name == website_name).first()
+#     first_instance_to_scrap = web.last_scraped + 1
+#     web.last_scraped += NUM_USERS_TO_SCRAP  # todo: after MS 2: how auto scrap work- can it be done simultaneously?
+#     return first_instance_to_scrap
+
+
 def auto_scrap_updates(website_name):
+    """
+    gets the website name that is being scraped
+    checks in the user table what is the last rank that was scraped based on website id
+     returns value + 1 as the instance to first scrap
+    """
     web = session.query(WebsitesT).filter(WebsitesT.name == website_name).first()
-    first_instance_to_scrap = web.last_scraped + 1
-    web.last_scraped += NUM_USERS_TO_SCRAP  # todo BOTH: can cause trouble if program fails before finishing
-    return first_instance_to_scrap
+    last_scraped = session.query(func.max(UserT.rank)).filter(UserT.website_id == web.id).scalar()
+    return last_scraped+1

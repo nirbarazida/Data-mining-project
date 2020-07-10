@@ -80,7 +80,7 @@ class Website(object):
         soup = Website.create_soup(topic_url)
         yield soup
 
-        for i in range(number_of_last_page - 1):
+        for _ in range(number_of_last_page - 1):
             last_link = self.website_url + soup.find('a', {'rel': 'next'})['href']
             soup = Website.create_soup(last_link)
             yield soup
