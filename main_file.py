@@ -27,14 +27,15 @@ Authors: Nir Barazida and Inbar Shirizly
 
 from command_args import args
 import time
-import create_DB
 from user_analysis import UserAnalysis
 from user import User
 import json
 import concurrent.futures
-from ORM import WebsitesT, engine, Base, session
 from logger import Logger
 from tqdm import tqdm
+from functools import wraps
+from working_with_database import initiate_database, create_table_website, auto_scrap_updates
+import random
 
 logger_main = Logger("main").logger
 
@@ -44,12 +45,10 @@ logger_main = Logger("main").logger
 WEBSITE_NAMES = args.web_sites
 FIRST_INSTANCE_TO_SCRAP = args.first_user
 NUM_USERS_TO_SCRAP = args.num_users
-RECORDS_IN_CHUNK_OF_DATA = args.chunk_of_data
 SLEEP_FACTOR = args.sleep_factor
 MULTI_PROCESS = args.multi_process
 AUTO_SCRAP = args.auto_scrap
-
-MIN_LAST_SCRAPED = 0
+DB_NAME = args.DB_name
 
 
 JSON_FILE_NAME = "mining_constants.json"
@@ -58,41 +57,35 @@ JSON_FILE_NAME = "mining_constants.json"
 with open(JSON_FILE_NAME, "r") as json_file:
     constants_data = json.load(json_file)
 
-# constants - Stays always the same
+# nunber of instances in each page
 NUM_INSTANCES_IN_PAGE = constants_data["constants"]["NUM_INSTANCES_IN_PAGE"]
 
-
-def create_table_website(web_names): # : TODO - Inbar - I think this should be in ORM file
-    """
-    get a list of all the websites that the user wants to scrap from
-    create new entries in table websites with those names
-    """
-
-    if not engine.dialect.has_table(engine, 'websites'):
-        raise print(f'Table websites not exist in DB')
-
-    for name in web_names:
-        web = session.query(WebsitesT).filter(WebsitesT.name == name).first()
-        if web is None:
-            web = WebsitesT(name=name, last_scraped=MIN_LAST_SCRAPED)
-            session.add(web)
-            session.commit()
-
+# logger strings
+OPENING_STRING = constants_data["constants"]["LOGGER_STRINGS"]["OPENING_STRING"]
+SANITY_CHECK_STRING = constants_data["constants"]["LOGGER_STRINGS"]["SANITY_CHECK_STRING"]
+WEBSITE_SCRAPP_INFO = constants_data["constants"]["LOGGER_STRINGS"]["WEBSITE_SCRAPP_INFO"]
 
 def arrange_first_user_to_scrap(website_name): #: TODO - moved from main function - need to find place for it
-    if AUTO_SCRAP:
-        web = session.query(WebsitesT).filter(WebsitesT.name == website_name).first()
-        first_instance_to_scrap = web.last_scraped + 1
-        web.last_scraped += NUM_USERS_TO_SCRAP  # todo BOTH: can cause trouble if program fails before finishing
-    else:
-        first_instance_to_scrap = FIRST_INSTANCE_TO_SCRAP
+
+    first_instance_to_scrap = auto_scrap_updates(website_name) if AUTO_SCRAP else FIRST_INSTANCE_TO_SCRAP
 
     index_first_page = (first_instance_to_scrap // NUM_INSTANCES_IN_PAGE) + 1
     index_first_instance_in_first_page = first_instance_to_scrap % NUM_INSTANCES_IN_PAGE
-
     return first_instance_to_scrap, index_first_page, index_first_instance_in_first_page
 
 
+def timer(func):
+    @wraps(func)
+    def wrapper_timer(*args, **kwargs):
+        start_time = time.perf_counter()
+        func(*args, **kwargs)
+        end_time = time.perf_counter()
+        run_time = end_time - start_time
+        logger_main.info(f'Finished {func.__name__!r} in  {run_time:.2f} seconds') #: TODO - print for each website unique string
+    return wrapper_timer
+
+
+@timer
 def scrap_users(website_name):
     """
     receives website name and scrap individual users data (via the classes generators in the related files)
@@ -103,42 +96,38 @@ def scrap_users(website_name):
     :param website_name: domain name of the website that is been scrapped (str)
     :return: None
     """
-    websites_chunk_dict = {website: [] for website in WEBSITE_NAMES}
 
     first_instance_to_scrap, index_first_page, index_first_instance_in_first_page = arrange_first_user_to_scrap(website_name)
 
     user_page = UserAnalysis(website_name, index_first_page, index_first_instance_in_first_page)
 
-    logger_main.info(f"Website: {website_name} ,number of users to scrap = {NUM_USERS_TO_SCRAP},"
-          f" sleep factor = {SLEEP_FACTOR}, first user: {first_instance_to_scrap},"
-          f" last user: {first_instance_to_scrap + NUM_USERS_TO_SCRAP - 1},"
-          f" Multi Process? {MULTI_PROCESS} ")
+    logger_main.info(WEBSITE_SCRAPP_INFO.format(website_name, first_instance_to_scrap,
+                                                first_instance_to_scrap + NUM_USERS_TO_SCRAP - 1))
+
+    random_user_to_check = random.randint(0, NUM_USERS_TO_SCRAP - 1)
 
     # create a new user
     user_links_generator = user_page.generate_users_links()
-    for num_user, link in enumerate(tqdm(user_links_generator, desc=f"{website_name}", total=NUM_USERS_TO_SCRAP, position=1, leave=False)):
+    for num_user, link in enumerate(tqdm(user_links_generator, desc=f"{website_name}",
+                                         total=NUM_USERS_TO_SCRAP, position=1, leave=False)):
         user = User(website_name, link, first_instance_to_scrap)
         user.scrap_info(link)
         user.insert_user()
         #user.insert_user() #: TODO - problem!! in case we insert the same instance again, the DB just add it - duplicates
 
-        websites_chunk_dict[website_name].append(user)
+        if num_user == random_user_to_check: #:TODO - after milstone2 - create here a sanity check - pick random user from the data base and makes sure it corresponds to the website api data
+            logger_main.info(SANITY_CHECK_STRING.format(link, website_name,
+                                                        user._rank // NUM_INSTANCES_IN_PAGE, user._reputation_now))  #: TODO - add getters for these variables in user
 
         if num_user == NUM_USERS_TO_SCRAP - 1:
             break
 
 
+@timer
 def main():
-    t_start = time.perf_counter()
 
-    # Drops all tables. del when DB is ready
-    # Base.metadata.drop_all(engine)
-
-    # creates all tables - if exists won't do anything
-    Base.metadata.create_all(engine)
-
-    # create table website for all the websites
-    create_table_website(WEBSITE_NAMES)
+    initiate_database()
+    logger_main.info(OPENING_STRING.format(DB_NAME, NUM_USERS_TO_SCRAP, SLEEP_FACTOR, MULTI_PROCESS))
 
     # Multi Process mode
     if MULTI_PROCESS:
@@ -147,13 +136,8 @@ def main():
     # for loop mode
     else:
         for website_name in tqdm(WEBSITE_NAMES, desc="Websites", position=0):
-            t1 = time.perf_counter()
             scrap_users(website_name)
-            t2 = time.perf_counter()
-            logger_main.info(f"Finished to scrap {NUM_USERS_TO_SCRAP} users in {round(t2 - t1, 2)} seconds")
 
-    t_end = time.perf_counter()
-    logger_main.info(f"Finished all the code in {round(t_end - t_start, 2)} seconds")
 
 
 if __name__ == '__main__':

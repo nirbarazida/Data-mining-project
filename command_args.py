@@ -27,9 +27,6 @@ parser.add_argument('--web_sites', help="Which Stack Exchange websites to scrap 
                     default=['stackoverflow', 'askubuntu', 'math.stackexchange', 'superuser'],
                     choices={'stackoverflow', 'askubuntu', 'math.stackexchange', 'superuser'})
 
-parser.add_argument('--chunk_of_data', help="How many users to store in memory before\
-                     uploading to data base, default=10", default=10, type=int)
-
 parser.add_argument('--sleep_factor', help="Sleep factor between requests, default=1.5", default=1.5, type=float)
 
 parser.add_argument("--create_DB", help="needs to create new DB? default=True "

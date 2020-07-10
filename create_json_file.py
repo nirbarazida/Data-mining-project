@@ -13,7 +13,32 @@ data['constants'] = {
                     'EU': 'Europe'
                    },
     'MAGNITUDE_MAP': {"m": 6, "k": 3},
-    'REPUTATION_YEARS': (2017, 2018, 2019, 2020)
+    'REPUTATION_YEARS': (2017, 2018, 2019, 2020),
+
+    'REGEX_STRINGS': {"REPUTATION_REGEX": r"var\sgraphData\s=\s(\[\S+\])",
+                      "GMT_REGEX": r"GMT\s[+-]\d"},
+
+    'LOGGER_STRINGS': {"OPENING_STRING": "Working on DB: {}, number of users to scrap = {},"
+                                         " sleep factor = {}, Multi Process? {}",
+
+                       "SANITY_CHECK_STRING": "Sanity check for link: {}, website: {}, page: {}, reputation: {}",
+                        "WEBSITE_SCRAPP_INFO": "Website: {}, first user: {}, last user: {}",
+
+                       "GeocoderUnavailable_WARNING_STRING": r"problem! user {} rank {} and website {}"
+                                                             r" with address {}, did not scrapped, try to run again",
+
+                       "GeocoderUnavailable_ERROR_STRING":   r"Failed! user {} rank {} and website {} with address {},"
+                                                             r" did not scrapped"
+
+                       },
+    'KNOWN_COUNTRIES': {"USA": ["United States of America", "North America"],
+                        "The Netherlands": ["Netherlands", "Europe"]},
+
+    'IGNORE_NAME_IN_LOCATION_CACHE_TABLE': ["University", "Continental Europe", "Europe", "Flyover Country",
+                                            "An Underground Bunker", "Down Under", "America", "World",
+                                            "Pacific Ocean", "Central Europe"],
+
+    'AUTHENTICATION': {"USER_ENV_NAME": "MySQL_USER", "PASSWORD_ENV_NAME": "MySQL_PASS"}
 }
 
 data['constants for user'] = {
@@ -22,6 +47,7 @@ data['constants for user'] = {
     'MIN_NUM_USERS_TO_SCRAP': 30,
     'RECORDS_IN_CHUNK_OF_DATA': 5,
     'SLEEP_FACTOR': 1.5,
+    'SLEEP_TIME_FOR_LOCATIONS_API': 1.5,
     'MULTI_PROCESS': True
 }
 
