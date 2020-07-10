@@ -21,7 +21,7 @@ parser.add_argument('--DB_name', help="database name", type=str, default='stack_
 
 parser.add_argument('--num_users', help="Number of users to scrap", type=int, default=2)
 
-parser.add_argument('--first_user', help="first user to scrap", type=int, default=2) # todo NIR:check duplicates users
+parser.add_argument('--first_user', help="first user to scrap", type=int, default=2)
 
 parser.add_argument('--web_sites', help="Which Stack Exchange websites to scrap from", nargs='+',
                     default=['stackoverflow', 'askubuntu', 'math.stackexchange', 'superuser'],
