@@ -12,7 +12,9 @@ import os
 import pymysql
 import json
 from sqlalchemy import func
+from logger import Logger
 
+logger_DB = Logger("working with data base").logger
 
 MIN_LAST_SCRAPED = 0
 NUM_USERS_TO_SCRAP = args.num_users
@@ -30,6 +32,14 @@ with open(JSON_FILE_NAME, "r") as json_file:
 USER_NAME = os.environ.get(constants_data["constants"]["AUTHENTICATION"]["USER_ENV_NAME"])
 PASSWORD = os.environ.get(constants_data["constants"]["AUTHENTICATION"]["PASSWORD_ENV_NAME"])
 
+# logger messages
+CONNECTION_ERROR = constants_data["constants"]["LOGGER_STRINGS"]["CONNECTION_ERROR"]
+SERVER_ERROR = constants_data["constants"]["LOGGER_STRINGS"]["SERVER_ERROR"]
+DB_NAME_NOT_VALID = constants_data["constants"]["LOGGER_STRINGS"]["DB_NAME_NOT_VALID"]
+TABLE_NOT_EXIST = constants_data["constants"]["LOGGER_STRINGS"]["TABLE_NOT_EXIST"]
+
+#sql statments
+CHECK_DB = constants_data["constants"]["SQL_STATEMENTS"]["CHECK_DB"]
 
 def create_database():
     """
@@ -40,20 +50,19 @@ def create_database():
     try:
         connection = pymysql.connect(host='localhost', user=USER_NAME, password=PASSWORD)
     except pymysql.err.OperationalError as err:
-        print('os environ variables are not defined.'
-                                           ' for help go to https://www.youtube.com/watch?v=IolxqkL7cD8 ')
+        logger_DB.error(CONNECTION_ERROR)
         exit()
     else:
         # Create a cursor object
         try:
             cursor_insatnce = connection.cursor()
         except pymysql.err.OperationalError:
-            print("couldn't form a connection with server")
+            logger_DB.error(SERVER_ERROR)
             exit()
 
         else:
             # SQL Statement to check if DB exist
-            sql_statement = 'SELECT distinct(SCHEMA_NAME) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ' '"' + DB_NAME + '"'
+            sql_statement = CHECK_DB + DB_NAME + '"'
 
             if cursor_insatnce.execute(sql_statement) == 0:
                 # SQL Statement to create a database
@@ -62,7 +71,7 @@ def create_database():
                     # Execute the create database SQL statement through the cursor instance
                     cursor_insatnce.execute(sql_statement)
                 except pymysql.err.ProgrammingError:
-                    print(f"Database name:{DB_NAME} is not valid")
+                    logger_DB.error(DB_NAME_NOT_VALID.format(DB_NAME))
                     exit()
 
 def initiate_database():
@@ -90,7 +99,8 @@ def create_table_website(web_names):
     """
 
     if not engine.dialect.has_table(engine, 'websites'):
-        raise print('Table websites not exist in DB')
+        logger_DB.error(TABLE_NOT_EXIST)
+        exit()
 
     for name in web_names:
         web = session.query(WebsitesT).filter(WebsitesT.name == name).first()

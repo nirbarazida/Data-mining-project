@@ -28,9 +28,23 @@ data['constants'] = {
                                                              r" with address {}, did not scrapped, try to run again",
 
                        "GeocoderUnavailable_ERROR_STRING":   r"Failed! user {} rank {} and website {} with address {},"
-                                                             r" did not scrapped"
+                                                             r" did not scrapped",
+                       "CONNECTION_ERROR":"os environ variables are not defined. for help go to "
+                                                      "https://www.youtube.com/watch?v=IolxqkL7cD8 ",
+                       "SERVER_ERROR":"couldn't form a connection with server",
+                       "DB_NAME_NOT_VALID": r"Database name:{} is not valid",
+                       "TABLE_NOT_EXIST":"Table websites not exist in DB"
+
 
                        },
+    'SQL_STATEMENTS': {"CHECK_DB":'SELECT distinct(SCHEMA_NAME) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ' '"',
+
+
+
+
+
+
+    },
     'KNOWN_COUNTRIES': {"USA": ["United States of America", "North America"],
                         "The Netherlands": ["Netherlands", "Europe"]},
 

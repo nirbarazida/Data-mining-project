@@ -7,7 +7,8 @@ milestone 1 + 2: program implementations:
     (such as stack overflow, askUbuntu, etc)
 4. Scraps several websites in a loop or concurrently by Multi Process
 5. Scraps the websites' individual User pages for requested index (not necessarily from the beginning)
-     until the number of sequence(s) requested
+     until the number of sequence(s) requested. The default argument will be 'auto-scrap' that starts to scrap from the
+     last user in the data base - per website.
 6. data for each user is transformed via generators:
     a. generator for sequence of main pages (includes X individual instances in each page)
     b. generator of instances of user object (includes a dictionary of the relevant data which was scrapped)
@@ -18,7 +19,7 @@ milestone 1 + 2: program implementations:
 Along with the main file, the program include the following files:
 1. command_args - file which arrange the user input from the command line
 2. logger - file contains class logger - for general logger format
-3. ORM - file the create and arrange all relationships between the tables in the database
+3. ORM - file that defines schema using ORM - create tables and all relationships between the tables in the database.
 4. working_with_database - file that contains most of the function which CRUD with the database
 5. website - includes the class Website(object) - create soup of pages, find last page and create soups for main topic pages
 6. user_analysis- includes the class UserAnalysis(Website) - create a generator of links for each individual user page
@@ -78,7 +79,15 @@ def arrange_first_user_to_scrap(website_name):
     :param website_name: the website (str)
     :return: first_instance_to_scrap (int), index_first_page(int), index_first_instance_in_first_page(int)
     """
-    first_instance_to_scrap = auto_scrap_updates(website_name) if AUTO_SCRAP else FIRST_INSTANCE_TO_SCRAP
+
+    first_instance_to_scrap = auto_scrap_updates(website_name)
+    if not AUTO_SCRAP or FIRST_INSTANCE_TO_SCRAP:
+        print(f"\nWARNING: you chose not to use auto scrap. last user that was scraped for {website_name} "
+              f"is ranked {first_instance_to_scrap-1}.\n"
+              f"you choose to start from {FIRST_INSTANCE_TO_SCRAP}. Thus you will have "
+              f"{first_instance_to_scrap-1-FIRST_INSTANCE_TO_SCRAP} "
+              f"douplicat users that will NOT get into the global data base.")
+        first_instance_to_scrap = FIRST_INSTANCE_TO_SCRAP
 
     index_first_page = (first_instance_to_scrap // NUM_INSTANCES_IN_PAGE) + 1
     index_first_instance_in_first_page = first_instance_to_scrap % NUM_INSTANCES_IN_PAGE

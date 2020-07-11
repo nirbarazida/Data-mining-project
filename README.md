@@ -106,17 +106,17 @@ mode is turned off  it will run over this list in a loop. default value is False
 
 ## Files
 
-- command_args - file which arrange the user input from the command line.
-- logger - file contains class logger - for general logger format.
-- ORM - file that defines schema using ORM - create tables and all relationships between the tables in the database.
-- working_with_database - file that contains most of the function which CRUD with the database.
-- website - includes the class Website(object) - create soup of pages, find last page and create soups for main topic pages.
-- user_analysis- includes the class UserAnalysis(Website) - create a generator of links for each individual user page.
-- user- includes the class User(Website) - extracts the data in the individual user file and add the data to the
+- [command_args](https://github.com/nirbarazida/Data-mining-project/blob/master/command_args.py) - file which arrange the user input from the command line.
+- [logger](https://github.com/nirbarazida/Data-mining-project/blob/master/logger.py) - file contains class logger - for general logger format.
+- [ORM](https://github.com/nirbarazida/Data-mining-project/blob/master/ORM.py) - file that defines schema using ORM - create tables and all relationships between the tables in the database.
+- [working_with_database](https://github.com/nirbarazida/Data-mining-project/blob/master/working_with_database.py) - file that contains most of the function which CRUD with the database.
+- [website](https://github.com/nirbarazida/Data-mining-project/blob/master/website.py) - includes the class Website(object) - create soup of pages, find last page and create soups for main topic pages.
+- [user_analysis](https://github.com/nirbarazida/Data-mining-project/blob/master/user_analysis.py) - includes the class UserAnalysis(Website) - create a generator of links for each individual user page.
+- [user](https://github.com/nirbarazida/Data-mining-project/blob/master/user.py) - includes the class User(Website) - extracts the data in the individual user file and add the data to the
 relevant tables.
-- mining_constants.json - json format file contains the constants for all the program.
+- [mining_constants.json](https://github.com/nirbarazida/Data-mining-project/blob/master/mining_constants.json) - json format file contains the constants for all the program.
                                each file imports the data that is relevant to run the file.
-- requirements.txt - file with all the packages and dependencies of the project.
+- [requirements.txt](https://github.com/nirbarazida/Data-mining-project/blob/master/requirements.txt) - file with all the packages and dependencies of the project.
 
 ## Sources
 ##### [Corey Schafer - Python tutorials](https://www.youtube.com/user/schafer5):
