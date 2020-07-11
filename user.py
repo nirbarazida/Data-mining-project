@@ -375,7 +375,7 @@ class User(Website):
         # list of variables that we'll add and commit in one shot commit
         commit_list = []
         web = session.query(WebsitesT).filter(WebsitesT.name == self._website_name).first() #todo ms3 - get the id from main / can be calss variable
-        loc = session.query(Location).filter(Location.country == self._country).first()
+        loc = session.query(Location).filter(Location.country == self._country).first() # todo : create a one query with join
         if loc is None:
             loc = Location(**self.get_location())
 

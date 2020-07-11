@@ -37,7 +37,7 @@ def initiate_database():
     create_table_website(WEBSITE_NAMES)
 
 
-def create_database():# todo NIR: add exceptions
+def create_database():
 
     try:
         connection = pymysql.connect(host='localhost', user=USER_NAME, password=PASSWORD)
