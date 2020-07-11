@@ -4,20 +4,33 @@ define tables and relationship using Python classes.
 It also provides a system to query and manipulate the database using object-oriented code instead of writing SQL.
 """
 
-from sqlalchemy import create_engine, Integer, String, Column, DateTime, ForeignKey, UniqueConstraint
+from logger import Logger
+from sqlalchemy import create_engine, Integer, String, Column, DateTime, ForeignKey, UniqueConstraint,exc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Session
 from command_args import args
 import os
 
 
+logger_ORM = Logger("ORM").logger
+
+
 USER_NAME = os.environ.get("MySQL_USER")
 PASSWORD = os.environ.get("MySQL_PASS")
+
 DB_NAME = args.DB_name
 
-engine = create_engine(f"mysql+pymysql://{USER_NAME}:{PASSWORD}@localhost/{DB_NAME}")
+
+# catch SQLAlchemy's DBAPIError, which is a wrapper
+# for the DBAPI's exception.  It includes a .connection_invalidated
+try:
+    engine = create_engine(f"mysql+pymysql://{USER_NAME}:{PASSWORD}@localhost/{DB_NAME}")
+except exc.DBAPIError as err:
+    logger_ORM.error(err.orig)
+    exit(1)
 
 # mapper & MetaData: maps the subclass to the table and holds all the information about the database
+
 Base = declarative_base()
 
 # wraps the database connection and transaction. starts as the Session starts and remain open until the Session closed
@@ -34,7 +47,7 @@ class WebsitesT(Base):
     id = Column(Integer(), primary_key=True)
     name = Column(String(100), nullable=False)
     users = relationship("UserT", backref="website")
-    last_scraped = Column(Integer(), nullable=True)
+    # last_scraped = Column(Integer(), nullable=True) # todo MS3: how auto scrap works - can it be done simultaneously?
 
 
 class UserT(Base):
@@ -45,6 +58,7 @@ class UserT(Base):
         User_Tags - one to many (to get many to many with TagsT)
         Reputation - one to one
         Location - one to many
+    To avid duplication of users in the data base a unique set of ('name', 'rank', 'website_id') was declared.
     """
 
     __tablename__ = 'users'
@@ -62,8 +76,7 @@ class UserT(Base):
     # lazy='dynamic' - all the users won't be loaded. able to call them using query
     tags = relationship('User_Tags', backref='user', lazy='dynamic')
 
-    # __table_args__ = (UniqueConstraint('name','rank', 'website_id'),)  # todo NIR: create exception to it
-                                                                        # todo NIR: check why not scarpping all users
+    __table_args__ = (UniqueConstraint('name', 'rank', 'website_id'),)
 
 
 class User_Tags(Base):
@@ -81,16 +94,16 @@ class User_Tags(Base):
     score = Column(Integer())
     posts = Column(Integer())
 
-
 class TagsT(Base):
     """
     stores all the tags names
     relationship:
         User_Tags - one to many
+    unique: name
     """
     __tablename__ = 'tags'
     id = Column(Integer(), primary_key=True)
-    name = Column(String(100), nullable=False)
+    name = Column(String(100), nullable=False, unique=True)
     users = relationship('User_Tags', backref='tag')
 
 
@@ -118,7 +131,7 @@ class Location(Base):
     """
     __tablename__ = 'location'
     id = Column(Integer(), primary_key=True)
-    country = Column(String(100), nullable=True)
+    country = Column(String(100), nullable=True, unique=True)
     continent = Column(String(50), nullable=True)
     users = relationship("UserT", backref="location")
     stack_locations = relationship("Stack_Exchange_Location", backref="location")
@@ -129,8 +142,10 @@ class Stack_Exchange_Location(Base):
     location of all the users in the way that was writen in the website
     relationship:
         Location - one to many
+    for every user will check if his location matches to a location in this table - if yse - will form the same
+    connection to the Location. if not - will use geo-locator to find the country and continent
     """
     __tablename__ = 'stack_exchange_location'
     id = Column(Integer(), primary_key=True)
-    website_location = Column(String(100), nullable=True)
+    website_location = Column(String(100), nullable=True, unique=True)
     location_id = Column(Integer(), ForeignKey('location.id'))

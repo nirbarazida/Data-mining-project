@@ -113,7 +113,7 @@ def scrap_users(website_name):
         user = User(website_name, link, first_instance_to_scrap)
         user.scrap_info(link)
         user.insert_user()
-        #user.insert_user() #: TODO - problem!! in case we insert the same instance again, the DB just add it - duplicates
+
 
         if num_user == random_user_to_check: #:TODO - after milstone2 - create here a sanity check - pick random user from the data base and makes sure it corresponds to the website api data
             logger_main.info(SANITY_CHECK_STRING.format(link, website_name,

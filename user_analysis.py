@@ -44,11 +44,11 @@ class UserAnalysis(Website):
         :yield: url link for each individual user (str)
         """
 
-        for i, soup in enumerate(self.get_pages_soups(self.get_first_url())):
+        for index, soup in enumerate(self.get_pages_soups(self.get_first_url())):
             users_grid = soup.find("div", {"class": "grid-layout"})
             users_info = users_grid.find_all_next("div", {"class": "user-info"})
 
-            first_instance_in_page = self._index_first_instance_first_page - 1 if i == 0 else 0
+            first_instance_in_page = self._index_first_instance_first_page - 1 if index == 0 else 0
 
             for user_info in users_info[first_instance_in_page:]:
                 user_details = user_info.find("div", {"class": "user-details"})
