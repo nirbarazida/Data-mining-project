@@ -53,10 +53,10 @@ To approach the diversity problem we decided to create 3 different class:
 
  The first two are general and have little dependence on the website HTML.
  The third class is all dedicated to scraping the information and very much adjusted to the specific website we are scraping.
- 
+  
  ### Class Flow- Chart
  
-![image](https://raw.githubusercontent.com/nirbarazida/Data-mining-project/master/Class%20flow%20chart.jpeg)  
+![image](https://github.com/nirbarazida/Data-mining-project/blob/master/Class%20flow%20chart%20MS2.jpeg)  
 
 - **Class Website:** \
     General class for the website crawler with the format of Stack Exchange
@@ -67,44 +67,74 @@ To approach the diversity problem we decided to create 3 different class:
 - **Class User** \
     Receives the users url, scrapes all the information into class variables
 
+ After creating all three class that ables us to scrap the data, we'll start working on the data-base that stores
+ all the information. To crate the database we will use SQLAlchemy based on ORM. This way we will bw able to query
+ and manipulate the database using object-oriented code instead of writing SQL.
+
 ## Features
 
-In the json file "data_mining_constants.txt", one can find options for 
-scrapping the data. It will be referred to as the following features:
+in the command line arguments the user will be able to use the following features:
+
+- **AUTO_SCRAP** - the ability to start scraping users from the last instance that was scraped. every website is individual
+and will be check for his last user that was scraped. default value is True.
+
+- **NUM_USERS_TO_SCRAP** - amount of users that will be scrapped in the current execution. default users to scrap is 10
 
 - **WEBSITE_NAMES** - list of websites that the program will scrap. Note that they must be part of StackExchange group.
 
-- **FIRST_INSTANCE_TO_SCRAP** - index of the first user that will be 
-scrapped. Allows to scrap more users by running the program several times (could be on different computers)
-and scrap different users.
-
-- **NUM_USERS_TO_SCRAP** - amount of users that will be scrapped in the current execution
-
-- **RECORDS_IN_CHUNK_OF_DATA** - the chunk of data that will be uploaded to the database in each request (now only prints when it
-reaches the chosen amount). This saves a pre-chosen amount of user records on the computer 
-between each connection with the database, allowing for more agility
-between storage and time efficiency
+- **FIRST_USER** - index of the first user that will be scrapped. Allows to scrap more users by running the program 
+several times (could be on different computers) and scrap different users. Note that the user must make sure that he 
+will not scrap any duplicate users. the user will receive a warning about it and the duplicate users will not get in the
+data base. default value is None.
 
 - **SLEEP_FACTOR** - for preventing crawl blockage each time the program
  requests url from website. It sleeps the same 
 amount of time the request took, times this factor. This feature allows
 the user to pick  a factor that will allow the program to run as fast
-as possible while avoiding blockage.
+as possible while avoiding blockage. default value is 1.5 seconds.
 
 - **THREADING** - when this mode is on, the program will scrap from each
 of the input WEBSITE_NAMES concurrently using threading. If the 
-mode is turned off  it will run over this list in a loop
+mode is turned off  it will run over this list in a loop. default value is False.
 
+- **CREATE_DB** - gives the user an option to create a new data base and store the information in it. default value is
+ True so that the user will have to insert minimum information to the command line. in this case all he has to do is to insert
+ the new database name.
+
+- **DB_NAME** - The data Base name that the user wants to scrap the information to. if one dose not exist the program
+ will create one for him with the new name. default name is 'stack_exchange_db'
+
+## Files
+
+- command_args - file which arrange the user input from the command line.
+- logger - file contains class logger - for general logger format.
+- ORM - file that defines schema using ORM - create tables and all relationships between the tables in the database.
+- working_with_database - file that contains most of the function which CRUD with the database.
+- website - includes the class Website(object) - create soup of pages, find last page and create soups for main topic pages.
+- user_analysis- includes the class UserAnalysis(Website) - create a generator of links for each individual user page.
+- user- includes the class User(Website) - extracts the data in the individual user file and add the data to the
+relevant tables.
+- mining_constants.json - json format file contains the constants for all the program.
+                               each file imports the data that is relevant to run the file.
+- requirements.txt - file with all the packages and dependencies of the project.
 
 ## Sources
-[Corey Schafer - Python tutorials](https://www.youtube.com/user/schafer5):
+##### [Corey Schafer - Python tutorials](https://www.youtube.com/user/schafer5):
 
 - [Python OOP Tutorials - Working with Classes](https://www.youtube.com/watch?v=ZDa-Z5JzLYM&list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc)
 - [Web Scraping with BeautifulSoup and Requests](https://www.youtube.com/watch?v=ng2o98k983k&t=1120s)
 - [Generators](https://www.youtube.com/watch?v=bD05uGo_sVI)
 - [Threading](https://www.youtube.com/watch?v=IEEhzQoKtQU)
 
+##### Web scraping:
+
 [Web scraping with Python from   A to Z, ITC](https://www.itc.tech/web-scraping-with-python-a-to-z/)
 
+##### Defining schema using ORM:
+
+- [sqlalchemy documentation](https://docs.sqlalchemy.org/en/13/core/engines.html#sqlite)
+- [basic orm coverage](https://www.fullstackpython.com/object-relational-mappers-orms.html)
+- [defining schema using SQLAlchemy ORM](https://overiq.com/sqlalchemy-101/defining-schema-in-sqlalchemy-orm/)
+- [Django vs Flask - Difference between Django and Flask](https://www.youtube.com/watch?v=Bf2LnG-wigs)
 
 
