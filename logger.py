@@ -19,7 +19,7 @@ class Logger(object):
         handler = logging.FileHandler(f'{logger_name}.log')
 
         # Format the logs structure so that every line would include the time, name, level name and log message
-        formatter = logging.Formatter('%(levelname)s:%(asctime)s:%(name)s:%(message)s') #:TODO - let's talk about changing format here
+        formatter = logging.Formatter('%(levelname)s:%(asctime)s:%(name)s:%(message)s')
         handler.setFormatter(formatter)
 
         # Adding the format handler

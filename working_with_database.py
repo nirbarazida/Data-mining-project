@@ -30,7 +30,6 @@ with open(JSON_FILE_NAME, "r") as json_file:
 USER_NAME = os.environ.get(constants_data["constants"]["AUTHENTICATION"]["USER_ENV_NAME"])
 PASSWORD = os.environ.get(constants_data["constants"]["AUTHENTICATION"]["PASSWORD_ENV_NAME"])
 
-# :TODO - we need here logger as well for all the exceptions
 
 def create_database():
     """
@@ -96,16 +95,10 @@ def create_table_website(web_names):
     for name in web_names:
         web = session.query(WebsitesT).filter(WebsitesT.name == name).first()
         if web is None:
-            web = WebsitesT(name=name) #, last_scraped=MIN_LAST_SCRAPED)
+            web = WebsitesT(name=name)
             session.add(web)
             session.commit()
 
-
-# def auto_scrap_updates(website_name):
-#     web = session.query(WebsitesT).filter(WebsitesT.name == website_name).first()
-#     first_instance_to_scrap = web.last_scraped + 1
-#     web.last_scraped += NUM_USERS_TO_SCRAP  # todo: after MS 2: how auto scrap work- can it be done simultaneously?
-#     return first_instance_to_scrap
 
 
 def auto_scrap_updates(website_name):

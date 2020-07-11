@@ -36,12 +36,11 @@ except exc.DBAPIError as err:
     logger_ORM.error(err.orig)
     exit(1)
 
-# mapper & MetaData: maps the subclass to the table and holds all the information about the database
-
-Base = declarative_base()
-
-# wraps the database connection and transaction. starts as the Session starts and remain open until the Session closed
-session = Session(bind=engine)
+else:
+    # mapper & MetaData: maps the subclass to the table and holds all the information about the database
+    Base = declarative_base()
+    # wraps the database connection and transaction. starts as the Session starts and remain open until the Session closed
+    session = Session(bind=engine)
 
 
 class WebsitesT(Base):
@@ -54,7 +53,7 @@ class WebsitesT(Base):
     id = Column(Integer(), primary_key=True)
     name = Column(String(100), nullable=False)
     users = relationship("UserT", backref="website")
-    # last_scraped = Column(Integer(), nullable=True) # todo MS3: how auto scrap works - can it be done simultaneously?
+
 
 
 class UserT(Base):

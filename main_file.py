@@ -71,7 +71,7 @@ SANITY_CHECK_STRING = constants_data["constants"]["LOGGER_STRINGS"]["SANITY_CHEC
 WEBSITE_SCRAPP_INFO = constants_data["constants"]["LOGGER_STRINGS"]["WEBSITE_SCRAPP_INFO"]
 
 
-def arrange_first_user_to_scrap(website_name): #: TODO - moved from main function - need to find place for it
+def arrange_first_user_to_scrap(website_name):
     """
     get the first instance to scarp for each user. from this variable,
     get the number of the first page and the number of the first user in that page
@@ -96,7 +96,7 @@ def timer(func):
         func(*args, **kwargs)
         end_time = time.perf_counter()
         run_time = end_time - start_time
-        logger_main.info(f'Finished {func.__name__!r} in  {run_time:.2f} seconds') #: TODO - print for each website unique string
+        logger_main.info(f'Finished {func.__name__!r} in  {run_time:.2f} seconds')
     return wrapper_timer
 
 
@@ -129,9 +129,9 @@ def scrap_users(website_name):
         user.scrap_info()
         user.insert_user()
 
-        if num_user == random_user_to_check: #:TODO - after milstone2 - create here a sanity check - pick random user from the data base and makes sure it corresponds to the website api data
+        if num_user == random_user_to_check:
             logger_main.info(SANITY_CHECK_STRING.format(link, website_name,
-                                                        user._rank // NUM_INSTANCES_IN_PAGE, user._reputation_now))  #: TODO - add getters for these variables in user
+                                                        user._rank // NUM_INSTANCES_IN_PAGE, user._reputation_now))
 
         if num_user == NUM_USERS_TO_SCRAP - 1:
             break
