@@ -17,7 +17,7 @@ def bool_converter(p):
 # receiving arguments from the command line terminal for the scraping process
 parser = argparse.ArgumentParser(description='Scraping users from Stack Exchange websites')
 
-parser.add_argument('--DB_name', help="database name", type=str, default='stack_exchange_db')
+parser.add_argument('--DB_name', help="database name", type=str, default='stack_exchange_db') #:TODO - we must check for valid sql name for DB
 
 parser.add_argument('--num_users', help="Number of users to scrap", type=int, default=2)
 

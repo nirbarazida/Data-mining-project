@@ -10,13 +10,20 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Session
 from command_args import args
 import os
+import json
 
 
 logger_ORM = Logger("ORM").logger
 
+JSON_FILE_NAME = "mining_constants.json"
+# get constants from json file (which contains all the Constants)
 
-USER_NAME = os.environ.get("MySQL_USER")
-PASSWORD = os.environ.get("MySQL_PASS")
+with open(JSON_FILE_NAME, "r") as json_file:
+    constants_data = json.load(json_file)
+
+# get authentication values
+USER_NAME = os.environ.get(constants_data["constants"]["AUTHENTICATION"]["USER_ENV_NAME"])
+PASSWORD = os.environ.get(constants_data["constants"]["AUTHENTICATION"]["PASSWORD_ENV_NAME"])
 
 DB_NAME = args.DB_name
 

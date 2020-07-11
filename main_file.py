@@ -1,27 +1,32 @@
 """
 Data mining project - "Analysis of Stack Exchange Websites"- main file
-milestone 1: program implementations:
-1. Scraps a list of websites under the Stack Exchange websites
+milestone 1 + 2: program implementations:
+1. create DB or use an existing one according to command line specifications.
+2. In the DB, create and use tables using ORM (SQLAlchemy)
+3. Scraps a list of websites under the Stack Exchange websites
     (such as stack overflow, askUbuntu, etc)
-2. Scraps several websites in a loop or concurrently by Multi Process
-3. Scraps the websites' individual User pages for requested index (not necessarily from the beginning)
+4. Scraps several websites in a loop or concurrently by Multi Process
+5. Scraps the websites' individual User pages for requested index (not necessarily from the beginning)
      until the number of sequence(s) requested
-4. data for each user is transformed via generators:
+6. data for each user is transformed via generators:
     a. generator for sequence of main pages (includes X individual instances in each page)
     b. generator of instances of user object (includes a dictionary of the relevant data which was scrapped)
-5. The data of each user for each website is appended to its relevant list (in a dedicated dictionary)
-    when the list reaches it's demanded length - it prints all the values in the list and cleans it
-    (This is preparation for uploading the data in chunks to the database)
-6. When the user index reaches the user last index requested (according to the amount of users to scrap)
-    the program prints the last amount of data needed (if there is list of users which have not been printed yet)
-    and program breaks from the function (in the case of a loop, it will begin the next website. in the Multi Process case,
+7. for each user, the scrapper receives the information and add it to the tables, checking integrity and duplicates.
+8. When the user index reaches the user last index requested (according to the amount of users to scrap)
+    program breaks from the function (in the case of a loop, it will begin the next website. in the Multi Process case,
     it can happen in en expected ratio - but it assures that each one of the websites will scrap all the requested users
 Along with the main file, the program include the following files:
-1. website.py - includes the class Website(object) - create soup of pages, find last page and create soups for main topic pages
-2. user_analysis.py - includes the class UserAnalysis(Website) - create a generator of links for each individual user page
-3. user.py - includes the class User(Website) - extracts the data in the individual user file - creates a dict object
-4. data mining_constants.txt - text file in json format which contains the constants for all the program.
+1. command_args - file which arrange the user input from the command line
+2. logger - file contains class logger - for general logger format
+3. ORM - file the create and arrange all relationships between the tables in the database
+4. working_with_database - file that contains most of the function which CRUD with the database
+5. website - includes the class Website(object) - create soup of pages, find last page and create soups for main topic pages
+6. user_analysis- includes the class UserAnalysis(Website) - create a generator of links for each individual user page
+7. user- includes the class User(Website) - extracts the data in the individual user file and add the data to the
+relevant tables
+8. mining_constants.json - json format file contains the constants for all the program.
                                each file imports the data that is relevant to run the file.
+9. requirements.txt - file with all the packages and dependencies of the project
 Authors: Nir Barazida and Inbar Shirizly
 """
 
@@ -65,8 +70,14 @@ OPENING_STRING = constants_data["constants"]["LOGGER_STRINGS"]["OPENING_STRING"]
 SANITY_CHECK_STRING = constants_data["constants"]["LOGGER_STRINGS"]["SANITY_CHECK_STRING"]
 WEBSITE_SCRAPP_INFO = constants_data["constants"]["LOGGER_STRINGS"]["WEBSITE_SCRAPP_INFO"]
 
-def arrange_first_user_to_scrap(website_name): #: TODO - moved from main function - need to find place for it
 
+def arrange_first_user_to_scrap(website_name): #: TODO - moved from main function - need to find place for it
+    """
+    get the first instance to scarp for each user. from this variable,
+    get the number of the first page and the number of the first user in that page
+    :param website_name: the website (str)
+    :return: first_instance_to_scrap (int), index_first_page(int), index_first_instance_in_first_page(int)
+    """
     first_instance_to_scrap = auto_scrap_updates(website_name) if AUTO_SCRAP else FIRST_INSTANCE_TO_SCRAP
 
     index_first_page = (first_instance_to_scrap // NUM_INSTANCES_IN_PAGE) + 1
@@ -75,6 +86,10 @@ def arrange_first_user_to_scrap(website_name): #: TODO - moved from main functio
 
 
 def timer(func):
+    """
+    time decorator - calculates the time that the checked function ran
+    :param func: checked function
+    """
     @wraps(func)
     def wrapper_timer(*args, **kwargs):
         start_time = time.perf_counter()
@@ -89,10 +104,10 @@ def timer(func):
 def scrap_users(website_name):
     """
     receives website name and scrap individual users data (via the classes generators in the related files)
-    create a dictionary [website: [user_instance1, user_instance2...] each list has maximum length of
-    RECORDS_IN_CHUNK_OF_DATA. when the list reaches this length, it prints the data on each user and cleans the list
-    when the user index reaches the last user needed (per website), the function prints the rest of the data (the users
-    that are in the last list) in breaking out (on the Multi Process mode, this function runs concurrently on different websites)
+    the information scrapped is inserted to the database.
+    the function generates a random user for a sanity check , logs information that can be checked manually
+    when the user index reaches the last user needed (per website) finish code.
+    on the Multi Process mode, this function runs concurrently on different websites
     :param website_name: domain name of the website that is been scrapped (str)
     :return: None
     """
@@ -111,9 +126,8 @@ def scrap_users(website_name):
     for num_user, link in enumerate(tqdm(user_links_generator, desc=f"{website_name}",
                                          total=NUM_USERS_TO_SCRAP, position=1, leave=False)):
         user = User(website_name, link, first_instance_to_scrap)
-        user.scrap_info(link)
+        user.scrap_info()
         user.insert_user()
-
 
         if num_user == random_user_to_check: #:TODO - after milstone2 - create here a sanity check - pick random user from the data base and makes sure it corresponds to the website api data
             logger_main.info(SANITY_CHECK_STRING.format(link, website_name,
@@ -137,7 +151,6 @@ def main():
     else:
         for website_name in tqdm(WEBSITE_NAMES, desc="Websites", position=0):
             scrap_users(website_name)
-
 
 
 if __name__ == '__main__':

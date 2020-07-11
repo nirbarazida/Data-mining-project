@@ -2,6 +2,10 @@ import logging
 
 
 class Logger(object):
+    """
+    class for creating a logger for the file, includes creating a file handler relevant to
+    the logger, including name of the file, level of the logger and the formatter
+    """
 
     def __init__(self, logger_name):
         # Initiating the logger object
@@ -20,7 +24,3 @@ class Logger(object):
 
         # Adding the format handler
         self.logger.addHandler(handler)
-
-        # And printing the logs to the console as well
-        # if logger_name == "main":
-        #     self.logger.addHandler(logging.StreamHandler(sys.stdout))

@@ -123,6 +123,8 @@ class User(Website):
 
     for clarity reasons all class variables are being declared at the top of the class. All class
     variables who needs more than one line to scrap the information are being scraped in separate blocks
+    The class contains as well the methods for adding new rows into the database tables, from the data of the
+    instance of the relevant user
     """
 
     # class variable that contains the current rank of the users for each website, i.e : {"stackoverflow": 5,
@@ -158,32 +160,50 @@ class User(Website):
     def personal_info(self):
         """
         Defines users name and users location
-        not all users have a location - thus location will stay None type
+        not all users have a location (country and continent) - thus location will stay None type
+        The function contains a full process for finding location of the user (in case he wrote something describes it).
+        The process manage the locations with a dynamic programming approach (time over storage)
+        1. check if user location description last phrase is part of the known phrases which were filled manually to
+        the json file - if yes, allocate them
+        2. query in the table of the database that includes phrases in the websites the accepted as describing
+            users location, if it finds value in the DB, allocates these values to the user location.
+        3. runs an internal function which takes users location description and check it with an api module
+        4. If a location have been founded, checks if the phrase of users description can be added to the sql table
         """
         basic_info_scope = self._soup.find("ul", {"class": "list-reset grid gs8 gsy fd-column fc-medium"})
         basic_info_as_list = basic_info_scope.find_all_next("div", {"class": "grid gs8 gsx ai-center"})
         if basic_info_as_list[0].find('svg', {'aria-hidden': 'true', 'class': 'svg-icon iconLocation'}):
             location_string = basic_info_as_list[0].text.strip()
-
+            # finds last phrase after comma of the user location valus.
             last_word_in_user_location_string = location_string.rsplit(",")[-1].strip()
-
+            # check if the phrase is part of the known counties phrases which were add manually
+            # in case that ot exists, gives the user location parameters the known values
             if last_word_in_user_location_string in KNOWN_COUNTRIES:
                 self._country, self._continent = KNOWN_COUNTRIES[last_word_in_user_location_string]
 
-            location_row = session.query(Location) \
-                .join(Stack_Exchange_Location) \
-                .filter(Stack_Exchange_Location.website_location == last_word_in_user_location_string) \
-                .first()
-
-            if location_row:
-                self._country, self._continent = location_row.country, location_row.continent
-
             else:
-                self._country, self._continent = self.get_country_and_continent_from_location(location_string)
-                if (self._country) \
-                        and (last_word_in_user_location_string not in IGNORE_NAME_IN_LOCATION_CACHE_TABLE) \
-                        and (last_word_in_user_location_string.istitle()):
-                    self._new_location_name_in_website = last_word_in_user_location_string
+                # query in the table of the database that includes phrases in the websites the accepted as describing
+                # users location, if it finds value in the DB, allocates these values to the user location and skipping
+                # the api request part
+                location_row = session.query(Location) \
+                    .join(Stack_Exchange_Location) \
+                    .filter(Stack_Exchange_Location.website_location == last_word_in_user_location_string) \
+                    .first()
+
+                if location_row:
+                    self._country, self._continent = location_row.country, location_row.continent
+
+                else:
+                    # In this part, no value founded to the counry in our current resources. Thus, implementing function
+                    # that requests location from api
+                    self._country, self._continent = self.get_country_and_continent_from_location(location_string)
+                    # if finds country (user have valid country description), checks if it is valid to add to the
+                    # known phrases (it is title word (we ignore state names such as CA - could be appropriate to
+                    # multiple countries), and it is not part of the phrases we manually
+                    if (self._country) \
+                            and (last_word_in_user_location_string not in IGNORE_NAME_IN_LOCATION_CACHE_TABLE) \
+                            and (last_word_in_user_location_string.istitle()):
+                        self._new_location_name_in_website = last_word_in_user_location_string
 
         for index in basic_info_as_list:
             if 'Member for' in index.text:
@@ -193,6 +213,16 @@ class User(Website):
                 break
 
     def get_country_and_continent_from_location(self, loc_string):
+        """
+        finds user location (country and continent) from his location description
+        because the api sometimes is unavailable (for several reasons) the function works in this form:
+        1. try first time - in a case of a failure, log a warning and try again (with sleep time for not immediately
+        try again (could lead to problem again)
+        2. if there is a second error, log an ERROR message with the user details for scraping his location individually
+        later (this feature will be completed in milestone 3)
+        :param loc_string: user location description (str)
+        :return: country and continent (str, str) or (None, None)
+        """
         country, continent = None, None  # initiate the returned variables
         if not re.search(GMT_REGEX, loc_string):  # handle "GMT {-8:00}" - time zone location inputted
             try:
@@ -216,15 +246,7 @@ class User(Website):
         """
     user location will be determent by the geo-locator library. it receives the users location as written in the web
     converts it to  latitude and longitude then it will be called again to convert the latitude and longitude to
-    a global unique name of country and continent. using a dict that is located in the json file the continents name
-    will be converted to a full name ('NA': 'North America').
-    HOWEVER, between every request we need to set a sleep factor of 1 sec - thus every country takes more than 2 sec.
-    ITS A LOT OF TIME.
-
-    to solve this problem we've created a new table (Stack_Exchange_Location) that store the name of the country from
-    the website and connect it ,by a one to many relationship, to the location table. now for every user we will first
-    check for a match in the Stack_Exchange_Location table with his country in the website. match - the user will form
-    a connection to the location in the Location table. no match - will use geo-locator.
+    a global unique name of country and continent.
         """
         country, continent = None, None  # initiate the returned variables
         loc = Website.geolocator.geocode(loc_string)
@@ -256,13 +278,16 @@ class User(Website):
             people_reached = user_community_info[2].text.strip('~')
             self._people_reached = int(float(people_reached[:-1]) * (10 ** magnitude_dict[people_reached[-1]]))
 
-    def reputation_hist(self, url):
+    def reputation_hist(self):
         """
         user reputation for years: [2017, 2018, 2019 ,2020]
-         will evaluate years only for users registered before 2017
+        will evaluate years only for users registered before 2017
+        in case that users is registered more then 4 years ago and there is a problem,
+        log a warning for checking manually the issue
+        :return: None
         """
         if self._member_since < threshold_date:
-            soup_activity = self.create_soup(url + "?tab=topactivity")
+            soup_activity = self.create_soup(self._url + "?tab=topactivity")
             source_data = soup_activity.find("div", {"id": "top-cards"}).contents[3].string
             numbers = re.search(REPUTATION_REGEX, source_data).group(1)
             reputation_numbers = ast.literal_eval(numbers)
@@ -293,7 +318,7 @@ class User(Website):
                 tags[index].append(int(tag.text.replace("\n", " ").split()[3].replace(",", "")))
             return tags
 
-    def scrap_info(self, link):
+    def scrap_info(self):
         """
         calls to all the methods of user to scrap information.
         created to decrees amount of lines in main file.
@@ -301,7 +326,7 @@ class User(Website):
         """
         self.professional_info()
         self.personal_info()
-        self.reputation_hist(link)
+        self.reputation_hist()
 
     def get_user_info(self):
         """
