@@ -32,7 +32,8 @@
       "CONNECTION_ERROR": "os environ variables are not defined. for help go to https://www.youtube.com/watch?v=IolxqkL7cD8 ",
       "SERVER_ERROR": "couldn't form a connection with server",
       "DB_NAME_NOT_VALID": "Database name:{} is not valid",
-      "TABLE_NOT_EXIST": "Table websites not exist in DB"
+      "TABLE_NOT_EXIST": "Table websites not exist in DB",
+      "SELF_SCRAPING_WARNING": "{}WARNING: you chose not to use auto scrap. last user that was scraped for {} is ranked {}.{}you choose to start from {}. Thus you can have {} duplicate users that will NOT get into the global data base."
     },
     "SQL_STATEMENTS": {
       "CHECK_DB": "SELECT distinct(SCHEMA_NAME) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = \""

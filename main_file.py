@@ -45,7 +45,6 @@ import random
 
 logger_main = Logger("main").logger
 
-
 # implementing the command line arguments into variables
 # will not use the arguments directly for flexibility purposes (to using json file for input variables)
 WEBSITE_NAMES = args.web_sites
@@ -55,7 +54,6 @@ SLEEP_FACTOR = args.sleep_factor
 MULTI_PROCESS = args.multi_process
 AUTO_SCRAP = args.auto_scrap
 DB_NAME = args.DB_name
-
 
 JSON_FILE_NAME = "mining_constants.json"
 # get constants from json file (which contains all the Constants)
@@ -70,6 +68,7 @@ NUM_INSTANCES_IN_PAGE = constants_data["constants"]["NUM_INSTANCES_IN_PAGE"]
 OPENING_STRING = constants_data["constants"]["LOGGER_STRINGS"]["OPENING_STRING"]
 SANITY_CHECK_STRING = constants_data["constants"]["LOGGER_STRINGS"]["SANITY_CHECK_STRING"]
 WEBSITE_SCRAPP_INFO = constants_data["constants"]["LOGGER_STRINGS"]["WEBSITE_SCRAPP_INFO"]
+SELF_SCRAPING_WARNING = constants_data["constants"]["LOGGER_STRINGS"]["SELF_SCRAPING_WARNING"]
 
 
 def arrange_first_user_to_scrap(website_name):
@@ -82,11 +81,9 @@ def arrange_first_user_to_scrap(website_name):
 
     first_instance_to_scrap = auto_scrap_updates(website_name)
     if not AUTO_SCRAP or FIRST_INSTANCE_TO_SCRAP:
-        print(f"\nWARNING: you chose not to use auto scrap. last user that was scraped for {website_name} "
-              f"is ranked {first_instance_to_scrap-1}.\n"
-              f"you choose to start from {FIRST_INSTANCE_TO_SCRAP}. Thus you will have "
-              f"{first_instance_to_scrap-1-FIRST_INSTANCE_TO_SCRAP} "
-              f"douplicat users that will NOT get into the global data base.")
+        print(
+            SELF_SCRAPING_WARNING.format("\n", website_name, first_instance_to_scrap - 1, "\n", FIRST_INSTANCE_TO_SCRAP,
+                                         first_instance_to_scrap - 1 - FIRST_INSTANCE_TO_SCRAP, ))
         first_instance_to_scrap = FIRST_INSTANCE_TO_SCRAP
 
     index_first_page = (first_instance_to_scrap // NUM_INSTANCES_IN_PAGE) + 1
@@ -99,6 +96,7 @@ def timer(func):
     time decorator - calculates the time that the checked function ran
     :param func: checked function
     """
+
     @wraps(func)
     def wrapper_timer(*args, **kwargs):
         start_time = time.perf_counter()
@@ -106,6 +104,7 @@ def timer(func):
         end_time = time.perf_counter()
         run_time = end_time - start_time
         logger_main.info(f'Finished {func.__name__!r} in  {run_time:.2f} seconds')
+
     return wrapper_timer
 
 
@@ -121,7 +120,8 @@ def scrap_users(website_name):
     :return: None
     """
 
-    first_instance_to_scrap, index_first_page, index_first_instance_in_first_page = arrange_first_user_to_scrap(website_name)
+    first_instance_to_scrap, index_first_page, index_first_instance_in_first_page = arrange_first_user_to_scrap(
+        website_name)
 
     user_page = UserAnalysis(website_name, index_first_page, index_first_instance_in_first_page)
 
@@ -148,7 +148,6 @@ def scrap_users(website_name):
 
 @timer
 def main():
-
     initiate_database()
     logger_main.info(OPENING_STRING.format(DB_NAME, NUM_USERS_TO_SCRAP, SLEEP_FACTOR, MULTI_PROCESS))
 

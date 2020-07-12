@@ -5,13 +5,13 @@ data = {}
 data['constants'] = {
     'NUM_INSTANCES_IN_PAGE': 36,
     'CONTINENTS_MAP': {
-                    'NA': 'North America',
-                    'SA': 'South America',
-                    'AS': 'Asia',
-                    'OC': 'Australia',
-                    'AF': 'Africa',
-                    'EU': 'Europe'
-                   },
+        'NA': 'North America',
+        'SA': 'South America',
+        'AS': 'Asia',
+        'OC': 'Australia',
+        'AF': 'Africa',
+        'EU': 'Europe'
+    },
     'MAGNITUDE_MAP': {"m": 6, "k": 3},
     'REPUTATION_YEARS': (2017, 2018, 2019, 2020),
 
@@ -22,29 +22,28 @@ data['constants'] = {
                                          " sleep factor = {}, Multi Process? {}",
 
                        "SANITY_CHECK_STRING": "Sanity check for link: {}, website: {}, page: {}, reputation: {}",
-                        "WEBSITE_SCRAPP_INFO": "Website: {}, first user: {}, last user: {}",
+                       "WEBSITE_SCRAPP_INFO": "Website: {}, first user: {}, last user: {}",
 
                        "GeocoderUnavailable_WARNING_STRING": r"problem! user {} rank {} and website {}"
                                                              r" with address {}, did not scrapped, try to run again",
 
-                       "GeocoderUnavailable_ERROR_STRING":   r"Failed! user {} rank {} and website {} with address {},"
-                                                             r" did not scrapped",
-                       "CONNECTION_ERROR":"os environ variables are not defined. for help go to "
-                                                      "https://www.youtube.com/watch?v=IolxqkL7cD8 ",
-                       "SERVER_ERROR":"couldn't form a connection with server",
+                       "GeocoderUnavailable_ERROR_STRING": r"Failed! user {} rank {} and website {} with address {},"
+                                                           r" did not scrapped",
+                       "CONNECTION_ERROR": "os environ variables are not defined. for help go to "
+                                           "https://www.youtube.com/watch?v=IolxqkL7cD8 ",
+                       "SERVER_ERROR": "couldn't form a connection with server",
                        "DB_NAME_NOT_VALID": r"Database name:{} is not valid",
-                       "TABLE_NOT_EXIST":"Table websites not exist in DB"
-
+                       "TABLE_NOT_EXIST": "Table websites not exist in DB",
+                       "SELF_SCRAPING_WARNING": r"{}WARNING: you chose not to use auto scrap. last user that was "
+                                                r"scraped for {} is ranked {}.{}"
+                                                r"you choose to start from {}. Thus you can have "
+                                                r"{} duplicate users that will NOT get into the global data base."
 
                        },
-    'SQL_STATEMENTS': {"CHECK_DB":'SELECT distinct(SCHEMA_NAME) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ' '"',
+    'SQL_STATEMENTS': {
+        "CHECK_DB": 'SELECT distinct(SCHEMA_NAME) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ' '"',
 
-
-
-
-
-
-    },
+        },
     'KNOWN_COUNTRIES': {"USA": ["United States of America", "North America"],
                         "The Netherlands": ["Netherlands", "Europe"]},
 
@@ -64,7 +63,6 @@ data['constants for user'] = {
     'SLEEP_TIME_FOR_LOCATIONS_API': 1.5,
     'MULTI_PROCESS': True
 }
-
 
 with open('mining_constants.json', 'w') as outfile:
     json.dump(data, outfile, indent=2)

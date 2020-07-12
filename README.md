@@ -65,11 +65,14 @@ To approach the diversity problem we decided to create 3 different class:
     Class for user analysis in a the website that get links for each individual user page
 
 - **Class User** \
-    Receives the users url, scrapes all the information into class variables
+    Receives the users url, scrapes all the information into class variables and eventually will commit all the 
+    information to a data base using SQLAlchemy ORM.
 
  After creating all three class that ables us to scrap the data, we'll start working on the data-base that stores
- all the information. To crate the database we will use SQLAlchemy based on ORM. This way we will bw able to query
+ the information. To crate the data-base we will use SQLAlchemy based on ORM. This way we will be able to query
  and manipulate the database using object-oriented code instead of writing SQL.
+ the implantation of the above can be shown in the [ORM.py](https://github.com/nirbarazida/Data-mining-project/blob/master/ORM.py) file
+
 
 ## Features
 
@@ -93,8 +96,8 @@ amount of time the request took, times this factor. This feature allows
 the user to pick  a factor that will allow the program to run as fast
 as possible while avoiding blockage. default value is 1.5 seconds.
 
-- **THREADING** - when this mode is on, the program will scrap from each
-of the input WEBSITE_NAMES concurrently using threading. If the 
+- **Multiprocessing** - when this mode is on, the program will scrap from each
+of the input WEBSITE_NAMES concurrently using Multiprocessing. If the 
 mode is turned off  it will run over this list in a loop. default value is False.
 
 - **CREATE_DB** - gives the user an option to create a new data base and store the information in it. default value is
@@ -124,7 +127,7 @@ relevant tables.
 - [Python OOP Tutorials - Working with Classes](https://www.youtube.com/watch?v=ZDa-Z5JzLYM&list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc)
 - [Web Scraping with BeautifulSoup and Requests](https://www.youtube.com/watch?v=ng2o98k983k&t=1120s)
 - [Generators](https://www.youtube.com/watch?v=bD05uGo_sVI)
-- [Threading](https://www.youtube.com/watch?v=IEEhzQoKtQU)
+- [Multiprocessing](https://www.youtube.com/watch?v=fKl2JW_qrso)
 
 ##### Web scraping:
 
@@ -135,6 +138,5 @@ relevant tables.
 - [sqlalchemy documentation](https://docs.sqlalchemy.org/en/13/core/engines.html#sqlite)
 - [basic orm coverage](https://www.fullstackpython.com/object-relational-mappers-orms.html)
 - [defining schema using SQLAlchemy ORM](https://overiq.com/sqlalchemy-101/defining-schema-in-sqlalchemy-orm/)
-- [Django vs Flask - Difference between Django and Flask](https://www.youtube.com/watch?v=Bf2LnG-wigs)
 
 
