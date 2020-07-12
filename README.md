@@ -39,7 +39,7 @@ The analysis focuses on data retrieved from the top individual users of several 
 The project dependencies can be found in the requirements.txt file in the current repository
 ## Program work flow
 
-![image](https://raw.githubusercontent.com/nirbarazida/Data-mining-project/master/Data%20mining%20workflow.jpeg)
+![image](https://github.com/nirbarazida/Data-mining-project/blob/master/figures/Data%20mining%20workflow.jpeg)
 
 For now, this project is in milestone 1, hence the program crawls from the 
 input websites and **prints** each individual user data. <br/>
@@ -60,7 +60,7 @@ To approach the diversity problem we decided to create 3 different class:
   
  ### Class Flow- Chart
  
-![image](https://github.com/nirbarazida/Data-mining-project/blob/master/Class%20flow%20chart%20MS2.jpeg)  
+![image](https://github.com/nirbarazida/Data-mining-project/blob/master/figures/Class%20flow%20chart%20MS2.jpeg)  
 
 - **Class Website:** \
     General class for the website crawler with the format of Stack Exchange
@@ -78,6 +78,8 @@ To approach the diversity problem we decided to create 3 different class:
  the implantation of the above can be shown in the [ORM.py](https://github.com/nirbarazida/Data-mining-project/blob/master/ORM.py) file
 
 ## Database  - ERD
+
+![image](https://github.com/nirbarazida/Data-mining-project/blob/master/figures/ERD.JPG)
 
 Tables description:
 
