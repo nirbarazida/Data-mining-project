@@ -35,40 +35,24 @@ from command_args import args
 import time
 from user_analysis import UserAnalysis
 from user import User
-import json
 import concurrent.futures
 from logger import Logger
 from tqdm import tqdm
 from functools import wraps
-from working_with_database import initiate_database, create_table_website, auto_scrap_updates
+from working_with_database import initiate_database, create_table_website, find_last_user_scrapped
 import random
+import conf
 
 logger_main = Logger("main").logger
 
 # implementing the command line arguments into variables
 # will not use the arguments directly for flexibility purposes (to using json file for input variables)
 WEBSITE_NAMES = args.web_sites
-FIRST_INSTANCE_TO_SCRAP = args.first_user
 NUM_USERS_TO_SCRAP = args.num_users
 SLEEP_FACTOR = args.sleep_factor
 MULTI_PROCESS = args.multi_process
-AUTO_SCRAP = args.auto_scrap
 DB_NAME = args.DB_name
 
-JSON_FILE_NAME = "mining_constants.json"
-# get constants from json file (which contains all the Constants)
-
-with open(JSON_FILE_NAME, "r") as json_file:
-    constants_data = json.load(json_file)
-
-# nunber of instances in each page
-NUM_INSTANCES_IN_PAGE = constants_data["constants"]["NUM_INSTANCES_IN_PAGE"]
-
-# logger strings
-OPENING_STRING = constants_data["constants"]["LOGGER_STRINGS"]["OPENING_STRING"]
-SANITY_CHECK_STRING = constants_data["constants"]["LOGGER_STRINGS"]["SANITY_CHECK_STRING"]
-WEBSITE_SCRAPP_INFO = constants_data["constants"]["LOGGER_STRINGS"]["WEBSITE_SCRAPP_INFO"]
-SELF_SCRAPING_WARNING = constants_data["constants"]["LOGGER_STRINGS"]["SELF_SCRAPING_WARNING"]
 
 
 def arrange_first_user_to_scrap(website_name):
@@ -79,15 +63,10 @@ def arrange_first_user_to_scrap(website_name):
     :return: first_instance_to_scrap (int), index_first_page(int), index_first_instance_in_first_page(int)
     """
 
-    first_instance_to_scrap = auto_scrap_updates(website_name)
-    if not AUTO_SCRAP or FIRST_INSTANCE_TO_SCRAP:
-        print(
-            SELF_SCRAPING_WARNING.format("\n", website_name, first_instance_to_scrap - 1, "\n", FIRST_INSTANCE_TO_SCRAP,
-                                         first_instance_to_scrap - 1 - FIRST_INSTANCE_TO_SCRAP, ))
-        first_instance_to_scrap = FIRST_INSTANCE_TO_SCRAP
+    first_instance_to_scrap = find_last_user_scrapped(website_name)
 
-    index_first_page = (first_instance_to_scrap // NUM_INSTANCES_IN_PAGE) + 1
-    index_first_instance_in_first_page = first_instance_to_scrap % NUM_INSTANCES_IN_PAGE
+    index_first_page = (first_instance_to_scrap // conf.NUM_INSTANCES_IN_PAGE) + 1
+    index_first_instance_in_first_page = first_instance_to_scrap % conf.NUM_INSTANCES_IN_PAGE
     return first_instance_to_scrap, index_first_page, index_first_instance_in_first_page
 
 
@@ -125,7 +104,7 @@ def scrap_users(website_name):
 
     user_page = UserAnalysis(website_name, index_first_page, index_first_instance_in_first_page)
 
-    logger_main.info(WEBSITE_SCRAPP_INFO.format(website_name, first_instance_to_scrap,
+    logger_main.info(conf.WEBSITE_SCRAPP_INFO.format(website_name, first_instance_to_scrap,
                                                 first_instance_to_scrap + NUM_USERS_TO_SCRAP - 1))
 
     random_user_to_check = random.randint(0, NUM_USERS_TO_SCRAP - 1)
@@ -139,8 +118,8 @@ def scrap_users(website_name):
         user.insert_user()
 
         if num_user == random_user_to_check:
-            logger_main.info(SANITY_CHECK_STRING.format(link, website_name,
-                                                        user._rank // NUM_INSTANCES_IN_PAGE, user._reputation_now))
+            logger_main.info(conf.SANITY_CHECK_STRING.format(link, website_name,
+                                                        user._rank // conf.NUM_INSTANCES_IN_PAGE, user._reputation_now))
 
         if num_user == NUM_USERS_TO_SCRAP - 1:
             break
@@ -149,7 +128,7 @@ def scrap_users(website_name):
 @timer
 def main():
     initiate_database()
-    logger_main.info(OPENING_STRING.format(DB_NAME, NUM_USERS_TO_SCRAP, SLEEP_FACTOR, MULTI_PROCESS))
+    logger_main.info(conf.OPENING_STRING.format(DB_NAME, NUM_USERS_TO_SCRAP, SLEEP_FACTOR, MULTI_PROCESS))
 
     # Multi Process mode
     if MULTI_PROCESS:
@@ -157,7 +136,7 @@ def main():
             executer.map(scrap_users, WEBSITE_NAMES)
     # for loop mode
     else:
-        for website_name in tqdm(WEBSITE_NAMES, desc="Websites", position=0):
+        for website_name in WEBSITE_NAMES:
             scrap_users(website_name)
 
 

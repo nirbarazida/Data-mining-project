@@ -39,6 +39,8 @@ data['constants'] = {
                                                 r"you choose to start from {}. Thus you can have "
                                                 r"{} duplicate users that will NOT get into the global data base."
 
+
+
                        },
     'SQL_STATEMENTS': {
         "CHECK_DB": 'SELECT distinct(SCHEMA_NAME) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ' '"',

@@ -9,29 +9,23 @@ from sqlalchemy import create_engine, Integer, String, Column, DateTime, Foreign
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Session
 from command_args import args
-import os
-import json
+import conf
+
+
+COUNTRY_MAX_STRING_LENGTH = 56   # longest country name in the world contain 56 letters
+CONTINENT_MAX_STRING_LENGTH = 12  # longest continent name in the world contain 12 letters
+NAMES_STRING_LENGTH = 100      # decision to allocate max 100 characters for each user, website, tag and location names
+
 
 
 logger_ORM = Logger("ORM").logger
-
-JSON_FILE_NAME = "mining_constants.json"
-# get constants from json file (which contains all the Constants)
-
-with open(JSON_FILE_NAME, "r") as json_file:
-    constants_data = json.load(json_file)
-
-# get authentication values
-USER_NAME = os.environ.get(constants_data["constants"]["AUTHENTICATION"]["USER_ENV_NAME"])
-PASSWORD = os.environ.get(constants_data["constants"]["AUTHENTICATION"]["PASSWORD_ENV_NAME"])
-
 DB_NAME = args.DB_name
 
 
 # catch SQLAlchemy's DBAPIError, which is a wrapper
 # for the DBAPI's exception.  It includes a .connection_invalidated
 try:
-    engine = create_engine(f"mysql+pymysql://{USER_NAME}:{PASSWORD}@localhost/{DB_NAME}")
+    engine = create_engine(f"mysql+pymysql://{conf.USER_NAME}:{conf.PASSWORD}@localhost/{DB_NAME}")
 except exc.DBAPIError as err:
     logger_ORM.error(err.orig)
     exit(1)
@@ -51,7 +45,7 @@ class WebsitesT(Base):
     """
     __tablename__ = 'websites'
     id = Column(Integer(), primary_key=True)
-    name = Column(String(100), nullable=False)
+    name = Column(String(NAMES_STRING_LENGTH), nullable=False)
     users = relationship("UserT", backref="website")
 
 
@@ -70,15 +64,14 @@ class UserT(Base):
     __tablename__ = 'users'
     id = Column(Integer(), primary_key=True)
     rank = Column(Integer())
-    name = Column(String(100), nullable=False)
+    name = Column(String(NAMES_STRING_LENGTH), nullable=False)
     member_since = Column(DateTime())
     profile_views = Column(Integer())
     answers = Column(Integer())
     people_reached = Column(Integer())
     location_id = Column(Integer(), ForeignKey('location.id'))
     website_id = Column(Integer(), ForeignKey('websites.id'))
-    # uselist - converts it to one-to-one relationship
-    reputation = relationship('Reputation', backref='user', uselist=False)
+    reputation = relationship('Reputation', backref='user', uselist=False) # uselist - for one-to-one relationship
     # lazy='dynamic' - all the users won't be loaded. able to call them using query
     tags = relationship('User_Tags', backref='user', lazy='dynamic')
 
@@ -109,7 +102,7 @@ class TagsT(Base):
     """
     __tablename__ = 'tags'
     id = Column(Integer(), primary_key=True)
-    name = Column(String(100), nullable=False, unique=True)
+    name = Column(String(NAMES_STRING_LENGTH), nullable=False, unique=True)
     users = relationship('User_Tags', backref='tag')
 
 
@@ -137,8 +130,8 @@ class Location(Base):
     """
     __tablename__ = 'location'
     id = Column(Integer(), primary_key=True)
-    country = Column(String(100), nullable=True, unique=True)
-    continent = Column(String(50), nullable=True)
+    country = Column(String(COUNTRY_MAX_STRING_LENGTH), nullable=True, unique=True)
+    continent = Column(String(CONTINENT_MAX_STRING_LENGTH), nullable=True)
     users = relationship("UserT", backref="location")
     stack_locations = relationship("Stack_Exchange_Location", backref="location")
 
@@ -153,5 +146,5 @@ class Stack_Exchange_Location(Base):
     """
     __tablename__ = 'stack_exchange_location'
     id = Column(Integer(), primary_key=True)
-    website_location = Column(String(100), nullable=True, unique=True)
+    website_location = Column(String(NAMES_STRING_LENGTH), nullable=True, unique=True)
     location_id = Column(Integer(), ForeignKey('location.id'))

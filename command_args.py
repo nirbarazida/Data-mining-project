@@ -21,19 +21,13 @@ parser.add_argument('--DB_name', help="database name", type=str, default='stack_
 
 parser.add_argument('--num_users', help="Number of users to scrap", type=int, default=10)
 
-parser.add_argument('--first_user', help="first user to scrap", type=int, default=None)
-
 parser.add_argument('--web_sites', help="Which Stack Exchange websites to scrap from", nargs='+',
                     default=['stackoverflow', 'askubuntu', 'math.stackexchange', 'superuser'],
                     choices={'stackoverflow', 'askubuntu', 'math.stackexchange', 'superuser'})
 
 parser.add_argument('--sleep_factor', help="Sleep factor between requests, default=1.5", default=1.5, type=float)
 
-parser.add_argument("--create_DB", help="needs to create new DB? default=True"
-                    , type=bool_converter, default=True)
 
-parser.add_argument("--auto_scrap", help="start scraping from the last instance default=True "
-                    , type=bool_converter, default=True)
 
 parser.add_argument("--multi_process", help="To use Multi Process or basic for loop between the different websites, "
                                             "default=False "

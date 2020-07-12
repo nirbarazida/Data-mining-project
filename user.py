@@ -65,14 +65,10 @@ milestone 2 summery:
 
 """
 
-
-
-
 from website import Website
 from ORM import WebsitesT, UserT, User_Tags, TagsT, Reputation, \
     Location, session, Stack_Exchange_Location
 from datetime import datetime, timedelta
-import json
 import re
 import ast
 import time
@@ -80,40 +76,16 @@ from sqlalchemy import exc
 from logger import Logger
 from geopy.exc import GeocoderUnavailable
 from pycountry_convert import country_alpha2_to_continent_code, country_name_to_country_alpha2
+import conf
 
 logger_user = Logger("user").logger
 logger_not_scrapped = Logger("not_scrapped").logger
 
 
-# get constants from json file (which contains all the Constants)
-JSON_FILE_NAME = "mining_constants.json"
-
-with open(JSON_FILE_NAME, "r") as json_file:
-    constants_data = json.load(json_file)
-
-magnitude_dict = constants_data["constants"]["MAGNITUDE_MAP"]
-
-# location handling varibales
-continents_dict = constants_data["constants"]["CONTINENTS_MAP"]
-KNOWN_COUNTRIES = constants_data["constants"]["KNOWN_COUNTRIES"]
-IGNORE_NAME_IN_LOCATION_CACHE_TABLE = constants_data["constants"]["IGNORE_NAME_IN_LOCATION_CACHE_TABLE"]
-
-# regex strings
-REPUTATION_REGEX = re.compile(constants_data["constants"]["REGEX_STRINGS"]["REPUTATION_REGEX"])
-GMT_REGEX = re.compile(constants_data["constants"]["REGEX_STRINGS"]["GMT_REGEX"])
-
-# logger strings
-GeocoderUnavailable_WARNING_STRING = constants_data["constants"]["LOGGER_STRINGS"]["GeocoderUnavailable_WARNING_STRING"]
-GeocoderUnavailable_ERROR_STRING = constants_data["constants"]["LOGGER_STRINGS"]["GeocoderUnavailable_ERROR_STRING"]
-
 # find indexes of 1 of January in the years searched for reputation. get threshold for it (4 years from today)
-REPUTATION_YEARS = constants_data["constants"]["REPUTATION_YEARS"]
 now = datetime.now()
 threshold_date = now - timedelta(days=4 * 365)
-year_indexes = [-(now - datetime(year, 1, 1)).days for year in REPUTATION_YEARS]
-
-# sleep time in seconds for request to locations api
-SLEEP_TIME_FOR_LOCATIONS_API = constants_data["constants for user"]["SLEEP_TIME_FOR_LOCATIONS_API"]
+year_indexes = [-(now - datetime(year, 1, 1)).days for year in conf.REPUTATION_YEARS]
 
 
 class User(Website):
@@ -151,6 +123,7 @@ class User(Website):
         self._reputation_now = int(
             self._soup.find("div", {"class": "grid--cell fs-title fc-dark"}).text.replace(',',
                                                                                           ''))
+        self._reputation_2017 = None
         self._reputation_2018 = None
         self._reputation_2019 = None
         self._reputation_2020 = None
@@ -177,8 +150,8 @@ class User(Website):
             last_word_in_user_location_string = location_string.rsplit(",")[-1].strip()
             # check if the phrase is part of the known counties phrases which were add manually
             # in case that ot exists, gives the user location parameters the known values
-            if last_word_in_user_location_string in KNOWN_COUNTRIES:
-                self._country, self._continent = KNOWN_COUNTRIES[last_word_in_user_location_string]
+            if last_word_in_user_location_string in conf.KNOWN_COUNTRIES:
+                self._country, self._continent = conf.KNOWN_COUNTRIES[last_word_in_user_location_string]
 
             else:
                 # query in the table of the database that includes phrases in the websites the accepted as describing
@@ -200,7 +173,7 @@ class User(Website):
                     # known phrases (it is title word (we ignore state names such as CA - could be appropriate to
                     # multiple countries), and it is not part of the phrases we manually
                     if (self._country) \
-                            and (last_word_in_user_location_string not in IGNORE_NAME_IN_LOCATION_CACHE_TABLE) \
+                            and (last_word_in_user_location_string not in conf.IGNORE_NAME_IN_LOCATION_CACHE_TABLE) \
                             and (last_word_in_user_location_string.istitle()):
                         self._new_location_name_in_website = last_word_in_user_location_string
 
@@ -223,18 +196,18 @@ class User(Website):
         :return: country and continent (str, str) or (None, None)
         """
         country, continent = None, None  # initiate the returned variables
-        if not re.search(GMT_REGEX, loc_string):  # handle "GMT {-8:00}" - time zone location inputted
+        if not re.search(conf.GMT_REGEX, loc_string):  # handle "GMT {-8:00}" - time zone location inputted
             try:
                 country, continent = User.geolocator_process(loc_string)
             except GeocoderUnavailable:
-                logger_user.warning(GeocoderUnavailable_WARNING_STRING.format(self._name, self._rank,
+                logger_user.warning(conf.GeocoderUnavailable_WARNING_STRING.format(self._name, self._rank,
                                                                               self._website_name, loc_string))
 
-                time.sleep(SLEEP_TIME_FOR_LOCATIONS_API)
+                time.sleep(conf.SLEEP_TIME_FOR_LOCATIONS_API)
                 try:
                     country, continent = User.geolocator_process(loc_string)
                 except GeocoderUnavailable:
-                    logger_user.error(GeocoderUnavailable_ERROR_STRING.format(self._name, self._rank,
+                    logger_user.error(conf.GeocoderUnavailable_ERROR_STRING.format(self._name, self._rank,
                                                                               self._website_name,
                                                                               loc_string))
 
@@ -251,18 +224,18 @@ class User(Website):
         loc = Website.geolocator.geocode(loc_string)
         if loc:
             lat, lon = loc.latitude, loc.longitude
-            time.sleep(SLEEP_TIME_FOR_LOCATIONS_API)
+            time.sleep(conf.SLEEP_TIME_FOR_LOCATIONS_API)
             new_loc = Website.geolocator.reverse([lat, lon], language='en')
             try:
                 country = new_loc.raw["address"]["country"]
-                continent = continents_dict[country_alpha2_to_continent_code(
+                continent = conf.continents_dict[country_alpha2_to_continent_code(
                     country_name_to_country_alpha2(country))]
 
             except KeyError:
-                if country in KNOWN_COUNTRIES:
-                    country, continent = KNOWN_COUNTRIES[country]
+                if country in conf.KNOWN_COUNTRIES:
+                    country, continent = conf.KNOWN_COUNTRIES[country]
             finally:
-                time.sleep(SLEEP_TIME_FOR_LOCATIONS_API)
+                time.sleep(conf.SLEEP_TIME_FOR_LOCATIONS_API)
         return country, continent
 
     def professional_info(self):
@@ -275,7 +248,7 @@ class User(Website):
                                                                     {'class': 'grid--cell fs-body3 fc-dark fw-bold'})
             self._answers = int(user_community_info[0].text.replace(",", ""))
             people_reached = user_community_info[2].text.strip('~')
-            self._people_reached = int(float(people_reached[:-1]) * (10 ** magnitude_dict[people_reached[-1]]))
+            self._people_reached = int(float(people_reached[:-1]) * (10 ** conf.magnitude_dict[people_reached[-1]]))
 
     def reputation_hist(self):
         """
@@ -288,7 +261,7 @@ class User(Website):
         if self._member_since < threshold_date:
             soup_activity = self.create_soup(self._url + "?tab=topactivity")
             source_data = soup_activity.find("div", {"id": "top-cards"}).contents[3].string
-            numbers = re.search(REPUTATION_REGEX, source_data).group(1)
+            numbers = re.search(conf.REPUTATION_REGEX, source_data).group(1)
             reputation_numbers = ast.literal_eval(numbers)
             try:
                 self._reputation_2017 = reputation_numbers[year_indexes[0]]
@@ -386,7 +359,7 @@ class User(Website):
     new one. if exists would get that instance. then will form a connection between the Tags and a new User_Tags
     instance
 
-    To avid duplication of users in the data base a unique set of ('name', 'rank', 'website_id') was declared.
+    To avoid duplication of users in the data base a unique set of ('name', 'rank', 'website_id') was declared.
     also location, tags and website name was declared as unique.
     duo to the above - before every commit an exception of IntegrityError will be raise to avid crash.
     in a case of duplication 2 action will tack place:
@@ -394,7 +367,6 @@ class User(Website):
     2. the user url will be logged in the logger_not_scrapped to check what happened and scrape him latter if needed
      also a warning will be logged in the logger_user
         """
-
 
         # list of variables that we'll add and commit in one shot commit
         commit_list = []

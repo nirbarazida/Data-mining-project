@@ -1,6 +1,6 @@
 # Data-mining-project
-ITC - Data mining project - *StackExchange* Analyse
-main focus - **Stack Overflow**
+ITC - Data mining project - *StackExchange* Analyse. <br />
+ main focus - **Stack Overflow**
 
 ### Authors
 Nir Barazida and Inbar Shirizly
@@ -13,21 +13,25 @@ The websites that are analysed are under the group of [StackExchange](https://st
 1. https://stackoverflow.com/
 2. https://math.stackexchange.com/
 3. https://askubuntu.com/
+4. https://superuser.com/
 
 
-The analysis focuses on data retrieved from the top **1000** individual users
+The analysis focuses on data retrieved from the top individual users of several websites
  (according to the website's all-time rank (since the website's establishment
  until scrapper was run)).
 
 #### Main insights the program attempts to present:
-- Presents insights about each country:
+- Presents insights about each country and continent:
     1. [Reputation](https://stackoverflow.com/help/whats-reputation#:~:text=You%20gain%20reputation%20when%3A,your%20answer%3A%20%2B%20full%20bounty%20amount)
-    2. Total answers 
+    2. Total answers, profile views and people reached 
     3. [People reached](https://meta.stackoverflow.com/questions/290491/what-does-people-reached-signify-and-how-is-it-calculated#:~:text=2%20Answers&text=The%20people%20reached%20statistic%20is,equivalent%20with%20a%20single%20user.)
-    4. [Top tags](https://stackoverflow.com/help/tagging) 
+    4. [Top tags](https://stackoverflow.com/help/tagging) - posts and score
+    5. reputation trends between 2017-2020
     
 - Presents the amount of top users over time - according to the registration date
  of **current** top users
+ 
+ 
 
 
  ## install
@@ -73,22 +77,31 @@ To approach the diversity problem we decided to create 3 different class:
  and manipulate the database using object-oriented code instead of writing SQL.
  the implantation of the above can be shown in the [ORM.py](https://github.com/nirbarazida/Data-mining-project/blob/master/ORM.py) file
 
+## Database  - ERD
+
+Tables description:
+
+- `users` - contains information of the indivdual user - contain users from all
+the websites together, distinguished by `website_id`.
+- `websites` - table related to users (one website to many users)
+- `tags` - name of tag - connected to a relation table `user_tags` - which contains
+the score and number of posts of the tag to the each user (`users` - `tags` = many to many)
+- `reputation` - reputation of the user, including data from each year between 2017-2020
+related to `users` table (one user for one reputation entity)
+- `location` - country and continent of users (one location for many users)
+- `stack_exchange_location` - table that stores the users last phrase of location 
+description, using attitude of *dynamic programming* - using these description to save
+api requests (if the description already exists during the scrap process).
+(one location_id for many website_location (the description))
+
 
 ## Features
 
-in the command line arguments the user will be able to use the following features:
-
-- **AUTO_SCRAP** - the ability to start scraping users from the last instance that was scraped. every website is individual
-and will be check for his last user that was scraped. default value is True.
+In the command line arguments the user will be able to use the following features:
 
 - **NUM_USERS_TO_SCRAP** - amount of users that will be scrapped in the current execution. default users to scrap is 10
 
 - **WEBSITE_NAMES** - list of websites that the program will scrap. Note that they must be part of StackExchange group.
-
-- **FIRST_USER** - index of the first user that will be scrapped. Allows to scrap more users by running the program 
-several times (could be on different computers) and scrap different users. Note that the user must make sure that he 
-will not scrap any duplicate users. the user will receive a warning about it and the duplicate users will not get in the
-data base. default value is None.
 
 - **SLEEP_FACTOR** - for preventing crawl blockage each time the program
  requests url from website. It sleeps the same 
@@ -100,11 +113,8 @@ as possible while avoiding blockage. default value is 1.5 seconds.
 of the input WEBSITE_NAMES concurrently using Multiprocessing. If the 
 mode is turned off  it will run over this list in a loop. default value is False.
 
-- **CREATE_DB** - gives the user an option to create a new data base and store the information in it. default value is
- True so that the user will have to insert minimum information to the command line. in this case all he has to do is to insert
- the new database name.
 
-- **DB_NAME** - The data Base name that the user wants to scrap the information to. if one dose not exist the program
+- **DB_NAME** - The database name that the user wants to scrap the information to. if one dose not exist the program
  will create one for him with the new name. default name is 'stack_exchange_db'
 
 ## Files
