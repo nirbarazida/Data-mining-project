@@ -39,9 +39,11 @@ The analysis focuses on data retrieved from the top individual users of several 
 - first and foremost - one who is using our program must have a MySQL account. the program create and commit information
  to a MySQL data-base. don't worry if you don't have a dedicated data-base for this information - we'll create it for you.
 - To connect to the user MySQL account one has to create environment variables of user name and password. this way
-we'll protect your sensitive information and make sure that it won't show on github and/or in the command line argument.
-To create environment variables you can use this guid [Corey Schafer - Environment Variables](https://www.youtube.com/watch?v=IolxqkL7cD8)
-
+we'll protect your sensitive information and make sure that it won't show on github and/or in the command line argument.\
+To create environment variables you can use this guid [Corey Schafer - Environment Variables](https://www.youtube.com/watch?v=IolxqkL7cD8) \
+please store the variable with the names:
+    1. MySQL_PASS - password. 
+    2. MySQL_USER - user name.
 
 
 ## Program work flow
