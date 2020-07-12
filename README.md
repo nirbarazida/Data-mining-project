@@ -34,17 +34,24 @@ The analysis focuses on data retrieved from the top individual users of several 
  
 
 
- ## install
-[Requirements file](https://github.com/nirbarazida/Data-mining-project/blob/master/requirements.txt) \
-The project dependencies can be found in the requirements.txt file in the current repository
+ ## install and usage 
+- [Requirements.txt](https://github.com/nirbarazida/Data-mining-project/blob/master/requirements.txt) - The project dependencies can be found in the requirements.txt file in the current repository
+- first and foremost - one who is using our program must have a MySQL account. the program create and commit information
+ to a MySQL data-base. don't worry if you don't have a dedicated data-base for this information - we'll create it for you.
+- To connect to the user MySQL account one has to create environment variables of user name and password. this way
+we'll protect your sensitive information and make sure that it won't show on github and/or in the command line argument.
+To create environment variables you can use this guid [Corey Schafer - Environment Variables](https://www.youtube.com/watch?v=IolxqkL7cD8)
+
+
+
 ## Program work flow
 
 ![image](https://github.com/nirbarazida/Data-mining-project/blob/master/figures/Data%20mining%20workflow.jpeg)
 
-For now, this project is in milestone 1, hence the program crawls from the 
-input websites and **prints** each individual user data. <br/>
-In the future, the program will store the data which was retrieved and 
-upload it to MySQL database, and display the insights in a dashboard
+For now, this project is in milestone 2, hence the program crawls from the 
+input websites and commit the data to the user MySQL data-base. <br/>
+In the future, the program will store the data on a remote data base that
+is located on a server, and display the insights in a dashboard
 
 ## Project implementation
 The project implementation plan is to use OOP because of it's diversity and time optimization.\
