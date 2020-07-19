@@ -78,7 +78,7 @@ import ast
 import time
 from sqlalchemy import exc
 from logger import Logger
-from geopy.exc import GeocoderUnavailable  #:TODO: manage maybe another exceptions here
+from geopy.exc import GeocoderUnavailable
 from pycountry_convert import country_alpha2_to_continent_code, country_name_to_country_alpha2
 
 logger_user = Logger("user").logger
@@ -150,7 +150,7 @@ class User(Website):
         self._new_location_name_in_website = None  # add this value as a flag for adding record to Stack_Exchange_Location table
         self._reputation_now = int(
             self._soup.find("div", {"class": "grid--cell fs-title fc-dark"}).text.replace(',',
-                                                                                          ''))  #:TODO - cluster this with the other reputations
+                                                                                          ''))
         self._reputation_2017 = None
         self._reputation_2018 = None
         self._reputation_2019 = None
@@ -400,7 +400,7 @@ class User(Website):
         # list of variables that we'll add and commit in one shot commit
         commit_list = []
         web = session.query(WebsitesT).filter(WebsitesT.name == self._website_name).first() #todo ms3 - get the id from main / can be calss variable
-        loc = session.query(Location).filter(Location.country == self._country).first() # todo : create a one query with join
+        loc = session.query(Location).filter(Location.country == self._country).first()
         if loc is None:
             loc = Location(**self.get_location())
 
