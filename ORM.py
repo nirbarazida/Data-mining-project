@@ -12,9 +12,9 @@ from command_args import args
 import conf
 
 
-COUNTRY_MAX_STRING_LENGTH = 56   # longest country name in the world contain 56 letters
-CONTINENT_MAX_STRING_LENGTH = 12  # longest continent name in the world contain 12 letters
-NAMES_STRING_LENGTH = 100      # decision to allocate max 100 characters for each user, website, tag and location names
+COUNTRY_MAX_STRING_LENGTH = 112   # longest country name in the world contain 56 letters - we will take factor 2
+CONTINENT_MAX_STRING_LENGTH = 26  # longest continent name in the world contain 13 letters =- we will take factor 2
+NAMES_STRING_LENGTH = 200      # decision to allocate max 200 characters for each user, website, tag and location names
 
 
 
