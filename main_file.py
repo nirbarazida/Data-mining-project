@@ -114,8 +114,7 @@ def scrap_users(website_name):
     for num_user, link in enumerate(tqdm(user_links_generator, desc=f"{website_name}",
                                          total=NUM_USERS_TO_SCRAP, position=1, leave=False)):
         user = User(website_name, link, first_instance_to_scrap)
-        user.scrap_info()
-        user.insert_user()
+        user.insert_user_to_DB()
 
         if num_user == random_user_to_check:
             logger_main.info(conf.SANITY_CHECK_STRING.format(link, website_name,
