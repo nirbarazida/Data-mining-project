@@ -72,7 +72,7 @@ from sqlalchemy import exc
 from logger import Logger
 
 import conf
-from UserScraper import UserScraper
+from user_scraper import UserScraper
 
 logger_user = Logger("user").logger
 logger_not_scrapped = Logger("not_scrapped").logger
@@ -93,40 +93,6 @@ class User(UserScraper):
     The class contains as well the methods for adding new rows into the database tables, from the data of the
     instance of the relevant user
     """
-
-    # rank holder for users from each website, i.e : {"stackoverflow": 5,"another website":2}
-    num_user_dict = {}
-
-    def __init__(self, website_name, url, first_instance_to_scrap):
-        UserScraper.__init__(self, url, website_name)
-
-        self._website_name = website_name
-        self._url = url
-        # self._soup = Website.create_soup(url)
-
-        User.num_user_dict[self._website_name] = User.num_user_dict.get(self._website_name,
-                                                                        first_instance_to_scrap - 1) + 1
-        self._rank = User.num_user_dict[self._website_name]
-        self._name = None
-        self._member_since = None
-        self._profile_views = 0
-        self._answers = None
-        self._people_reached = None
-        self._country = None  # not all users have a valid location in profile - must keep as default none
-        self._continent = None  # same as line above
-        self._new_location_name_in_website = None  # flag for adding record to Stack_Exchange_Location table
-        self._reputation_now = None
-        self._reputation_2017 = None
-        self._reputation_2018 = None
-        self._reputation_2019 = None
-        self._reputation_2020 = None
-        self._tags = None
-
-        UserScraper.user_name_and_reputation(self)
-        UserScraper.professional_info(self)
-        UserScraper.personal_info(self)
-        UserScraper.reputation_hist(self)
-        UserScraper.create_tags(self)
 
     def get_user_info(self):
         """
@@ -180,6 +146,8 @@ class User(UserScraper):
             logger_not_scrapped.error(f'IntegrityError: "Duplicate entry for key users.name ranked {self._rank} at'
                                       f' website {self._website_name} with url: {self._url}" ')
             return None
+
+        return True
 
     def commit_user_info_to_DB(self, commit_list):
         # add all new user info to relevant tables and commits it
@@ -236,7 +204,7 @@ class User(UserScraper):
         # list of variables that we'll add and commit in one shot commit
         commit_list = []
         web = session.query(WebsitesT).filter(
-            WebsitesT.name == self._website_name).first()  # todo ms3 - get the id from main / can be calss variable
+            WebsitesT.name == self._website_name).first()
         loc = session.query(Location).filter(Location.country == self._country).first()
         if loc is None:
             loc = Location(**self.get_location())
@@ -251,23 +219,24 @@ class User(UserScraper):
         user = UserT(location=loc, website_id=web.id, **self.get_user_info())
 
         # commit user to data - if didn't seceded will return None
-        User.commit_user_to_DB(self, user) # todo : raise flag if user didn't commit
-
+        if not User.commit_user_to_DB(self, user):
+            return None
 
         # create user Reputation and connects it to the user.
         rep = Reputation(user_id=user.id, **self.get_reputation())
         commit_list.append(rep)
 
         # create user Reputation and connects it to UserT and User_Tags (many-many relationship)
-        for tag in self._tags:
-            new_tag = session.query(TagsT).filter(TagsT.name == tag[0]).first()
-            if new_tag is None:
-                new_tag = TagsT(name=tag[0])
-                commit_list.append(new_tag)
-            ass = User_Tags(score=tag[1], posts=tag[2])
-            ass.user_id = user.id
-            new_tag.users.append(ass)
-            commit_list.append(ass)
+        if self._tags:
+            for tag in self._tags:
+                new_tag = session.query(TagsT).filter(TagsT.name == tag[0]).first()
+                if new_tag is None:
+                    new_tag = TagsT(name=tag[0])
+                    commit_list.append(new_tag)
+                ass = User_Tags(score=tag[1], posts=tag[2])
+                ass.user_id = user.id
+                new_tag.users.append(ass)
+                commit_list.append(ass)
 
         # commit all user info to DB - if didn't seceded will return None
         User.commit_user_info_to_DB(self, commit_list)

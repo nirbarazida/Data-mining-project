@@ -77,9 +77,9 @@ def create_table_website(web_names):
     create new entries in table websites with those names
     """
 
-    if not engine.dialect.has_table(engine, 'websites'):
-        logger_DB.error(conf.TABLE_NOT_EXIST)
-        exit()
+    # if not engine.dialect.has_table(engine, 'websites'):
+    #     logger_DB.error(conf.TABLE_NOT_EXIST)
+    #     exit()
 
     for name in web_names:
         web = session.query(WebsitesT).filter(WebsitesT.name == name).first()

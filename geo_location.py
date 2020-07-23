@@ -1,4 +1,3 @@
-
 from website import Website
 from ORM import Location, session, Stack_Exchange_Location
 from logger import Logger
@@ -13,48 +12,50 @@ logger_GeoLocation = Logger("GeoLocation").logger
 
 
 class GeoLocation(object):
-
     geolocator = Nominatim(user_agent="stack_exchange_users", timeout=3)  # TODO : get from conf class
 
-    def __init__(self, location_string=None):
-        self._location_string = location_string
-        self._name = None
-        self._website = None
+    def __init__(self, location_string=None, name=None, website=None):
+        self._location_string = location_string # todo: your call Inbar - drop variables from UserScraper or overwrite?
+        self._name = name
+        self._website_name = website
         self._country = None
         self._continent = None
         self._new_location_name_in_website = None
 
     def create_location(self):
-        # finds last phrase after comma of the user location valus.
-        last_word_in_user_location_string = self._location_string.rsplit(",")[-1].strip()
-        # check if the phrase is part of the known counties phrases which were add manually
-        # in case that ot exists, gives the user location parameters the known values
-        if last_word_in_user_location_string in conf.KNOWN_COUNTRIES:
-            self._country, self._continent = conf.KNOWN_COUNTRIES[last_word_in_user_location_string]
-
-        else:
-            # query in the table of the database that includes phrases in the websites the accepted as describing
-            # users location, if it finds value in the DB, allocates these values to the user location and skipping
-            # the api request part
-            location_row = session.query(Location) \
-                .join(Stack_Exchange_Location) \
-                .filter(Stack_Exchange_Location.website_location == last_word_in_user_location_string) \
-                .first()
-
-            if location_row:
-                self._country, self._continent = location_row.country, location_row.continent
+        if self._location_string:
+            # finds last phrase after comma of the user location valus.
+            last_word_in_user_location_string = self._location_string.rsplit(",")[-1].strip()
+            # check if the phrase is part of the known counties phrases which were add manually
+            # in case that ot exists, gives the user location parameters the known values
+            if last_word_in_user_location_string in conf.KNOWN_COUNTRIES:
+                self._country, self._continent = conf.KNOWN_COUNTRIES[last_word_in_user_location_string]
 
             else:
-                # In this part, no value founded to the counry in our current resources. Thus, implementing function
-                # that requests location from api
-                self._country, self._continent = self.get_country_and_continent_from_location(self._location_string)
-                # if finds country (user have valid country description), checks if it is valid to add to the
-                # known phrases (it is title word (we ignore state names such as CA - could be appropriate to
-                # multiple countries), and it is not part of the phrases we manually
-                if self._country \
-                        and (last_word_in_user_location_string not in conf.IGNORE_NAME_IN_LOCATION_CACHE_TABLE) \
-                        and (last_word_in_user_location_string.istitle()):
-                    self._new_location_name_in_website = last_word_in_user_location_string
+                # query in the table of the database that includes phrases in the websites the accepted as describing
+                # users location, if it finds value in the DB, allocates these values to the user location and skipping
+                # the api request part
+                location_row = session.query(Location) \
+                    .join(Stack_Exchange_Location) \
+                    .filter(Stack_Exchange_Location.website_location == last_word_in_user_location_string) \
+                    .first()
+
+                if location_row:
+                    self._country, self._continent = location_row.country, location_row.continent
+
+                else:
+                    # In this part, no value founded to the counry in our current resources. Thus, implementing function
+                    # that requests location from api
+                    self._country, self._continent = self.get_country_and_continent_from_location(self._location_string)
+                    # if finds country (user have valid country description), checks if it is valid to add to the
+                    # known phrases (it is title word (we ignore state names such as CA - could be appropriate to
+                    # multiple countries), and it is not part of the phrases we manually
+                    if self._country \
+                            and (last_word_in_user_location_string not in conf.IGNORE_NAME_IN_LOCATION_CACHE_TABLE) \
+                            and (last_word_in_user_location_string.istitle()):
+                        self._new_location_name_in_website = last_word_in_user_location_string
+        else:
+            logger_GeoLocation.warning("XYZ")  # TODO: if using if else - write a warning in conf file and import here
 
     def get_country_and_continent_from_location(self, loc_string):
         """
@@ -73,14 +74,14 @@ class GeoLocation(object):
                 country, continent = GeoLocation.geolocator_process(loc_string)
             except GeocoderUnavailable:
                 logger_GeoLocation.warning(conf.GeocoderUnavailable_WARNING_STRING.format(self._name,
-                                                                                          self._website, loc_string))
+                                                                                          self._website_name, loc_string))
 
                 time.sleep(conf.SLEEP_TIME_FOR_LOCATIONS_API)
                 try:
                     country, continent = GeoLocation.geolocator_process(loc_string)
                 except GeocoderUnavailable:
                     logger_GeoLocation.error(conf.GeocoderUnavailable_ERROR_STRING.format(self._name,
-                                                                                          self._website, loc_string))
+                                                                                          self._website_name, loc_string))
 
         return country, continent
 

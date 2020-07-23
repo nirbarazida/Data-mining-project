@@ -113,7 +113,8 @@ def scrap_users(website_name):
     user_links_generator = user_page.generate_users_links()
     for num_user, link in enumerate(tqdm(user_links_generator, desc=f"{website_name}",
                                          total=NUM_USERS_TO_SCRAP, position=1, leave=False)):
-        user = User(website_name, link, first_instance_to_scrap)
+        user = User(link, website_name, first_instance_to_scrap)
+        user.create_user()
         user.insert_user_to_DB()
 
         if num_user == random_user_to_check:
