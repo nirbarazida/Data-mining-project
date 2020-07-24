@@ -7,14 +7,11 @@ Website - General class for websites with the format of Stack Exchange
 Authors: Nir Barazida and Inbar Shirizly
 """
 
+from src import config
 import requests
 from bs4 import BeautifulSoup
 import re
 import time
-from command_args import args
-from geopy.geocoders import Nominatim
-
-SLEEP_FACTOR = args.sleep_factor
 
 
 class Website(object):
@@ -25,7 +22,6 @@ class Website(object):
     2. get last main topic page for input topic (users/tags etc)
     3. get soups of each input main topic page (that contain X amount of topic domain)
     """
-    geolocator = Nominatim(user_agent="stack_exchange_users", timeout=3)
 
     def __init__(self, website_name):
         """
@@ -49,7 +45,7 @@ class Website(object):
         """
         page = requests.get(url)
         time_sleep = page.elapsed.total_seconds()
-        time.sleep(time_sleep * SLEEP_FACTOR)
+        time.sleep(time_sleep * config.SLEEP_FACTOR)
         soup = BeautifulSoup(page.content, "html.parser")
         return soup
 

@@ -14,6 +14,9 @@ data['constants'] = {
     },
     'MAGNITUDE_MAP': {"m": 6, "k": 3},
     'REPUTATION_YEARS': (2017, 2018, 2019, 2020),
+    'ORM_TABLES_RESTRICTIONS': {"COUNTRY_MAX_STRING_LENGTH": 112,
+                                "CONTINENT_MAX_STRING_LENGTH": 26,
+                                "NAMES_STRING_LENGTH": 200},
 
     'REGEX_STRINGS': {"REPUTATION_REGEX": r"var\sgraphData\s=\s(\[\S+\])",
                       "GMT_REGEX": r"GMT\s[+-]\d"},
@@ -57,6 +60,7 @@ data['constants'] = {
 }
 
 data['constants for user'] = {
+    'DB_NAME': "stack_exchange_db",
     'WEBSITE_NAMES': ["stackoverflow", "askubuntu", "math.stackexchange", "superuser"],
     'FIRST_INSTANCE_TO_SCRAP': 1,
     'MIN_NUM_USERS_TO_SCRAP': 30,

@@ -31,64 +31,19 @@ relevant tables
 Authors: Nir Barazida and Inbar Shirizly
 """
 
-from command_args import args
-import time
-from user_analysis import UserAnalysis
-from user import User
+from src import logger, config, general
+import argparse
+from src.user_analysis import UserAnalysis
+from src.user import User
 import concurrent.futures
-from logger import Logger
 from tqdm import tqdm
-from functools import wraps
-from working_with_database import initiate_database, create_table_website, find_last_user_scrapped
+from src.working_with_database import initiate_database
 import random
-import conf
-
-logger_main = Logger("main").logger
-
-# implementing the command line arguments into variables
-# will not use the arguments directly for flexibility purposes (to using json file for input variables)
-WEBSITE_NAMES = args.web_sites
-NUM_USERS_TO_SCRAP = args.num_users
-SLEEP_FACTOR = args.sleep_factor
-MULTI_PROCESS = args.multi_process
-DB_NAME = args.DB_name
+from itertools import repeat
 
 
-
-def arrange_first_user_to_scrap(website_name):
-    """
-    get the first instance to scarp for each user. from this variable,
-    get the number of the first page and the number of the first user in that page
-    :param website_name: the website (str)
-    :return: first_instance_to_scrap (int), index_first_page(int), index_first_instance_in_first_page(int)
-    """
-
-    first_instance_to_scrap = find_last_user_scrapped(website_name)
-
-    index_first_page = (first_instance_to_scrap // conf.NUM_INSTANCES_IN_PAGE) + 1
-    index_first_instance_in_first_page = first_instance_to_scrap % conf.NUM_INSTANCES_IN_PAGE
-    return first_instance_to_scrap, index_first_page, index_first_instance_in_first_page
-
-
-def timer(func):
-    """
-    time decorator - calculates the time that the checked function ran
-    :param func: checked function
-    """
-
-    @wraps(func)
-    def wrapper_timer(*args, **kwargs):
-        start_time = time.perf_counter()
-        func(*args, **kwargs)
-        end_time = time.perf_counter()
-        run_time = end_time - start_time
-        logger_main.info(f'Finished {func.__name__!r} in  {run_time:.2f} seconds')
-
-    return wrapper_timer
-
-
-@timer
-def scrap_users(website_name):
+@general.timer
+def scrap_users(website_name, num_users_to_scrap):
     """
     receives website name and scrap individual users data (via the classes generators in the related files)
     the information scrapped is inserted to the database.
@@ -96,48 +51,65 @@ def scrap_users(website_name):
     when the user index reaches the last user needed (per website) finish code.
     on the Multi Process mode, this function runs concurrently on different websites
     :param website_name: domain name of the website that is been scrapped (str)
+    :param num_users_to_scrap: number of users to scrap in the following sessiom
     :return: None
     """
 
-    first_instance_to_scrap, index_first_page, index_first_instance_in_first_page = arrange_first_user_to_scrap(
+    first_instance_to_scrap, index_first_page, index_first_instance_in_first_page = general.arrange_first_user_to_scrap(
         website_name)
 
     user_page = UserAnalysis(website_name, index_first_page, index_first_instance_in_first_page)
 
-    logger_main.info(conf.WEBSITE_SCRAPP_INFO.format(website_name, first_instance_to_scrap,
-                                                first_instance_to_scrap + NUM_USERS_TO_SCRAP - 1))
+    logger.info(config.WEBSITE_SCRAPP_INFO.format(website_name, first_instance_to_scrap,
+                                                first_instance_to_scrap + num_users_to_scrap - 1))
 
-    random_user_to_check = random.randint(0, NUM_USERS_TO_SCRAP - 1)
+    random_user_to_check = random.randint(0, num_users_to_scrap - 1)
 
     # create a new user
     user_links_generator = user_page.generate_users_links()
     for num_user, link in enumerate(tqdm(user_links_generator, desc=f"{website_name}",
-                                         total=NUM_USERS_TO_SCRAP, position=1, leave=False)):
+                                         total=num_users_to_scrap, position=1, leave=False)):
         user = User(link, website_name, first_instance_to_scrap)
         user.create_user()
         user.insert_user_to_DB()
 
         if num_user == random_user_to_check:
-            logger_main.info(conf.SANITY_CHECK_STRING.format(link, website_name,
-                                                        user._rank // conf.NUM_INSTANCES_IN_PAGE, user._reputation_now))
+            logger.info(config.SANITY_CHECK_STRING.format(link, website_name,
+                                                        user._rank // config.NUM_INSTANCES_IN_PAGE, user._reputation_now))
 
-        if num_user == NUM_USERS_TO_SCRAP - 1:
+        if num_user == num_users_to_scrap - 1:
             break
 
 
-@timer
+@general.timer
 def main():
-    initiate_database()
-    logger_main.info(conf.OPENING_STRING.format(DB_NAME, NUM_USERS_TO_SCRAP, SLEEP_FACTOR, MULTI_PROCESS))
+    # receiving arguments from the command line terminal for the scraping process
+
+    parser = argparse.ArgumentParser(description='Scraping users from Stack Exchange websites')
+
+    parser.add_argument('--db_name', help="database name", type=str, default='stack_exchange_db')
+    parser.add_argument('--num_users_to_scrap', help="Number of users to scrap", type=int, default=10)
+    parser.add_argument('--websites', help="Which Stack Exchange websites to scrap from", nargs='+',
+                        default=['stackoverflow', 'askubuntu', 'math.stackexchange', 'superuser'],
+                        choices={'stackoverflow', 'askubuntu', 'math.stackexchange', 'superuser'})
+    parser.add_argument("--multi_process",
+                        help="To use Multi Process or basic for loop between the different websites, "
+                             "default=False "
+                        , type=general.bool_converter, default=False)
+    args = parser.parse_args()
+
+
+    initiate_database(args.websites)
+    logger.info(config.OPENING_STRING.format(config.DB_NAME, args.num_users_to_scrap, config.SLEEP_FACTOR, args.multi_process))
 
     # Multi Process mode
-    if MULTI_PROCESS:
+    if args.multi_process:
         with concurrent.futures.ProcessPoolExecutor() as executer:
-            executer.map(scrap_users, WEBSITE_NAMES)
+            executer.map(scrap_users, *[args.websites, repeat(args.num_users_to_scrap)])
     # for loop mode
     else:
-        for website_name in WEBSITE_NAMES:
-            scrap_users(website_name)
+        for website_name in args.websites:
+            scrap_users(website_name, args.num_users_to_scrap)
 
 
 if __name__ == '__main__':

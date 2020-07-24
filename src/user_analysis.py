@@ -5,7 +5,7 @@ UserAnalysis - class that inherits from Website.
 
 Authors: Nir Barazida and Inbar Shirizly
 """
-from website import Website
+from src.website import Website
 
 
 class UserAnalysis(Website):

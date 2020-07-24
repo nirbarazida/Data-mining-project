@@ -65,22 +65,19 @@ milestone 2 summery:
 
 """
 
-from ORM import WebsitesT, UserT, User_Tags, TagsT, Reputation, \
-    Location, session, Stack_Exchange_Location
+from src import logger, config, session
+from src.ORM import WebsitesT, UserT, User_Tags, TagsT, Reputation, \
+    Location, Stack_Exchange_Location
 from datetime import datetime, timedelta
 from sqlalchemy import exc
-from logger import Logger
+from src.user_scraper import UserScraper
 
-import conf
-from user_scraper import UserScraper
 
-logger_user = Logger("user").logger
-logger_not_scrapped = Logger("not_scrapped").logger
 
 # find indexes of 1 of January in the years searched for reputation. get threshold for it (4 years from today)
 now = datetime.now()
 threshold_date = now - timedelta(days=4 * 365)
-year_indexes = [-(now - datetime(year, 1, 1)).days for year in conf.REPUTATION_YEARS]
+year_indexes = [-(now - datetime(year, 1, 1)).days for year in config.REPUTATION_YEARS]
 
 
 class User(UserScraper):
@@ -140,10 +137,10 @@ class User(UserScraper):
         except exc.IntegrityError:
             session.rollback()
             # log the problem in user logger, Can't print user name with spacial/ unknown characters
-            logger_user.warning(f'IntegrityError: "Duplicate entry for key users.name ranked')
+            logger.warning(f'IntegrityError: "Duplicate entry for key users.name ranked')
 
             # insert user information to not scrapped users logger, Can't print user name with unknown characters
-            logger_not_scrapped.error(f'IntegrityError: "Duplicate entry for key users.name ranked {self._rank} at'
+            logger.error(f'IntegrityError: "Duplicate entry for key users.name ranked {self._rank} at'
                                       f' website {self._website_name} with url: {self._url}" ')
             return None
 
@@ -159,7 +156,7 @@ class User(UserScraper):
         # duplicat values in DB - can't commit new information
         except exc.IntegrityError as e:
             session.rollback()
-            logger_user.warning(e.orig)
+            logger.warning(e.orig)
 
             # delete user from data base
             user = session.query(UserT).filter(UserT.name == self._name).first()
@@ -167,8 +164,8 @@ class User(UserScraper):
             session.commit()
 
             # insert user information to not scrapped users logger
-            logger_not_scrapped.error(e.orig)
-            logger_not_scrapped.error(f'{self._name} ranked {self._rank} at'
+            logger.error(e.orig)
+            logger.error(f'{self._name} ranked {self._rank} at'
                                       f' website {self._website_name} with url: {self._url}" was not scraped because'
                                       f'of IntegrityError in second commit')
 

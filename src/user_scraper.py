@@ -1,23 +1,15 @@
+from src import config, logger
 from datetime import datetime, timedelta
 import ast
-from logger import Logger
-import conf
-import requests
-from bs4 import BeautifulSoup
 import re
-import time
-from command_args import args
-from geo_location import GeoLocation
+from src.geo_location import GeoLocation
+from src.website import Website
 
-SLEEP_FACTOR = args.sleep_factor
 
 # find indexes of 1 of January in the years searched for reputation. get threshold for it (4 years from today)
 now = datetime.now()
 threshold_date = now - timedelta(days=4 * 365)
-year_indexes = [-(now - datetime(year, 1, 1)).days for year in conf.REPUTATION_YEARS]
-
-logger_UserScraper = Logger("UserScraper").logger
-logger_not_scrapped = Logger("not_scrapped").logger
+year_indexes = [-(now - datetime(year, 1, 1)).days for year in config.REPUTATION_YEARS]
 
 
 class UserScraper(GeoLocation):
@@ -30,7 +22,7 @@ class UserScraper(GeoLocation):
 
         self._url = url
         self._website_name = website
-        self._soup = UserScraper.create_soup(url)
+        self._soup = Website.create_soup(url)
 
         UserScraper.num_user_dict[self._website_name] = \
             UserScraper.num_user_dict.get(self._website_name, first_instance_to_scrap - 1) + 1
@@ -51,21 +43,6 @@ class UserScraper(GeoLocation):
         self._reputation_2019 = None
         self._reputation_2020 = None
         self._tags = None
-
-    @staticmethod
-    def create_soup(url):
-        """
-        Static method that return soup from users url
-        sleeps between each request according to the time
-        that took to the request to be executed * SLEEP FACTOR
-        :param url: input url (str)
-        :return: soup: content of the url (BeautifulSoup)
-        """
-        page = requests.get(url)
-        time_sleep = page.elapsed.total_seconds()
-        time.sleep(time_sleep * SLEEP_FACTOR)
-        soup = BeautifulSoup(page.content, "html.parser")
-        return soup
 
     def user_name_and_reputation(self):
         """scrapes the user's name and reputation today"""
@@ -90,8 +67,9 @@ class UserScraper(GeoLocation):
         basic_info_scope = self._soup.find("ul", {"class": "list-reset grid gs8 gsy fd-column fc-medium"})
         basic_info_as_list = basic_info_scope.find_all_next("div", {"class": "grid gs8 gsx ai-center"})
         if basic_info_as_list[0].find('svg', {'aria-hidden': 'true', 'class': 'svg-icon iconLocation'}):
-            self._location_string = basic_info_as_list[0].text.strip()
-            self.create_location()
+            location_string = basic_info_as_list[0].text.strip()
+            self._country, self._continent, self._new_location_name_in_website =\
+                GeoLocation.create_location(location_string, self._name, self._website_name)
 
         for index in basic_info_as_list:
             if 'Member for' in index.text:
@@ -110,7 +88,7 @@ class UserScraper(GeoLocation):
                                                                     {'class': 'grid--cell fs-body3 fc-dark fw-bold'})
             self._answers = int(user_community_info[0].text.replace(",", ""))
             people_reached = user_community_info[2].text.strip('~')
-            self._people_reached = int(float(people_reached[:-1]) * (10 ** conf.magnitude_dict[people_reached[-1]]))
+            self._people_reached = int(float(people_reached[:-1]) * (10 ** config.magnitude_dict[people_reached[-1]]))
 
     def reputation_hist(self):
         """
@@ -121,9 +99,9 @@ class UserScraper(GeoLocation):
         :return: None
         """
         if self._member_since < threshold_date:
-            soup_activity = UserScraper.create_soup(self._url + "?tab=topactivity")
+            soup_activity = Website.create_soup(self._url + "?tab=topactivity")
             source_data = soup_activity.find("div", {"id": "top-cards"}).contents[3].string
-            numbers = re.search(conf.REPUTATION_REGEX, source_data).group(1)
+            numbers = re.search(config.REPUTATION_REGEX, source_data).group(1)
             reputation_numbers = ast.literal_eval(numbers)
             try:
                 self._reputation_2017 = reputation_numbers[year_indexes[0]]
@@ -131,7 +109,7 @@ class UserScraper(GeoLocation):
                 self._reputation_2019 = reputation_numbers[year_indexes[2]]
                 self._reputation_2020 = reputation_numbers[year_indexes[3]]
             except IndexError:
-                logger_UserScraper.warning(f"website {self._website_name} user {self._name}"
+                logger.warning(f"website {self._website_name} user {self._name}"
                                            f" is member since more than 4 years but have reputation plot of month")
 
     def create_tags(self):
