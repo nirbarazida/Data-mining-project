@@ -2,7 +2,7 @@ from src import config, logger
 from datetime import datetime, timedelta
 import ast
 import re
-from src.geo_location import GeoLocation
+from src.geo_location import create_location
 from src.website import Website
 
 
@@ -12,7 +12,7 @@ class UserScraper:
 
     # find indexes of January 1, in the years searched for reputation. get threshold for it (4 years from today)
     threshold_date = datetime.now() - timedelta(days=4 * 365)
-    year_indexes = [-(datetime.now()  - datetime(year, 1, 1)).days for year in config.REPUTATION_YEARS]
+    year_indexes = [-(datetime.now() - datetime(year, 1, 1)).days for year in config.REPUTATION_YEARS]
 
     def __init__(self, url, website, first_instance_to_scrap):
 
@@ -55,8 +55,8 @@ class UserScraper:
         basic_info_as_list = basic_info_scope.find_all_next("div", {"class": "grid gs8 gsx ai-center"})
         if basic_info_as_list[0].find('svg', {'aria-hidden': 'true', 'class': 'svg-icon iconLocation'}):
             location_string = basic_info_as_list[0].text.strip()
-            self._country, self._continent, self._new_location_name_in_website =\
-                GeoLocation.create_location(location_string, self._name, self._website_name)
+            temp_location_tuple = create_location(location_string, self._name, self._website_name)
+            self._country, self._continent, self._new_location_name_in_website =  temp_location_tuple
 
         for index in basic_info_as_list:
             if 'Member for' in index.text:
@@ -116,8 +116,4 @@ class UserScraper:
             for index, tag in enumerate(all_tags_info.find_all_next('div', {"class": "grid jc-end ml-auto"})):
                 tags[index].append(int(tag.text.replace("\n", " ").split()[1].replace(",", "")))
                 tags[index].append(int(tag.text.replace("\n", " ").split()[3].replace(",", "")))
-
             return tags
-
-
-
