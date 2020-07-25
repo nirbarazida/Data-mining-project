@@ -40,9 +40,7 @@
       "GeocoderUnavailable_ERROR_STRING": "Failed! user {} rank {} and website {} with address {}, did not scrapped",
       "CONNECTION_ERROR": "{} \tos environ variables are not defined or not fitting authentication. for help check https://www.youtube.com/watch?v=IolxqkL7cD8 ",
       "SERVER_ERROR": "couldn't form a connection with server",
-      "DB_NAME_NOT_VALID": "Database name:{} is not valid",
-      "TABLE_NOT_EXIST": "Table websites not exist in DB",
-      "SELF_SCRAPING_WARNING": "{}WARNING: you chose not to use auto scrap. last user that was scraped for {} is ranked {}.{}you choose to start from {}. Thus you can have {} duplicate users that will NOT get into the global data base."
+      "DB_NAME_NOT_VALID": "Database name:{} is not valid"
     },
     "SQL_STATEMENTS": {
       "CHECK_DB": "SELECT distinct(SCHEMA_NAME) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = \""
@@ -84,9 +82,6 @@
       "math.stackexchange",
       "superuser"
     ],
-    "FIRST_INSTANCE_TO_SCRAP": 1,
-    "MIN_NUM_USERS_TO_SCRAP": 30,
-    "RECORDS_IN_CHUNK_OF_DATA": 5,
     "SLEEP_FACTOR": 1.5,
     "SLEEP_TIME_FOR_LOCATIONS_API": 1.5,
     "MULTI_PROCESS": true

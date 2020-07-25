@@ -30,13 +30,11 @@ class Config:
         self.OPENING_STRING = constants_data["constants"]["LOGGER_STRINGS"]["OPENING_STRING"]
         self.SANITY_CHECK_STRING = constants_data["constants"]["LOGGER_STRINGS"]["SANITY_CHECK_STRING"]
         self.WEBSITE_SCRAPP_INFO = constants_data["constants"]["LOGGER_STRINGS"]["WEBSITE_SCRAPP_INFO"]
-        self.SELF_SCRAPING_WARNING = constants_data["constants"]["LOGGER_STRINGS"]["SELF_SCRAPING_WARNING"]
 
         # logger messages - working with database
         self.CONNECTION_ERROR = constants_data["constants"]["LOGGER_STRINGS"]["CONNECTION_ERROR"]
         self.SERVER_ERROR = constants_data["constants"]["LOGGER_STRINGS"]["SERVER_ERROR"]
         self.DB_NAME_NOT_VALID = constants_data["constants"]["LOGGER_STRINGS"]["DB_NAME_NOT_VALID"]
-        self.TABLE_NOT_EXIST = constants_data["constants"]["LOGGER_STRINGS"]["TABLE_NOT_EXIST"]
 
         # get authentication values
         self.USER_NAME = os.environ.get(constants_data["constants"]["AUTHENTICATION"]["USER_ENV_NAME"])
