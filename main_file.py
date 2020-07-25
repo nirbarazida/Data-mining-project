@@ -1,33 +1,11 @@
 """
 Data mining project - "Analysis of Stack Exchange Websites"- main file
-milestone 1 + 2: program implementations:
-1. create DB or use an existing one according to command line specifications.
-2. In the DB, create and use tables using ORM (SQLAlchemy)
-3. Scraps a list of websites under the Stack Exchange websites
-    (such as stack overflow, askUbuntu, etc)
-4. Scraps several websites in a loop or concurrently by Multi Process
-5. Scraps the websites' individual User pages for requested index (not necessarily from the beginning)
-     until the number of sequence(s) requested. The default argument will be 'auto-scrap' that starts to scrap from the
-     last user in the data base - per website.
-6. data for each user is transformed via generators:
-    a. generator for sequence of main pages (includes X individual instances in each page)
-    b. generator of instances of user object (includes a dictionary of the relevant data which was scrapped)
-7. for each user, the scrapper receives the information and add it to the tables, checking integrity and duplicates.
-8. When the user index reaches the user last index requested (according to the amount of users to scrap)
-    program breaks from the function (in the case of a loop, it will begin the next website. in the Multi Process case,
-    it can happen in en expected ratio - but it assures that each one of the websites will scrap all the requested users
-Along with the main file, the program include the following files:
-1. command_args - file which arrange the user input from the command line
-2. logger - file contains class logger - for general logger format
-3. ORM - file that defines schema using ORM - create tables and all relationships between the tables in the database.
-4. working_with_database - file that contains most of the function which CRUD with the database
-5. website - includes the class Website(object) - create soup of pages, find last page and create soups for main topic pages
-6. user_analysis- includes the class UserAnalysis(Website) - create a generator of links for each individual user page
-7. user- includes the class User(Website) - extracts the data in the individual user file and add the data to the
-relevant tables
-8. mining_constants.json - json format file contains the constants for all the program.
-                               each file imports the data that is relevant to run the file.
-9. requirements.txt - file with all the packages and dependencies of the project
+
+1. create databases and tables using ORM with MySQL
+2. scrap data from multiple website (with or without multi-proccessing
+3. enrich the database with data from an API request
+3. insert data into dedicated tables in the database
+
 Authors: Nir Barazida and Inbar Shirizly
 """
 
@@ -37,7 +15,7 @@ from src.user_analysis import UserAnalysis
 from src.user import User
 import concurrent.futures
 from tqdm import tqdm
-from src.working_with_database import initiate_database
+from src.working_with_database import initiate_database, insert_website_to_DB
 import random
 from itertools import repeat
 
@@ -58,7 +36,10 @@ def scrap_users(website_name, num_users_to_scrap):
     first_instance_to_scrap, index_first_page, index_first_instance_in_first_page = general.arrange_first_user_to_scrap(
         website_name)
 
+
     user_page = UserAnalysis(website_name, index_first_page, index_first_instance_in_first_page)
+
+    insert_website_to_DB(user_page.website_info)
 
     logger.info(config.WEBSITE_SCRAPP_INFO.format(website_name, first_instance_to_scrap,
                                                 first_instance_to_scrap + num_users_to_scrap - 1))
@@ -70,7 +51,6 @@ def scrap_users(website_name, num_users_to_scrap):
     for num_user, link in enumerate(tqdm(user_links_generator, desc=f"{website_name}",
                                          total=num_users_to_scrap, position=1, leave=False)):
         user = User(link, website_name, first_instance_to_scrap)
-        user.create_user()
         user.insert_user_to_DB()
 
         if num_user == random_user_to_check:
@@ -84,7 +64,6 @@ def scrap_users(website_name, num_users_to_scrap):
 @general.timer
 def main():
     # receiving arguments from the command line terminal for the scraping process
-
     parser = argparse.ArgumentParser(description='Scraping users from Stack Exchange websites')
 
     parser.add_argument('--db_name', help="database name", type=str, default='stack_exchange_db')
@@ -97,7 +76,6 @@ def main():
                              "default=False "
                         , type=general.bool_converter, default=False)
     args = parser.parse_args()
-
 
     initiate_database(args.websites)
     logger.info(config.OPENING_STRING.format(config.DB_NAME, args.num_users_to_scrap, config.SLEEP_FACTOR, args.multi_process))

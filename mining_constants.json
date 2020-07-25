@@ -9,6 +9,10 @@
       "AF": "Africa",
       "EU": "Europe"
     },
+    "API_WEBSITE_BASE_URL": "https://api.stackexchange.com/",
+    "API_TYPE": {
+      "INFO": "info"
+    },
     "MAGNITUDE_MAP": {
       "m": 6,
       "k": 3
@@ -34,7 +38,7 @@
       "WEBSITE_SCRAPP_INFO": "Website: {}, first user: {}, last user: {}",
       "GeocoderUnavailable_WARNING_STRING": "problem! user {} rank {} and website {} with address {}, did not scrapped, try to run again",
       "GeocoderUnavailable_ERROR_STRING": "Failed! user {} rank {} and website {} with address {}, did not scrapped",
-      "CONNECTION_ERROR": "os environ variables are not defined. for help go to https://www.youtube.com/watch?v=IolxqkL7cD8 ",
+      "CONNECTION_ERROR": "{} \tos environ variables are not defined or not fitting authentication. for help check https://www.youtube.com/watch?v=IolxqkL7cD8 ",
       "SERVER_ERROR": "couldn't form a connection with server",
       "DB_NAME_NOT_VALID": "Database name:{} is not valid",
       "TABLE_NOT_EXIST": "Table websites not exist in DB",
@@ -71,6 +75,8 @@
     }
   },
   "constants for user": {
+    "SQL_EXTENSION": "mysql",
+    "PYTHON_DBAPI": "pymysql",
     "DB_NAME": "stack_exchange_db",
     "WEBSITE_NAMES": [
       "stackoverflow",

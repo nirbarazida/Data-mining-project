@@ -12,6 +12,10 @@ data['constants'] = {
         'AF': 'Africa',
         'EU': 'Europe'
     },
+    'API_WEBSITE_BASE_URL': "https://api.stackexchange.com/",
+    'API_TYPE': {
+    'INFO': "info"
+    },
     'MAGNITUDE_MAP': {"m": 6, "k": 3},
     'REPUTATION_YEARS': (2017, 2018, 2019, 2020),
     'ORM_TABLES_RESTRICTIONS': {"COUNTRY_MAX_STRING_LENGTH": 112,
@@ -32,8 +36,8 @@ data['constants'] = {
 
                        "GeocoderUnavailable_ERROR_STRING": r"Failed! user {} rank {} and website {} with address {},"
                                                            r" did not scrapped",
-                       "CONNECTION_ERROR": "os environ variables are not defined. for help go to "
-                                           "https://www.youtube.com/watch?v=IolxqkL7cD8 ",
+                       "CONNECTION_ERROR": "{} \tos environ variables are not defined or not fitting authentication."
+                                           " for help check https://www.youtube.com/watch?v=IolxqkL7cD8 ",
                        "SERVER_ERROR": "couldn't form a connection with server",
                        "DB_NAME_NOT_VALID": r"Database name:{} is not valid",
                        "TABLE_NOT_EXIST": "Table websites not exist in DB",
@@ -60,6 +64,8 @@ data['constants'] = {
 }
 
 data['constants for user'] = {
+    'SQL_EXTENSION': 'mysql',
+    'PYTHON_DBAPI': 'pymysql',
     'DB_NAME': "stack_exchange_db",
     'WEBSITE_NAMES': ["stackoverflow", "askubuntu", "math.stackexchange", "superuser"],
     'FIRST_INSTANCE_TO_SCRAP': 1,

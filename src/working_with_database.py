@@ -6,43 +6,37 @@ create_table_website - create the website table and add entities according to th
 find_last_user_scrapped - finds the last users to scrap from the table
 """
 
-from src import config, logger, engine, Base, session
+from src import config, logger, engine, Base, session, connection
 from src.ORM import WebsitesT, UserT
 import pymysql
 from sqlalchemy import func
-
 
 def create_database():
     """
     creates the DB  (if not exist yet - if it is, continues).
     checks if connection to the database is valid
     """
-    try:
-        connection = pymysql.connect(host='localhost', user=config.USER_NAME, password=config.PASSWORD)
-    except pymysql.err.OperationalError as err:
-        logger.error(config.CONNECTION_ERROR)
+
+    # Create a cursor object
+    try:  #: TODO: in which case this happened?
+        cursor_instance = connection.cursor()
+    except pymysql.err.OperationalError:
+        logger.error(config.SERVER_ERROR)
         exit()
+
     else:
-        # Create a cursor object
-        try:
-            cursor_instance = connection.cursor()
-        except pymysql.err.OperationalError:
-            logger.error(config.SERVER_ERROR)
-            exit()
+        # SQL Statement to check if DB exist
+        sql_statement = config.CHECK_DB + config.DB_NAME + '"'
 
-        else:
-            # SQL Statement to check if DB exist
-            sql_statement = config.CHECK_DB + config.DB_NAME + '"'
-
-            if cursor_instance.execute(sql_statement) == 0:
-                # SQL Statement to create a database
-                sql_statement = "CREATE DATABASE " + config.DB_NAME
-                try:
-                    # Execute the create database SQL statement through the cursor instance
-                    cursor_instance.execute(sql_statement)
-                except pymysql.err.ProgrammingError:
-                    logger.error(config.DB_NAME_NOT_VALID.format(config.DB_NAME))
-                    exit()
+        if cursor_instance.execute(sql_statement) == 0:
+            # SQL Statement to create a database
+            sql_statement = "CREATE DATABASE " + config.DB_NAME
+            try:
+                # Execute the create database SQL statement through the cursor instance
+                cursor_instance.execute(sql_statement)
+            except pymysql.err.ProgrammingError:
+                logger.error(config.DB_NAME_NOT_VALID.format(config.DB_NAME))
+                exit()
 
 
 def initiate_database(websites):
@@ -57,27 +51,27 @@ def initiate_database(websites):
     # creates all tables - if exists won't do anything
     Base.metadata.create_all(engine)
 
-    # create table website for all the websites
-    create_table_website(websites)
 
-
-def create_table_website(websites):
+def insert_website_to_DB(website_dict):
     """
-    get a list of all the websites that the user wants to scrap from
-    create new entries in table websites with those names
+    enters data of website into DB. if the entity already exists, update relevant data
+    :param website_dict: parameters of website table (dict)
     """
 
-    # if not engine.dialect.has_table(engine, 'websites'):
-    #     logger_DB.error(conf.TABLE_NOT_EXIST)
-    #     exit()
+    web = session.query(WebsitesT).filter(WebsitesT.name == website_dict["name"]).first()
 
-    for name in websites:
-        web = session.query(WebsitesT).filter(WebsitesT.name == name).first()
-        if web is None:
-            logger.info(f"new entity in website table: {web}")
-            web = WebsitesT(name=name)
-            session.add(web)
-            session.commit()
+    if web:
+        web.total_users = website_dict["total_users"]
+        web.total_answers = website_dict["total_answers"]
+        web.total_questions = website_dict["total_questions"]
+        web.answers_per_minute = website_dict["answers_per_minute"]
+        web.questions_per_minute = website_dict["questions_per_minute"]
+
+    else:
+        web = WebsitesT(**website_dict)
+    session.add(web)
+    session.commit()
+
 
 
 
@@ -90,8 +84,10 @@ def find_last_user_scrapped(website_name):
     """
     web = session.query(WebsitesT).filter(WebsitesT.name == website_name).first()
 
-    last_scraped = session.query(func.max(UserT.rank)).filter(UserT.website_id == web.id).scalar()
     try:
+        last_scraped = session.query(func.max(UserT.rank)).filter(UserT.website_id == web.id).scalar()
         return last_scraped + 1
     except TypeError:
+        return 1
+    except AttributeError:
         return 1

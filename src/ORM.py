@@ -5,7 +5,7 @@ It also provides a system to query and manipulate the database using object-orie
 """
 
 from src import Base, config
-from sqlalchemy import Integer, String, Column, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import Integer, String, Column, DateTime, ForeignKey, UniqueConstraint, Float
 from sqlalchemy.orm import relationship
 
 
@@ -18,6 +18,11 @@ class WebsitesT(Base):
     __tablename__ = 'websites'
     id = Column(Integer(), primary_key=True)
     name = Column(String(config.NAMES_STRING_LENGTH), nullable=False)
+    total_users = Column(Integer())
+    total_answers = Column(Integer())
+    total_questions = Column(Integer())
+    answers_per_minute = Column(Float())
+    questions_per_minute = Column(Float())
     users = relationship("UserT", backref="website")
 
 

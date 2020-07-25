@@ -14,8 +14,17 @@ class Config:
         with open(JSON_FILE_NAME, "r") as json_file:
             constants_data = json.load(json_file)
 
+        # SQL extensions and python db-api + DB name
+        self.SQL_EXTENSION = constants_data["constants for user"]["SQL_EXTENSION"]
+        self.PYTHON_DBAPI = constants_data["constants for user"]["PYTHON_DBAPI"]
         self.DB_NAME = constants_data["constants for user"]["DB_NAME"]
+
+        # number of instances in each page to scrap
         self.NUM_INSTANCES_IN_PAGE = constants_data["constants"]["NUM_INSTANCES_IN_PAGE"]
+
+        # API data
+        self.API_WEBSITE_BASE_URL = constants_data["constants"]["API_WEBSITE_BASE_URL"]
+        self.API_TYPE_WEBSITE_DATA = constants_data["constants"]["API_TYPE"]["INFO"]
 
         # logger strings - main file
         self.OPENING_STRING = constants_data["constants"]["LOGGER_STRINGS"]["OPENING_STRING"]
