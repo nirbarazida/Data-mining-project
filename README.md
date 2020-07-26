@@ -70,7 +70,7 @@ To approach the diversity problem we decided to create 3 different class:
   
  ### Class Flow- Chart
  
-![image](https://github.com/nirbarazida/Data-mining-project/blob/master/figures/Class%20flow%20chart%20MS2.jpeg)  
+![image](https://github.com/nirbarazida/Data-mining-project/blob/master/figures/Class%20flow%20chart%20MS3.jpeg)  
 
 - **Class Website:** \
     General class for the website crawler with the format of Stack Exchange
@@ -144,7 +144,7 @@ mode is turned off  it will run over this list in a loop. default value is False
     
 - [create_json_file.py](https://github.com/nirbarazida/Data-mining-project/blob/master/create_json_file.py) - python file that generate the mining_constants.json
 - [mining_constants.json](https://github.com/nirbarazida/Data-mining-project/blob/master/mining_constants.json) - json format file contains the constants for all the program.
-                               each file imports the data that is relevant to run the file.
+                               the conf.py parse the json into class variables. The program will only use conf.py to import different variables. 
 - [requirements.txt](https://github.com/nirbarazida/Data-mining-project/blob/master/requirements.txt) - file with all the packages and dependencies of the project.
 
 ## Sources
