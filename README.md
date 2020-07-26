@@ -50,7 +50,7 @@ please store the variable with the names:
 
 ![image](https://github.com/nirbarazida/Data-mining-project/blob/master/figures/Data%20mining%20workflow.jpeg)
 
-For now, this project is in milestone 2, hence the program crawls from the 
+For now, this project is in milestone 3, hence the program crawls from the 
 input websites and commit the data to the user MySQL data-base. <br/>
 In the future, the program will store the data on a remote data base that
 is located on a server, and display the insights in a dashboard
@@ -62,10 +62,11 @@ The opportunity to implement scraping features on different websites, using the 
 To approach the diversity problem we decided to create 3 different class:
 - **Website**
 - **User analysis**
+- **UserScraper**
 - **User**
 
  The first two are general and have little dependence on the website HTML.
- The third class is all dedicated to scraping the information and very much adjusted to the specific website we are scraping.
+ The third and fourth class are all dedicated to scraping the information and very much adjusted to the specific website and objects that we are scraping.
   
  ### Class Flow- Chart
  
@@ -77,14 +78,20 @@ To approach the diversity problem we decided to create 3 different class:
 - **Class User analysis:** \
     Class for user analysis in a the website that get links for each individual user page
 
-- **Class User** \
+- **UserScraper:**\
+    Receives the users url and scrapes all the information into class variables
+
+- **Class User:** \
+    Inherent from class UserScraper the methods to scrap information about a user into class variables.\
     Receives the users url, scrapes all the information into class variables and eventually will commit all the 
     information to a data base using SQLAlchemy ORM.
 
- After creating all three class that ables us to scrap the data, we'll start working on the data-base that stores
+ In addition to the scraping abilities we added an API ability to receive information about every website that is being scraped using StackExchange API.
+ After creating all four class that ables us to scrap the data and the API ability, we'll start working on the data-base that stores
  the information. To crate the data-base we will use SQLAlchemy based on ORM. This way we will be able to query
  and manipulate the database using object-oriented code instead of writing SQL.
  the implantation of the above can be shown in the [ORM.py](https://github.com/nirbarazida/Data-mining-project/blob/master/ORM.py) file
+ 
 
 ## Database  - ERD
 
@@ -94,7 +101,7 @@ Tables description:
 
 - `users` - contains information of the indivdual user - contain users from all
 the websites together, distinguished by `website_id`.
-- `websites` - table related to users (one website to many users)
+- `websites` - table related to users (one website to many users) - stores general information about the website from StackExchange API.
 - `tags` - name of tag - connected to a relation table `user_tags` - which contains
 the score and number of posts of the tag to the each user (`users` - `tags` = many to many)
 - `reputation` - reputation of the user, including data from each year between 2017-2020
@@ -114,30 +121,28 @@ In the command line arguments the user will be able to use the following feature
 
 - **WEBSITE_NAMES** - list of websites that the program will scrap. Note that they must be part of StackExchange group.
 
-- **SLEEP_FACTOR** - for preventing crawl blockage each time the program
- requests url from website. It sleeps the same 
-amount of time the request took, times this factor. This feature allows
-the user to pick  a factor that will allow the program to run as fast
-as possible while avoiding blockage. default value is 1.5 seconds.
-
 - **Multiprocessing** - when this mode is on, the program will scrap from each
 of the input WEBSITE_NAMES concurrently using Multiprocessing. If the 
 mode is turned off  it will run over this list in a loop. default value is False.
-
 
 - **DB_NAME** - The database name that the user wants to scrap the information to. if one dose not exist the program
  will create one for him with the new name. default name is 'stack_exchange_db'
 
 ## Files
-
-- [command_args](https://github.com/nirbarazida/Data-mining-project/blob/master/command_args.py) - file which arrange the user input from the command line.
-- [logger](https://github.com/nirbarazida/Data-mining-project/blob/master/logger.py) - file contains class logger - for general logger format.
-- [ORM](https://github.com/nirbarazida/Data-mining-project/blob/master/ORM.py) - file that defines schema using ORM - create tables and all relationships between the tables in the database.
-- [working_with_database](https://github.com/nirbarazida/Data-mining-project/blob/master/working_with_database.py) - file that contains most of the function which CRUD with the database.
-- [website](https://github.com/nirbarazida/Data-mining-project/blob/master/website.py) - includes the class Website(object) - create soup of pages, find last page and create soups for main topic pages.
-- [user_analysis](https://github.com/nirbarazida/Data-mining-project/blob/master/user_analysis.py) - includes the class UserAnalysis(Website) - create a generator of links for each individual user page.
-- [user](https://github.com/nirbarazida/Data-mining-project/blob/master/user.py) - includes the class User(Website) - extracts the data in the individual user file and add the data to the
-relevant tables.
+- #### **src**:
+    - [__init__.py](https://github.com/nirbarazida/Data-mining-project/blob/master/src/__init__.py) - when importing src file to main will initialize general process such set connection, create engine etc.
+    - [conf.py](https://github.com/nirbarazida/Data-mining-project/blob/master/src/conf.py) - configuration file, generate all important values from json file and from the command line input
+    - [general.py](https://github.com/nirbarazida/Data-mining-project/blob/master/src/general.py) - general function that are being needed in multiple python file.
+    - [geo_location.py](https://github.com/nirbarazida/Data-mining-project/blob/master/src/geo_location.py) - file contains three nested function that receives a general location string and retrieves a generic country and continent   
+    - [logger.py](https://github.com/nirbarazida/Data-mining-project/blob/master/src/logger.py) - file contains class logger - for general logger format.
+    - [ORM.py](https://github.com/nirbarazida/Data-mining-project/blob/master/src/ORM.py) - file that defines schema using ORM - create tables and all relationships between the tables in the database.
+    - [user.py](https://github.com/nirbarazida/Data-mining-project/blob/master/src/user.py) - includes the class User(UserScraper) - extracts the data for the individual user and add it to the relevant tables in the data-base.
+    - [user_analysis.py](https://github.com/nirbarazida/Data-mining-project/blob/master/src/user_analysis.py) - includes the class UserAnalysis(Website) - create a generator of links for each individual user page.
+    - [user_scraper.py](https://github.com/nirbarazida/Data-mining-project/blob/master/src/user_scraper.py) - includes the class UserScraper(Object) - Receives the users url and scrapes all the information into class variables
+    - [website.py](https://github.com/nirbarazida/Data-mining-project/blob/master/src/website.py) - includes the class Website(object) - create soup of pages, find last page and create soups for main topic pages.
+    - [working_with_database.py](https://github.com/nirbarazida/Data-mining-project/blob/master/src/working_with_database.py) - file that contains most of the function which CRUD with the database.
+    
+- [create_json_file.py](https://github.com/nirbarazida/Data-mining-project/blob/master/create_json_file.py) - python file that generate the mining_constants.json
 - [mining_constants.json](https://github.com/nirbarazida/Data-mining-project/blob/master/mining_constants.json) - json format file contains the constants for all the program.
                                each file imports the data that is relevant to run the file.
 - [requirements.txt](https://github.com/nirbarazida/Data-mining-project/blob/master/requirements.txt) - file with all the packages and dependencies of the project.
@@ -160,4 +165,5 @@ relevant tables.
 - [basic orm coverage](https://www.fullstackpython.com/object-relational-mappers-orms.html)
 - [defining schema using SQLAlchemy ORM](https://overiq.com/sqlalchemy-101/defining-schema-in-sqlalchemy-orm/)
 
-
+##### API:
+- [StackExchange API](https://api.stackexchange.com/)
