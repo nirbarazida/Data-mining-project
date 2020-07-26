@@ -1,13 +1,12 @@
 import logging
 
-
-class Logger(object):
+class Logger:
     """
     class for creating a logger for the file, includes creating a file handler relevant to
     the logger, including name of the file, level of the logger and the formatter
     """
 
-    def __init__(self, logger_name):
+    def __init__(self):
         # Initiating the logger object
         self.logger = logging.getLogger(__name__)
 
@@ -16,10 +15,10 @@ class Logger(object):
         self.logger.setLevel(logging.INFO)
 
         # Create the main.log file
-        handler = logging.FileHandler(f'{logger_name}.log')
+        handler = logging.FileHandler('data_project.log')
 
         # Format the logs structure so that every line would include the time, name, level name and log message
-        formatter = logging.Formatter('%(levelname)s:%(asctime)s:%(name)s:%(message)s')
+        formatter = logging.Formatter('%(levelname)s : %(asctime)s : %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
         handler.setFormatter(formatter)
 
         # Adding the format handler

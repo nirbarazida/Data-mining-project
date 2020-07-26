@@ -4,37 +4,9 @@ define tables and relationship using Python classes.
 It also provides a system to query and manipulate the database using object-oriented code instead of writing SQL.
 """
 
-from logger import Logger
-from sqlalchemy import create_engine, Integer, String, Column, DateTime, ForeignKey, UniqueConstraint,exc
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, Session
-from command_args import args
-import conf
-
-
-COUNTRY_MAX_STRING_LENGTH = 112   # longest country name in the world contain 56 letters - we will take factor 2
-CONTINENT_MAX_STRING_LENGTH = 26  # longest continent name in the world contain 13 letters =- we will take factor 2
-NAMES_STRING_LENGTH = 200      # decision to allocate max 200 characters for each user, website, tag and location names
-
-
-
-logger_ORM = Logger("ORM").logger
-DB_NAME = args.DB_name
-
-
-# catch SQLAlchemy's DBAPIError, which is a wrapper
-# for the DBAPI's exception.  It includes a .connection_invalidated
-try:
-    engine = create_engine(f"mysql+pymysql://{conf.USER_NAME}:{conf.PASSWORD}@localhost/{DB_NAME}")
-except exc.DBAPIError as err:
-    logger_ORM.error(err.orig)
-    exit(1)
-
-else:
-    # mapper & MetaData: maps the subclass to the table and holds all the information about the database
-    Base = declarative_base()
-    # wraps the database connection and transaction. starts as the Session starts and remain open until the Session closed
-    session = Session(bind=engine)
+from src import Base, config
+from sqlalchemy import Integer, String, Column, DateTime, ForeignKey, UniqueConstraint, Float
+from sqlalchemy.orm import relationship
 
 
 class WebsitesT(Base):
@@ -45,9 +17,13 @@ class WebsitesT(Base):
     """
     __tablename__ = 'websites'
     id = Column(Integer(), primary_key=True)
-    name = Column(String(NAMES_STRING_LENGTH), nullable=False)
+    name = Column(String(config.NAMES_STRING_LENGTH), nullable=False)
+    total_users = Column(Integer())
+    total_answers = Column(Integer())
+    total_questions = Column(Integer())
+    answers_per_minute = Column(Float())
+    questions_per_minute = Column(Float())
     users = relationship("UserT", backref="website")
-
 
 
 class UserT(Base):
@@ -64,7 +40,7 @@ class UserT(Base):
     __tablename__ = 'users'
     id = Column(Integer(), primary_key=True)
     rank = Column(Integer())
-    name = Column(String(NAMES_STRING_LENGTH), nullable=False)
+    name = Column(String(config.NAMES_STRING_LENGTH), nullable=False)
     member_since = Column(DateTime())
     profile_views = Column(Integer())
     answers = Column(Integer())
@@ -102,7 +78,7 @@ class TagsT(Base):
     """
     __tablename__ = 'tags'
     id = Column(Integer(), primary_key=True)
-    name = Column(String(NAMES_STRING_LENGTH), nullable=False, unique=True)
+    name = Column(String(config.NAMES_STRING_LENGTH), nullable=False, unique=True)
     users = relationship('User_Tags', backref='tag')
 
 
@@ -130,8 +106,8 @@ class Location(Base):
     """
     __tablename__ = 'location'
     id = Column(Integer(), primary_key=True)
-    country = Column(String(COUNTRY_MAX_STRING_LENGTH), nullable=True, unique=True)
-    continent = Column(String(CONTINENT_MAX_STRING_LENGTH), nullable=True)
+    country = Column(String(config.COUNTRY_MAX_STRING_LENGTH), nullable=True, unique=True)
+    continent = Column(String(config.CONTINENT_MAX_STRING_LENGTH), nullable=True)
     users = relationship("UserT", backref="location")
     stack_locations = relationship("Stack_Exchange_Location", backref="location")
 
@@ -146,5 +122,5 @@ class Stack_Exchange_Location(Base):
     """
     __tablename__ = 'stack_exchange_location'
     id = Column(Integer(), primary_key=True)
-    website_location = Column(String(NAMES_STRING_LENGTH), nullable=True, unique=True)
+    website_location = Column(String(config.NAMES_STRING_LENGTH), nullable=True, unique=True)
     location_id = Column(Integer(), ForeignKey('location.id'))
