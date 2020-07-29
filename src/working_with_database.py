@@ -30,14 +30,14 @@ def create_database():
             exit()
 
 
-def initiate_database(websites):
+def initiate_database():
     """
     initiates a database (generates the tables in the database (creates them if they not exist)
     """
     create_database()
 
     # Drops all tables. del when DB is ready
-    # Base.metadata.drop_all(engine)
+    Base.metadata.drop_all(engine)
 
     # creates all tables - if exists won't do anything
     Base.metadata.create_all(engine)
