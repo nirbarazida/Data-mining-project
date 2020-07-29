@@ -82,11 +82,14 @@ a global unique name of country and continent.
     if loc:
         lat, lon = loc.latitude, loc.longitude
         time.sleep(config.SLEEP_TIME_FOR_LOCATIONS_API)
-        new_loc = geolocator.reverse([lat, lon], language='en')
         try:
+            new_loc = geolocator.reverse([lat, lon], language='en')
             country = new_loc.raw["address"]["country"]
             continent = config.continents_dict[country_alpha2_to_continent_code(
                 country_name_to_country_alpha2(country))]
+
+        except TypeError:
+            logger.warning(config.USER_PROBLEMATIC_COUNTRY.format(loc_string))
 
         except KeyError:
             if country in config.KNOWN_COUNTRIES:

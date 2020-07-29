@@ -29,13 +29,12 @@ def scrap_users(website_name, num_users_to_scrap):
     when the user index reaches the last user needed (per website) finish code.
     on the Multi Process mode, this function runs concurrently on different websites
     :param website_name: domain name of the website that is been scrapped (str)
-    :param num_users_to_scrap: number of users to scrap in the following sessiom
+    :param num_users_to_scrap: number of users to scrap in the following session
     :return: None
     """
 
     first_instance_to_scrap, index_first_page, index_first_instance_in_first_page = general.arrange_first_user_to_scrap(
         website_name)
-
 
     user_page = UserAnalysis(website_name, index_first_page, index_first_instance_in_first_page)
 

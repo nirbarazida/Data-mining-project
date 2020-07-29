@@ -14,6 +14,7 @@ config = Config(JSON_FILE_NAME)
 
 try:
     connection = pymysql.connect(host='localhost', user=config.USER_NAME, password=config.PASSWORD)
+    cursor_instance = connection.cursor()
 
     engine = create_engine(f"{config.SQL_EXTENSION}+{config.PYTHON_DBAPI}://{config.USER_NAME}:"
                            f"{config.PASSWORD}@localhost/{config.DB_NAME}")
@@ -21,7 +22,6 @@ try:
     Base = declarative_base()
     # wraps the database connection and transaction. starts as the Session starts and remain open until the Session closed
     session = Session(bind=engine)
-
     geolocator = Nominatim(user_agent=f"{config.DB_NAME}", timeout=3)
 
 except exc.NoSuchModuleError as err:

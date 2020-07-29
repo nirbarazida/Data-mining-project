@@ -18,7 +18,7 @@ class Logger:
         handler = logging.FileHandler('data_project.log')
 
         # Format the logs structure so that every line would include the time, name, level name and log message
-        formatter = logging.Formatter('%(levelname)s : %(asctime)s : %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
+        formatter = logging.Formatter('%(levelname)s : %(asctime)s : %(process)d: %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
         handler.setFormatter(formatter)
 
         # Adding the format handler

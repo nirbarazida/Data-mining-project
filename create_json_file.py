@@ -37,9 +37,10 @@ data['constants'] = {
                        "GeocoderUnavailable_ERROR_STRING": r"Failed! user {} rank {} and website {} with address {},"
                                                            r" did not scrapped",
                        "CONNECTION_ERROR": "{} \tos environ variables are not defined or not fitting authentication."
-                                           " for help check https://www.youtube.com/watch?v=IolxqkL7cD8 ",
-                       "SERVER_ERROR": "couldn't form a connection with server",
+                                           " for help check https://www.youtube.com/watch?v=IolxqkL7cD8 "
+                                           "another option: couldn't form a connection with server",
                        "DB_NAME_NOT_VALID": r"Database name:{} is not valid",
+                       "USER_PROBLEMATIC_COUNTRY": "user location is: '{}' - will be address as None!"
                        },
     'SQL_STATEMENTS': {
         "CHECK_DB": 'SELECT distinct(SCHEMA_NAME) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ' '"',
