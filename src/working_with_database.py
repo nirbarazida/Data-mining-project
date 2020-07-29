@@ -37,7 +37,7 @@ def initiate_database(websites):
     create_database()
 
     # Drops all tables. del when DB is ready
-    Base.metadata.drop_all(engine)
+    # Base.metadata.drop_all(engine)
 
     # creates all tables - if exists won't do anything
     Base.metadata.create_all(engine)
