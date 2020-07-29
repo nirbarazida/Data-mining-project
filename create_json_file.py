@@ -23,7 +23,8 @@ data['constants'] = {
                                 "NAMES_STRING_LENGTH": 200},
 
     'REGEX_STRINGS': {"REPUTATION_REGEX": r"var\sgraphData\s=\s(\[\S+\])",
-                      "GMT_REGEX": r"GMT\s[+-]\d"},
+                      "GMT_REGEX": r"GMT\s[+-]\d",
+                      "ENCODE_REGEX": r"(['])([A-Za-z ]+)([\\]*)"},
 
     'LOGGER_STRINGS': {"OPENING_STRING": "Working on DB: {}, number of users to scrap = {},"
                                          " sleep factor = {}, Multi Process? {}",

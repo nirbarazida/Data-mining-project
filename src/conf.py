@@ -59,6 +59,7 @@ class Config:
         # regex strings
         self.REPUTATION_REGEX = re.compile(constants_data["constants"]["REGEX_STRINGS"]["REPUTATION_REGEX"])
         self.GMT_REGEX = re.compile(constants_data["constants"]["REGEX_STRINGS"]["GMT_REGEX"])
+        self.ENCODE_REGEX = re.compile(constants_data["constants"]["REGEX_STRINGS"]["ENCODE_REGEX"])
 
         # logger strings - geolocation exceptions
         self.GeocoderUnavailable_WARNING_STRING = constants_data["constants"]["LOGGER_STRINGS"]["GeocoderUnavailable_WARNING_STRING"]
