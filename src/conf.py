@@ -33,7 +33,7 @@ class Config:
 
         # logger messages - working with database
         self.CONNECTION_ERROR = constants_data["constants"]["LOGGER_STRINGS"]["CONNECTION_ERROR"]
-        self.SERVER_ERROR = constants_data["constants"]["LOGGER_STRINGS"]["SERVER_ERROR"]
+        self.USER_PROBLEMATIC_COUNTRY = constants_data["constants"]["LOGGER_STRINGS"]["USER_PROBLEMATIC_COUNTRY"]
         self.DB_NAME_NOT_VALID = constants_data["constants"]["LOGGER_STRINGS"]["DB_NAME_NOT_VALID"]
 
         # get authentication values

@@ -69,6 +69,7 @@ class User_Tags(Base):
     score = Column(Integer())
     posts = Column(Integer())
 
+
 class TagsT(Base):
     """
     stores all the tags names
@@ -106,7 +107,7 @@ class Location(Base):
     """
     __tablename__ = 'location'
     id = Column(Integer(), primary_key=True)
-    country = Column(String(config.COUNTRY_MAX_STRING_LENGTH), nullable=True, unique=True)
+    country = Column(String(config.COUNTRY_MAX_STRING_LENGTH), nullable=True) #, unique=True)
     continent = Column(String(config.CONTINENT_MAX_STRING_LENGTH), nullable=True)
     users = relationship("UserT", backref="location")
     stack_locations = relationship("Stack_Exchange_Location", backref="location")
@@ -122,5 +123,5 @@ class Stack_Exchange_Location(Base):
     """
     __tablename__ = 'stack_exchange_location'
     id = Column(Integer(), primary_key=True)
-    website_location = Column(String(config.NAMES_STRING_LENGTH), nullable=True, unique=True)
+    website_location = Column(String(config.NAMES_STRING_LENGTH), nullable=True) #, unique=True)
     location_id = Column(Integer(), ForeignKey('location.id'))

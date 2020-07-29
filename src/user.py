@@ -50,19 +50,21 @@ class User(UserScraper):
         """
         return {**self._reputation_hist, 'reputation_now': self._reputation_now}
 
+
     def commit_user_to_DB(self, user):
         try:
             session.add(user)
             session.commit()
 
-        except exc.IntegrityError:
+        except exc.IntegrityError as e:
+            logger.error(e)
             session.rollback()
-            # log the problem in user logger, Can't print user name with spacial/ unknown characters
-            logger.warning(f'IntegrityError: "Duplicate entry for key users.name ranked')
-
-            # insert user information to not scrapped users logger, Can't print user name with unknown characters
-            logger.error(f'IntegrityError: "Duplicate entry for key users.name ranked {self._rank} at'
-                                      f' website {self._website_name} with url: {self._url}" ')
+            # # log the problem in user logger, Can't print user name with spacial/ unknown characters
+            # logger.warning(f'IntegrityError: "Duplicate entry for key users.name ranked')
+            #
+            # # insert user information to not scrapped users logger, Can't print user name with unknown characters
+            # logger.error(f'IntegrityError: "Duplicate entry for key users.name ranked {self._rank} at'
+            #                           f' website {self._website_name} with url: {self._url}" ')
             return None
 
         return True
@@ -133,6 +135,7 @@ class User(UserScraper):
                                                          website_location=self._new_location_name_in_website)
             commit_list.append(stack_exchange_loc)
 
+
         # create new user entrance in table and commit it to create PK for user.
         user = UserT(location=loc, website_id=web.id, **self.user_info)
 
@@ -157,4 +160,8 @@ class User(UserScraper):
                 commit_list.append(ass)
 
         # commit all user info to DB - if didn't seceded will return None
-        User.commit_user_info_to_DB(self, commit_list)
+        # User.commit_user_info_to_DB(self, commit_list)
+        session.add_all(commit_list)
+        session.commit()
+        
+        
