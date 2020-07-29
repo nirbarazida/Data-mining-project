@@ -29,7 +29,7 @@ class User(UserScraper):
         """
         return {
             'rank': self._rank,
-            'name': self._name,
+            'name': self._name.encode('utf-8', 'ignore'),
             'member_since': self._member_since,
             'profile_views': self._profile_views,
             'answers': self._answers,
@@ -41,7 +41,7 @@ class User(UserScraper):
         """
         property of user location data
         """
-        return { 'country': self._country, 'continent': self._continent}
+        return {'country': self._country, 'continent': self._continent}
 
     @property
     def reputation(self):
@@ -49,7 +49,6 @@ class User(UserScraper):
         property of user reputation data
         """
         return {**self._reputation_hist, 'reputation_now': self._reputation_now}
-
 
     def commit_user_to_DB(self, user):
         try:
@@ -89,8 +88,8 @@ class User(UserScraper):
             # insert user information to not scrapped users logger
             logger.error(e.orig)
             logger.error(f'{self._name} ranked {self._rank} at'
-                                      f' website {self._website_name} with url: {self._url}" was not scraped because'
-                                      f'of IntegrityError in second commit')
+                         f' website {self._website_name} with url: {self._url}" was not scraped because'
+                         f'of IntegrityError in second commit')
 
     def insert_user_to_DB(self):
         """
@@ -132,9 +131,9 @@ class User(UserScraper):
 
         if self._new_location_name_in_website:
             stack_exchange_loc = Stack_Exchange_Location(location=loc,
-                                                         website_location=self._new_location_name_in_website)
+                                                         website_location=self._new_location_name_in_website.encode(
+                                                             'utf-8', 'ignore'))
             commit_list.append(stack_exchange_loc)
-
 
         # create new user entrance in table and commit it to create PK for user.
         user = UserT(location=loc, website_id=web.id, **self.user_info)
@@ -163,5 +162,3 @@ class User(UserScraper):
         # User.commit_user_info_to_DB(self, commit_list)
         session.add_all(commit_list)
         session.commit()
-        
-        
