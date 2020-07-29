@@ -11,7 +11,7 @@ from sqlalchemy import exc
 from src.user_scraper import UserScraper
 import re
 
-pattern = re.compile(r"([']*)([A-Za-z ]+)([\\]*)")
+pattern = re.compile(r"(['])([A-Za-z ]+)([\\]*)")
 
 
 class User(UserScraper):
@@ -32,7 +32,7 @@ class User(UserScraper):
         """
         return {
             'rank': self._rank,
-            'name': str(self._name.encode('utf-8', 'ignore')),
+            'name': pattern.search(str(self._name.encode('utf-8', 'ignore'))).group(2),
             'member_since': self._member_since,
             'profile_views': self._profile_views,
             'answers': self._answers,
@@ -133,8 +133,8 @@ class User(UserScraper):
             commit_list.append(loc)
 
         if self._new_location_name_in_website:
-            stack_exchange_loc = Stack_Exchange_Location(location=loc, website_location= \
-                str(self._new_location_name_in_website.encode('utf-8', 'ignore')))
+            stack_exchange_loc = Stack_Exchange_Location(location=loc, website_location=pattern.search(
+                str(self._new_location_name_in_website.encode('utf-8', 'ignore'))).group(2))
 
             commit_list.append(stack_exchange_loc)
 
