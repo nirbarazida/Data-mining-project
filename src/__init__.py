@@ -13,11 +13,11 @@ logger = Logger().logger
 config = Config(JSON_FILE_NAME)
 
 try:
-    connection = pymysql.connect(host='localhost', user=config.USER_NAME, password=config.PASSWORD, charset='utf8mb4')
+    connection = pymysql.connect(host='localhost', user=config.USER_NAME, password=config.PASSWORD)
     cursor_instance = connection.cursor()
 
     engine = create_engine(f"{config.SQL_EXTENSION}+{config.PYTHON_DBAPI}://{config.USER_NAME}:"
-                           f"{config.PASSWORD}@localhost/{config.DB_NAME}")
+                           f"{config.PASSWORD}@localhost/{config.DB_NAME}?charset=utf8mb4")
     # mapper & MetaData: maps the subclass to the table and holds all the information about the database
     Base = declarative_base()
     # wraps the database connection and transaction. starts as the Session starts and remain open until the Session closed
