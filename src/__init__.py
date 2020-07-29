@@ -18,7 +18,7 @@ try:
     cursor_instance = connection.cursor()
 
     engine = create_engine(f"{config.SQL_EXTENSION}+{config.PYTHON_DBAPI}://{config.USER_NAME}:"
-                           f"{config.PASSWORD}@localhost/{config.DB_NAME}?charset=utf8mb4")
+                           f"{config.PASSWORD}@localhost/{config.DB_NAME}")
 
     # mapper & MetaData: maps the subclass to the table and holds all the information about the database
     Base = declarative_base()
