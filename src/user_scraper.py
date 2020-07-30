@@ -62,7 +62,7 @@ class UserScraper:
             except AttributeError:
                 logger.warning(f'Could not encode to UTF-8mb4 the location string:{location_string}'
                              f' for user: {self._name} with url: {self._url}.')
-                self._new_location_name_in_website = None
+                location_string = None
 
             if location_string:
                 temp_location_tuple = create_location(location_string, self._name, self._website_name)
