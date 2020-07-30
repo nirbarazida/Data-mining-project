@@ -58,6 +58,14 @@ class UserScraper:
             temp_location_tuple = create_location(location_string, self._name, self._website_name)
             self._country, self._continent, self._new_location_name_in_website =  temp_location_tuple
 
+            # encode the lactation string to UTF-8
+            try:
+                config.ENCODE_REGEX.search(str(self._new_location_name_in_website.encode('utf-8', 'ignore'))).group(2)
+            except AttributeError:
+                logger.warning(f'Could not encode to UTF-8mb4 the location string:{self._new_location_name_in_website}'
+                             f' for user: {self._name} with url: {self._url}.')
+                self._new_location_name_in_website = None
+
         for index in basic_info_as_list:
             if 'Member for' in index.text:
                 self._member_since = datetime.strptime(index.find('span')['title'][:-1], '%Y-%m-%d %H:%M:%S')
