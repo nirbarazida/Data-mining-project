@@ -27,9 +27,17 @@ class User(UserScraper):
         """
         property of user general data for table UserT
         """
+        try:
+            self._name = config.ENCODE_REGEX.search(str(self._name.encode('utf-8', 'ignore'))).group(2)
+        except AttributeError:
+            logger.warning(f'Could not encode to UTF-8mb4 the user name: {self._name}'
+                           f' with url: {self._url}.')
+            self._name = self._website_name + " " + str(self._rank)
+
+
         return {
             'rank': self._rank,
-            'name': config.ENCODE_REGEX.search(str(self._name.encode('utf-8', 'ignore'))).group(2),
+            'name': self._name,
             'member_since': self._member_since,
             'profile_views': self._profile_views,
             'answers': self._answers,
@@ -130,10 +138,13 @@ class User(UserScraper):
             commit_list.append(loc)
 
         if self._new_location_name_in_website:
-            stack_exchange_loc = Stack_Exchange_Location(location=loc, website_location=config.ENCODE_REGEX.search(
-                str(self._new_location_name_in_website.encode('utf-8', 'ignore'))).group(2))
-
-            commit_list.append(stack_exchange_loc)
+            try:
+                stack_exchange_loc = Stack_Exchange_Location(location=loc, website_location=config.ENCODE_REGEX.search(
+                    str(self._new_location_name_in_website.encode('utf-8', 'ignore'))).group(2))
+                commit_list.append(stack_exchange_loc)
+            except AttributeError:
+                logger.warning(f'Could not encode to UTF-8mb4 the location string:{self._new_location_name_in_website}'
+                             f' for user: {self._name} with url: {self._url}.')
 
         # create new user entrance in table and commit it to create PK for user.
         user = UserT(location=loc, website_id=web.id, **self.user_info)
