@@ -21,7 +21,6 @@ class User(UserScraper):
     The class contains as well the methods for adding new rows into the database tables, from the data of the
     instance of the relevant user
     """
-    USER_COUNTER = 0
 
     @property
     def user_info(self):
