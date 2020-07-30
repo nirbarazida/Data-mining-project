@@ -55,16 +55,20 @@ class UserScraper:
         basic_info_as_list = basic_info_scope.find_all_next("div", {"class": "grid gs8 gsx ai-center"})
         if basic_info_as_list[0].find('svg', {'aria-hidden': 'true', 'class': 'svg-icon iconLocation'}):
             location_string = basic_info_as_list[0].text.strip()
-            temp_location_tuple = create_location(location_string, self._name, self._website_name)
-            self._country, self._continent, self._new_location_name_in_website =  temp_location_tuple
 
             # encode the lactation string to UTF-8
             try:
-                config.ENCODE_REGEX.search(str(self._new_location_name_in_website.encode('utf-8', 'ignore'))).group(2)
+                config.ENCODE_REGEX.search(str(location_string.encode('utf-8', 'ignore'))).group(2)
             except AttributeError:
-                logger.warning(f'Could not encode to UTF-8mb4 the location string:{self._new_location_name_in_website}'
+                logger.warning(f'Could not encode to UTF-8mb4 the location string:{location_string}'
                              f' for user: {self._name} with url: {self._url}.')
                 self._new_location_name_in_website = None
+
+            if location_string:
+                temp_location_tuple = create_location(location_string, self._name, self._website_name)
+                self._country, self._continent, self._new_location_name_in_website =  temp_location_tuple
+
+
 
         for index in basic_info_as_list:
             if 'Member for' in index.text:
