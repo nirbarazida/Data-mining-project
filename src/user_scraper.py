@@ -4,7 +4,6 @@ import ast
 import re
 from src.geo_location import create_location
 from src.website import Website
-import string
 
 
 class UserScraper:
@@ -66,11 +65,8 @@ class UserScraper:
                 location_string = None
 
             if location_string:
-                printable = set(string.printable)
-                location_string = ''.join(filter(lambda x: x in printable, location_string))
-                if location_string:
-                    temp_location_tuple = create_location(location_string, self._name, self._website_name)
-                    self._country, self._continent, self._new_location_name_in_website =  temp_location_tuple
+                temp_location_tuple = create_location(location_string, self._name, self._website_name)
+                self._country, self._continent, self._new_location_name_in_website =  temp_location_tuple
 
 
 
