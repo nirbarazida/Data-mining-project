@@ -13,7 +13,7 @@ logger = Logger().logger
 config = Config(JSON_FILE_NAME)
 
 try:
-    connection = pymysql.connect(host='localhost', user=config.USER_NAME, password=config.PASSWORD, charset='utf8mb4')
+    connection = pymysql.connect(host='localhost', user=config.USER_NAME, password=config.PASSWORD)
     cursor_instance = connection.cursor()
 
     engine = create_engine(f"{config.SQL_EXTENSION}+{config.PYTHON_DBAPI}://{config.USER_NAME}:"
