@@ -65,6 +65,7 @@ def main():
     # receiving arguments from the command line terminal for the scraping process
     parser = argparse.ArgumentParser(description='Scraping users from Stack Exchange websites')
 
+    parser.add_argument('--db_name', help="database name", type=str, default='stack_exchange_db')
     parser.add_argument('--num_users_to_scrap', help="Number of users to scrap", type=int, default=10)
     parser.add_argument('--websites', help="Which Stack Exchange websites to scrap from", nargs='+',
                         default=['stackoverflow', 'askubuntu', 'math.stackexchange', 'superuser'],
@@ -75,7 +76,7 @@ def main():
                         , type=general.bool_converter, default=False)
     args = parser.parse_args()
 
-    initiate_database()
+    initiate_database(args.websites)
     logger.info(config.OPENING_STRING.format(config.DB_NAME, args.num_users_to_scrap, config.SLEEP_FACTOR, args.multi_process))
 
     # Multi Process mode
