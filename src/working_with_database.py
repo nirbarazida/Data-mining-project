@@ -30,7 +30,7 @@ def create_database():
             exit()
 
 
-def initiate_database(websites):
+def initiate_database():
     """
     initiates a database (generates the tables in the database (creates them if they not exist)
     """
