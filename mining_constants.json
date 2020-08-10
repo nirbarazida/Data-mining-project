@@ -30,8 +30,7 @@
     },
     "REGEX_STRINGS": {
       "REPUTATION_REGEX": "var\\sgraphData\\s=\\s(\\[\\S+\\])",
-      "GMT_REGEX": "GMT\\s[+-]\\d",
-      "ENCODE_REGEX": "(['])([A-Za-z ]+)([\\\\]*)"
+      "GMT_REGEX": "GMT\\s[+-]\\d"
     },
     "LOGGER_STRINGS": {
       "OPENING_STRING": "Working on DB: {}, number of users to scrap = {}, sleep factor = {}, Multi Process? {}",
