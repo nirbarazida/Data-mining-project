@@ -1,3 +1,8 @@
+"""
+scarps user info from the input url
+prepare data to insert to database in dedicated properties
+"""
+
 from src import config, logger
 from datetime import datetime, timedelta
 import ast
@@ -7,6 +12,11 @@ from src.website import Website
 
 
 class UserScraper:
+    """
+    class that scarps user info from the input url.
+    the class contains properties that are the prepared dictionaries
+    that are used to insert the data to the database
+    """
     # rank holder for users from each website, i.e : {"stackoverflow": 5,"another website":2}
     num_user_dict = {}
 

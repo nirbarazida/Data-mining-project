@@ -1,7 +1,8 @@
 """
 why using SQLAlchemy ORM:
 define tables and relationship using Python classes.
-It also provides a system to query and manipulate the database using object-oriented code instead of writing SQL.
+It also provides a system to query and manipulate
+the database using object-oriented code instead of writing SQL.
 """
 
 from src import Base, config

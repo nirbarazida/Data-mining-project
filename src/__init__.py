@@ -1,3 +1,12 @@
+"""
+Constructor the generates instances for the program:
+1. logger
+2. config - instance that contains all the configurations from the Json file
+3. Base - SQL-alchemy instance for creating tables in a database
+4. database - instance of the Database class that contains all the queries and commit to the DB
+5. geolocator - instance of the Geo-locator api
+"""
+
 from src.conf import Config
 from src.logger import Logger
 from sqlalchemy.ext.declarative import declarative_base
@@ -13,7 +22,7 @@ config = Config(JSON_FILE_NAME)
 
 # mapper & MetaData: maps the subclass to the table and holds all the information about the database
 Base = declarative_base()
-from src.working_with_database import Database
+from src.database import Database
 
 
 try:

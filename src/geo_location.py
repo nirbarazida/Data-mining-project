@@ -1,3 +1,9 @@
+"""
+module that uses the Geo-Locator api and generates a country and continent from
+users location string that was scraped. using cache table in the database and cache values
+in the Json file to avoid redundant requests
+"""
+
 from src import logger, config, geolocator, database
 from geopy.exc import GeocoderUnavailable
 from pycountry_convert import country_alpha2_to_continent_code, country_name_to_country_alpha2

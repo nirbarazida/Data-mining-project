@@ -1,9 +1,8 @@
 """
-This file manages most of the connections with the database. The file contain the following functions:
-create_database() - creates the DB  (if the requested one does not exist yet)
-initiate_database() - It initiates a database (generates the tables in the database (creates them if they not exist)
-create_table_website - create the website table and add entities according to the new website to scrap
-find_last_user_scrapped - finds the last users to scrap from the table
+File that contains the main database of the file. the methods are divided as follows:
+1. init -  constructor database connection, with SQL-alchemy methods and prepare tables
+2. queries - using the session of the databases and return results from queries
+3. commit - insert the new data into the database. the commits include internal queries
 """
 
 from src import logger, Base, config
@@ -18,6 +17,9 @@ from sqlalchemy.orm import Session
 class Database:
 
     def __init__(self):
+        """
+        construct a database connection, with SQL-alchemy methods and prepare tables
+        """
         connection = pymysql.connect(host='localhost', user=config.USER_NAME, password=config.PASSWORD)
         self._cursor_instance = connection.cursor()
 
@@ -56,10 +58,40 @@ class Database:
                 logger.error(config.DB_NAME_NOT_VALID.format(config.DB_NAME))
                 exit()
 
-
-    def insert_website_to_DB(self, website_dict):
+    def query_last_user_scrapped(self, website_name):
         """
-        enters data of website into DB. if the entity already exists, update relevant data
+        finds the website name that is being scraped
+        checks in the user table what is the last rank that was scraped based on website id
+        returns value + 1 as the instance to first scrap. in a case that no records have been
+        scrapped, return 1.
+        """
+        web = self._session.query(WebsitesT).filter(WebsitesT.name == website_name).first()
+
+        try:
+            last_scraped = self._session.query(func.max(UserT.rank)).filter(UserT.website_id == web.id).scalar()
+            return last_scraped + 1
+        except TypeError:
+            return 1
+        except AttributeError:
+            return 1
+
+    def query_location(self, last_word_in_user_location_string):
+        """
+        finds location row in the database the contains the user input location string
+        that was scraped. If it does not exists, the location row is None
+        :param last_word_in_user_location_string: user writen last word of location which was
+        scarped
+        :return: row from the table / None
+        """
+        location_row = self._session.query(Location) \
+            .join(Stack_Exchange_Location) \
+            .filter(Stack_Exchange_Location.website_location == last_word_in_user_location_string) \
+            .first()
+        return location_row
+
+    def commit_website_to_DB(self, website_dict):
+        """
+        inserts data of website into DB. if the entity already exists, update relevant data
         :param website_dict: parameters of website table (dict)
         """
 
@@ -78,77 +110,11 @@ class Database:
         self._session.commit()
 
 
-    def find_last_user_scrapped(self, website_name):
-        """
-        gets the website name that is being scraped
-        checks in the user table what is the last rank that was scraped based on website id
-         returns value + 1 as the instance to first scrap. in a case that no records have been
-         scrapped, return 1.
-        """
-        web = self._session.query(WebsitesT).filter(WebsitesT.name == website_name).first()
-
-        try:
-            last_scraped = self._session.query(func.max(UserT.rank)).filter(UserT.website_id == web.id).scalar()
-            return last_scraped + 1
-        except TypeError:
-            return 1
-        except AttributeError:
-            return 1
-
-
-    def query_location(self, last_word_in_user_location_string):
-        location_row = self._session.query(Location) \
-            .join(Stack_Exchange_Location) \
-            .filter(Stack_Exchange_Location.website_location == last_word_in_user_location_string) \
-            .first()
-        return location_row
-
-
-    def commit_user_to_DB(self, user_table):
-        try:
-            self._session.add(user_table)
-            self._session.commit()
-
-        except exc.IntegrityError as e:
-            logger.error(e)
-            self._session.rollback()
-            # # log the problem in user logger, Can't print user name with spacial/ unknown characters
-            # logger.warning(f'IntegrityError: "Duplicate entry for key users.name ranked')
-            #
-            # # insert user information to not scrapped users logger, Can't print user name with unknown characters
-            # logger.error(f'IntegrityError: "Duplicate entry for key users.name ranked {self._rank} at'
-            #                           f' website {self._website_name} with url: {self._url}" ')
-            return None
-        return True
-
-
     def insert_user_to_DB(self, user):
         """
-    insert the user to the data base with SQLAlchemy using ORM.
-    ORM lets us define tables and relationship using Python classes.
-    also provides a system to query and manipulate the database using object-oriented code instead of writing SQL.
-
-    to make as less commits as possible we've created a commit_list that collects all the new instance throughout
-    the function and then adds and commits them at once.
-    first we get the web site id from the data and check if the user location exists in the data base - if not will
-    create a new Location instance.
-
-    before creating any new instances, we must create a UserT instance and commit it to the data base. this way a
-    user with a user.id will be created and we will be able to connect it to all other user information in the
-    different instances.
-
-    then we'll create an Reputation instance - will happen for every user.
-    last but not least will be the tag instance - will check if Tag instance already exist - if not - will create
-    new one. if exists would get that instance. then will form a connection between the Tags and a new User_Tags
-    instance
-
-    To avoid duplication of users in the data base a unique set of ('name', 'rank', 'website_id') was declared.
-    also location, tags and website name was declared as unique.
-    duo to the above - before every commit an exception of IntegrityError will be raise to avid crash.
-    in a case of duplication 2 action will tack place:
-    1. if the user was committed - the user will be deleted from the data base.
-    2. the user url will be logged in the logger_not_scrapped to check what happened and scrape him latter if needed
-     also a warning will be logged in the logger_user
+        inserts data of user into DB. the data is committed to the all the tables
+        in the db excepct the website
+        :param user: user instance (that contains properties of the data to insert)
         """
 
         # list of variables that we'll add and commit in one shot commit
@@ -168,9 +134,15 @@ class Database:
         # create new user entrance in table and commit it to create PK for user.
         user_table = UserT(location=loc, website_id=web.id, **user.user_info)
 
-        # commit user to data - if didn't seceded will return None
-        if not self.commit_user_to_DB(user_table):
-            return None
+        # commit user to data - if didn't succeed, rollback and stop the commit
+        try:
+            self._session.add(user_table)
+            self._session.commit()
+
+        except exc.IntegrityError as e:
+            logger.error(e)
+            self._session.rollback()
+            return
 
         # create user Reputation and connects it to the user.
         rep = Reputation(user_id=user_table.id, **user.reputation)
