@@ -9,13 +9,12 @@ Data mining project - "Analysis of Stack Exchange Websites"- main file
 Authors: Nir Barazida and Inbar Shirizly
 """
 
-from src import logger, config, general
+from src import logger, config, general, database
 import argparse
 from src.user_analysis import UserAnalysis
-from src.user import User
+from src.user_scraper import UserScraper
 import concurrent.futures
 from tqdm import tqdm
-from src.working_with_database import initiate_database, insert_website_to_DB
 import random
 from itertools import repeat
 
@@ -38,7 +37,7 @@ def scrap_users(website_name, num_users_to_scrap):
 
     user_page = UserAnalysis(website_name, index_first_page, index_first_instance_in_first_page)
 
-    insert_website_to_DB(user_page.website_info)
+    database.insert_website_to_DB(user_page.website_info)
 
     logger.info(config.WEBSITE_SCRAPP_INFO.format(website_name, first_instance_to_scrap,
                                                 first_instance_to_scrap + num_users_to_scrap - 1))
@@ -49,8 +48,8 @@ def scrap_users(website_name, num_users_to_scrap):
     user_links_generator = user_page.generate_users_links()
     for num_user, link in enumerate(tqdm(user_links_generator, desc=f"{website_name}",
                                          total=num_users_to_scrap, position=1, leave=False)):
-        user = User(link, website_name, first_instance_to_scrap)
-        user.insert_user_to_DB()
+        user = UserScraper(link, website_name, first_instance_to_scrap)
+        database.insert_user_to_DB(user)
 
         if num_user == random_user_to_check:
             logger.info(config.SANITY_CHECK_STRING.format(link, website_name,
@@ -75,7 +74,6 @@ def main():
                         , type=general.bool_converter, default=False)
     args = parser.parse_args()
 
-    initiate_database()
     logger.info(config.OPENING_STRING.format(config.DB_NAME, args.num_users_to_scrap, config.SLEEP_FACTOR, args.multi_process))
 
     # Multi Process mode

@@ -1,27 +1,23 @@
 from src.conf import Config
 from src.logger import Logger
-from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session
 from geopy.geocoders import Nominatim
 from sqlalchemy import exc
 import pymysql
+
 
 JSON_FILE_NAME = "mining_constants.json"
 
 logger = Logger().logger
 config = Config(JSON_FILE_NAME)
 
-try:
-    connection = pymysql.connect(host='localhost', user=config.USER_NAME, password=config.PASSWORD)
-    cursor_instance = connection.cursor()
+# mapper & MetaData: maps the subclass to the table and holds all the information about the database
+Base = declarative_base()
+from src.working_with_database import Database
 
-    engine = create_engine(f"{config.SQL_EXTENSION}+{config.PYTHON_DBAPI}://{config.USER_NAME}:"
-                           f"{config.PASSWORD}@localhost/{config.DB_NAME}")
-    # mapper & MetaData: maps the subclass to the table and holds all the information about the database
-    Base = declarative_base()
-    # wraps the database connection and transaction. starts as the Session starts and remain open until the Session closed
-    session = Session(bind=engine)
+
+try:
+    database = Database()
     geolocator = Nominatim(user_agent=f"{config.DB_NAME}", timeout=3)
 
 except exc.NoSuchModuleError as err:
