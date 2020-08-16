@@ -1,8 +1,16 @@
+"""
+this module contains general functions that are used along the program
+- timer - a decorator to time functions
+- arrange_first_user_to_scrap - calculates the page and number of user of the first to scarp
+- bool converter - allows the user to insert in the command-line
+                   many options for True and False
+"""
+
+
 import time
 from functools import wraps
 import argparse
-from src.working_with_database import find_last_user_scrapped
-from src import logger, config
+from src import logger, config, database
 
 
 def timer(func):
@@ -29,7 +37,7 @@ def arrange_first_user_to_scrap(website_name):
     :return: first_instance_to_scrap (int), index_first_page(int), index_first_instance_in_first_page(int)
     """
 
-    first_instance_to_scrap = find_last_user_scrapped(website_name)
+    first_instance_to_scrap = database.query_last_user_scrapped(website_name)
     index_first_page = (first_instance_to_scrap // config.NUM_INSTANCES_IN_PAGE) + 1
     index_first_instance_in_first_page = first_instance_to_scrap % config.NUM_INSTANCES_IN_PAGE
     return first_instance_to_scrap, index_first_page, index_first_instance_in_first_page

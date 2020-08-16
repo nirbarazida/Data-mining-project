@@ -1,7 +1,7 @@
 """
-UserAnalysis - class that inherits from Website.
-                it's main goal is to create a generator of links for 
-                each individual user page.
+class that inherits from Website.
+it's main goal is to create a generator of links for
+each individual user page.
 """
 from src.website import Website
 
@@ -27,7 +27,6 @@ class UserAnalysis(Website):
                                               f'/users?page={index_first_page}&tab=reputation&filter=all'
         self._index_first_instance_first_page = index_first_instance_first_page
 
-        self.get_website_data_api() # generate data for each website from api
 
     def get_first_url(self):
         return self._first_users_page_url

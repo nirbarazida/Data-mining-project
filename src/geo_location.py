@@ -1,5 +1,10 @@
-from src import logger, config, geolocator, session
-from src.ORM import Location, Stack_Exchange_Location
+"""
+module that uses the Geo-Locator api and generates a country and continent from
+users location string that was scraped. using cache table in the database and cache values
+in the Json file to avoid redundant requests
+"""
+
+from src import logger, config, geolocator, database
 from geopy.exc import GeocoderUnavailable
 from pycountry_convert import country_alpha2_to_continent_code, country_name_to_country_alpha2
 import re
@@ -28,10 +33,7 @@ def create_location(location_string, user_name, website_name):
             country, continent = config.KNOWN_COUNTRIES[last_word_in_user_location_string]
 
         else:
-            location_row = session.query(Location) \
-                .join(Stack_Exchange_Location) \
-                .filter(Stack_Exchange_Location.website_location == last_word_in_user_location_string) \
-                .first()
+            location_row = database.query_location(last_word_in_user_location_string)
 
             if location_row:
                 country, continent = location_row.country, location_row.continent

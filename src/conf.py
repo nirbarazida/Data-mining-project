@@ -1,6 +1,6 @@
 """
-config file, generate all important values from json file and
-from the command line input
+config file, generate all important values from a Json file
+- note the the json file name iniailizes in the __init__.py file
 """
 
 import json

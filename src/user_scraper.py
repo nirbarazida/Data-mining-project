@@ -1,3 +1,8 @@
+"""
+scarps user info from the input url
+prepare data to insert to database in dedicated properties
+"""
+
 from src import config, logger
 from datetime import datetime, timedelta
 import ast
@@ -7,6 +12,11 @@ from src.website import Website
 
 
 class UserScraper:
+    """
+    class that scarps user info from the input url.
+    the class contains properties that are the prepared dictionaries
+    that are used to insert the data to the database
+    """
     # rank holder for users from each website, i.e : {"stackoverflow": 5,"another website":2}
     num_user_dict = {}
 
@@ -117,3 +127,32 @@ class UserScraper:
                 tags[index].append(int(tag.text.replace("\n", " ").split()[1].replace(",", "")))
                 tags[index].append(int(tag.text.replace("\n", " ").split()[3].replace(",", "")))
             return tags
+
+
+    @property
+    def user_info(self):
+        """
+        property of user general data for table UserT
+        """
+        return {
+            'rank': self._rank,
+            'name': self._name,
+            'member_since': self._member_since,
+            'profile_views': self._profile_views,
+            'answers': self._answers,
+            'people_reached': self._people_reached,
+        }
+
+    @property
+    def location(self):
+        """
+        property of user location data
+        """
+        return {'country': self._country, 'continent': self._continent}
+
+    @property
+    def reputation(self):
+        """
+        property of user reputation data
+        """
+        return {**self._reputation_hist, 'reputation_now': self._reputation_now}
