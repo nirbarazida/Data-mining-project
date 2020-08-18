@@ -3,7 +3,7 @@ class that inherits from Website.
 it's main goal is to create a generator of links for
 each individual user page.
 """
-from src.website import Website
+from scraper.website import Website
 
 
 class UserAnalysis(Website):

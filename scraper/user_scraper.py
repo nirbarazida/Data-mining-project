@@ -7,8 +7,8 @@ from src import config, logger
 from datetime import datetime, timedelta
 import ast
 import re
-from src.geo_location import create_location
-from src.website import Website
+from scraper.geo_location import GeoLocation
+from scraper.website import Website
 
 
 class UserScraper:
@@ -65,7 +65,7 @@ class UserScraper:
         basic_info_as_list = basic_info_scope.find_all_next("div", {"class": "grid gs8 gsx ai-center"})
         if basic_info_as_list[0].find('svg', {'aria-hidden': 'true', 'class': 'svg-icon iconLocation'}):
             location_string = basic_info_as_list[0].text.strip()
-            temp_location_tuple = create_location(location_string, self._name, self._website_name)
+            temp_location_tuple = GeoLocation.create_location(location_string, self._name, self._website_name)
             self._country, self._continent, self._new_location_name_in_website =  temp_location_tuple
 
         for index in basic_info_as_list:

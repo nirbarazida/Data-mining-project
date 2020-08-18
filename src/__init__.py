@@ -15,14 +15,14 @@ from sqlalchemy import exc
 import pymysql
 
 
-JSON_FILE_NAME = "mining_constants.json"
+JSON_FILE_NAME = "src/mining_constants.json"
 
 logger = Logger().logger
 config = Config(JSON_FILE_NAME)
 
 # mapper & MetaData: maps the subclass to the table and holds all the information about the database
 Base = declarative_base()
-from src.database import Database
+from database.database import Database
 
 
 try:
