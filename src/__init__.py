@@ -22,7 +22,7 @@ config = Config(JSON_FILE_NAME)
 
 # mapper & MetaData: maps the subclass to the table and holds all the information about the database
 Base = declarative_base()
-from src.database import Database
+from database.database import Database
 
 
 try:

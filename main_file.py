@@ -11,9 +11,9 @@ Authors: Nir Barazida and Inbar Shirizly
 
 from src import logger, config, general, database
 import argparse
-from src.website_api import WebsiteAPI
-from src.user_analysis import UserAnalysis
-from src.user_scraper import UserScraper
+from API.website_api import WebsiteAPI
+from scraper import UserAnalysis
+from scraper import UserScraper
 import concurrent.futures
 from tqdm import tqdm
 import random

@@ -7,7 +7,7 @@ File that contains the main database of the file. the methods are divided as fol
 
 from src import logger, Base, config
 from sqlalchemy import create_engine, exc
-from src.ORM import WebsitesT, UserT, User_Tags, TagsT, Reputation, \
+from database.ORM import WebsitesT, UserT, User_Tags, TagsT, Reputation, \
     Location, Stack_Exchange_Location
 import pymysql
 from sqlalchemy import func
