@@ -15,7 +15,7 @@ from sqlalchemy import exc
 import pymysql
 
 
-JSON_FILE_NAME = "mining_constants.json"
+JSON_FILE_NAME = "src/mining_constants.json"
 
 logger = Logger().logger
 config = Config(JSON_FILE_NAME)
